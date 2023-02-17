@@ -124,3 +124,27 @@ const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
  * @see https://trpc.io/docs/procedures
  */
 export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
+export const protectedProcedureMitra = t.procedure
+  .use(enforceUserIsAuthed)
+  .use(({ ctx, next }) => {
+    if (!ctx.session.user.roles.includes("MITRA"))
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+
+    return next({
+      ctx: {
+        session: { ...ctx.session, user: ctx.session.user },
+      },
+    });
+  });
+export const protectedProcedureMerchant = t.procedure
+  .use(enforceUserIsAuthed)
+  .use(({ ctx, next }) => {
+    if (!ctx.session.user.roles.includes("MERCHANT"))
+      throw new TRPCError({ code: "UNAUTHORIZED" });
+
+    return next({
+      ctx: {
+        session: { ...ctx.session, user: ctx.session.user },
+      },
+    });
+  });

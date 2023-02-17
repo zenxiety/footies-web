@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
+    provider = "cockroachdb"
     // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
     // Further reading:
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
@@ -47,14 +47,120 @@ model Session {
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+enum Role {
+    USER
+    MITRA
+    MERCHANT
+}
+
 model User {
     id            String    @id @default(cuid())
     name          String?
     email         String?   @unique
+    isVerified    Boolean   @default(false)
     emailVerified DateTime?
+    password      String?
     image         String?
+    telepon       String?
+    saldo         Int       @default(0)
+    roles         Role[]    @default([USER])
     accounts      Account[]
     sessions      Session[]
+    Cart          Cart[]
+    Order         Order[]
+    Mitra         Mitra?
+    Alamat        Alamat[]
+    Merchant      Merchant?
+}
+
+model Merchant {
+    id     String  @id @default(cuid())
+    userId String  @unique
+    user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    saldo  Int     @default(0)
+    alamat String
+    rating Int
+    Menu   Menu[]
+    Order  Order[]
+}
+
+model Alamat {
+    id           String  @id @default(cuid())
+    userId       String
+    user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    alamat       String
+    detailLokasi String?
+    patokan      Int?
+}
+
+model Mitra {
+    id     String @id @default(cuid())
+    saldo  Int
+    rating Int
+    userId String @unique
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum MetodePembayaran {
+    CASH
+    WALLET
+}
+
+model Order {
+    id               String            @id @default(cuid())
+    userId           String            @unique
+    total            Int
+    status           String
+    User             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+    Menu             Menu?             @relation(fields: [menuId], references: [id])
+    menuId           String?
+    Merchant         Merchant?         @relation(fields: [merchantId], references: [id])
+    merchantId       String?
+    DetailPembayaran DetailPembayaran?
+    MetodePembayaran MetodePembayaran
+    Cart             Cart?
+}
+
+model DetailPembayaran {
+    id        String   @id @default(cuid())
+    harga     Int
+    ongkir    Int
+    fee       Int
+    Voucher   Voucher? @relation(fields: [voucherId], references: [id])
+    Order     Order    @relation(fields: [orderId], references: [id])
+    orderId   String   @unique
+    voucherId String?
+}
+
+model Cart {
+    id      String @id @default(cuid())
+    userId  String
+    menuId  String
+    qty     Int
+    user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    menu    Menu   @relation(fields: [menuId], references: [id], onDelete: Cascade)
+    Order   Order  @relation(fields: [orderId], references: [id])
+    orderId String @unique
+}
+
+model Voucher {
+    id               String             @id @default(cuid())
+    kode             String             @unique
+    diskon           Int
+    DetailPembayaran DetailPembayaran[]
+}
+
+model Menu {
+    id         String    @id @default(cuid())
+    nama       String
+    harga      Int
+    deskripsi  String
+    gambar     String
+    kategori   String
+    Cart       Cart[]
+    Order      Order[]
+    Merchant   Merchant? @relation(fields: [merchantId], references: [id])
+    merchantId String?
 }
 
 model VerificationToken {
