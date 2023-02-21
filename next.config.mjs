@@ -1,3 +1,7 @@
+import withPWA from "next-pwa";
+// @ts-ignore
+import runtimeCaching from "next-pwa/cache.js";
+
 // @ts-check
 
 /**
@@ -6,19 +10,20 @@
  */
 !process.env.SKIP_ENV_VALIDATION && (await import("./src/env.mjs"));
 
-/** @type {import("next").NextConfig} */
-const config = {
-  reactStrictMode: true,
+const withPWA_ = withPWA({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+  runtimeCaching,
+  buildExcludes: [/middleware-manifest.json$/],
+});
 
-  /**
-   * If you have the "experimental: { appDir: true }" setting enabled, then you
-   * must comment the below `i18n` config out.
-   *
-   * @see https://github.com/vercel/next.js/issues/41980
-   */
+const nextConfig = withPWA_({
+  reactStrictMode: true,
   i18n: {
     locales: ["en"],
     defaultLocale: "en",
   },
-};
-export default config;
+});
+
+export default nextConfig;
