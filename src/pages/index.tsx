@@ -14,7 +14,7 @@ const Home: NextPage = () => {
         <title>Footies</title>
       </Head>
       <section className="grid h-screen w-screen place-content-center bg-neutral-800 text-pink-400">
-        <h1 className="text-9xl">Your feet are cute</h1>
+        <h1 className="text-9xl">Dikis Lovely Feet</h1>
       </section>
     </>
   );
