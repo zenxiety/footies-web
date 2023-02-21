@@ -4,17 +4,33 @@ import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 import { api } from "../utils/api";
+import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const [count, setCount] = useState(5);
+
+  useEffect(() => {
+    if (count > 0) {
+      setTimeout(() => {
+        setCount(count - 1);
+      }, 1000);
+    }
+  }, [count]);
+
+  setTimeout(() => {
+    if (count === 0) {
+      window.location.href = "https://www.youtube.com/watch?v=xvFZjo5PgG0";
+    }
+  }, 1000);
 
   return (
     <>
       <Head>
         <title>Footies</title>
       </Head>
-      <section className="grid h-screen w-screen place-content-center bg-neutral-800 text-pink-400">
-        <h1 className="text-9xl">Dikis Lovely Feet</h1>
+      <section className="grid h-screen w-screen place-content-center gap-y-8 bg-neutral-800 text-center text-pink-400">
+        <h1 className="text-9xl">Your feet are cute :)</h1>
+        <h2 className="text-xl">OUR WEBSITE WILL BE RELEASED IN {count}</h2>
       </section>
     </>
   );
