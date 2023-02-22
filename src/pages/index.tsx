@@ -4,34 +4,41 @@ import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 
 import { api } from "../utils/api";
-import { useEffect, useState } from "react";
+import Layout from "../../components/Layout";
 
 const Home: NextPage = () => {
-  const [count, setCount] = useState(5);
-
-  useEffect(() => {
-    if (count > 0) {
-      setTimeout(() => {
-        setCount(count - 1);
-      }, 1000);
-    }
-  }, [count]);
-
-  // setTimeout(() => {
-  //   if (count === 0) {
-  //     window.location.href = "https://www.youtube.com/watch?v=xvFZjo5PgG0";
-  //   }
-  // }, 1000);
-
   return (
     <>
       <Head>
         <title>Footies</title>
       </Head>
-      <section className="grid h-screen w-screen place-content-center gap-y-8 bg-others-black text-center text-primary-300">
-        <h1 className="font-literata text-9xl">Your feet are cute :)</h1>
-        <h2 className="text-xl">OUR WEBSITE WILL BE RELEASED IN {count}</h2>
-      </section>
+      {/* <Layout> */}
+      <main className="flex h-screen flex-col justify-between gap-y-8 bg-secondary-500 text-center">
+        <h1 className="font-literata text-5xl text-primary-300">
+          Your feet are cute :)
+        </h1>
+        <div className="text- text-secondary-100">
+          <h1 className="font-louis">
+            Are mine too? a quick brown fox jumps over the lazy dog
+          </h1>
+          <h1 className="font-louis italic">
+            Are mine too? a quick brown fox jumps over the lazy dog
+          </h1>
+          <h1 className="font-louis font-light">
+            Are mine too? a quick brown fox jumps over the lazy dog
+          </h1>
+          <h1 className="font-louis font-light italic">
+            Are mine too? a quick brown fox jumps over the lazy dog
+          </h1>
+          <h1 className="font-louis font-bold">
+            Are mine too? a quick brown fox jumps over the lazy dog
+          </h1>
+          <h1 className="font-louis font-bold italic">
+            Are mine too? a quick brown fox jumps over the lazy dog
+          </h1>
+        </div>
+      </main>
+      {/* </Layout> */}
     </>
   );
 };

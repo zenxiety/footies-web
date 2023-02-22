@@ -25,7 +25,8 @@ module.exports = {
         info: "#4C6EF5",
       },
       fontFamily: {
-        literata: ["var(--font-literata)", ...fontFamily.sans],
+        literata: ["var(--font-literata)", ...fontFamily.serif],
+        louis: ["var(--font-louis)", ...fontFamily.sans],
       },
     },
   },
