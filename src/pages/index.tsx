@@ -17,19 +17,19 @@ const Home: NextPage = () => {
     }
   }, [count]);
 
-  setTimeout(() => {
-    if (count === 0) {
-      window.location.href = "https://www.youtube.com/watch?v=xvFZjo5PgG0";
-    }
-  }, 1000);
+  // setTimeout(() => {
+  //   if (count === 0) {
+  //     window.location.href = "https://www.youtube.com/watch?v=xvFZjo5PgG0";
+  //   }
+  // }, 1000);
 
   return (
     <>
       <Head>
         <title>Footies</title>
       </Head>
-      <section className="grid h-screen w-screen place-content-center gap-y-8 bg-neutral-800 text-center text-pink-400">
-        <h1 className="text-9xl">Your feet are cute :)</h1>
+      <section className="grid h-screen w-screen place-content-center gap-y-8 bg-others-black text-center text-primary-300">
+        <h1 className="font-literata text-9xl">Your feet are cute :)</h1>
         <h2 className="text-xl">OUR WEBSITE WILL BE RELEASED IN {count}</h2>
       </section>
     </>

@@ -6,14 +6,24 @@ import { api } from "../utils/api";
 
 import "../styles/globals.css";
 
+import { Literata } from "@next/font/google";
+
+const literata = Literata({
+  weight: ["400"],
+  subsets: ["latin"],
+  variable: "--font-literata",
+});
+
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <SessionProvider session={session}>
-      <Component {...pageProps} />
-    </SessionProvider>
+    <main className={`${literata.variable} font-sans`}>
+      <SessionProvider session={session}>
+        <Component {...pageProps} />
+      </SessionProvider>
+    </main>
   );
 };
 
