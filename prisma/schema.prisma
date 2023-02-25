@@ -57,11 +57,14 @@ model User {
     id            String    @id @default(cuid())
     name          String?
     email         String?   @unique
+    firstName     String?
+    lastName      String?
     isVerified    Boolean   @default(false)
     emailVerified DateTime?
     password      String?
     image         String?
     telepon       String?
+    task          Task[]
     saldo         Int       @default(0)
     roles         Role[]    @default([USER])
     accounts      Account[]
@@ -73,15 +76,32 @@ model User {
     Merchant      Merchant?
 }
 
+model Task {
+    id        String   @id @default(cuid())
+    title     Role
+    completed Boolean  @default(false)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    User      User?    @relation(fields: [userId], references: [id])
+    userId    String?
+}
+
 model Merchant {
-    id     String  @id @default(cuid())
-    userId String  @unique
-    user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-    saldo  Int     @default(0)
-    alamat String
-    rating Int
-    Menu   Menu[]
-    Order  Order[]
+    id        String   @id @default(cuid())
+    userId    String   @unique
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    saldo     Int      @default(0)
+    nama      String
+    alamat    String
+    jamBuka   String
+    jamTutup  String
+    deskripsi String?
+    labels    String[]
+    rating    Int?
+    dokumen   String[]
+    Menu      Menu[]
+    Order     Order[]
+    Cart      Cart[]
 }
 
 model Alamat {
@@ -112,8 +132,8 @@ model Order {
     total            Int
     status           String
     User             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-    Menu             Menu?             @relation(fields: [menuId], references: [id])
-    menuId           String?
+    Menu             Menu?             @relation(fields: [menuId], references: [id], onDelete: Cascade)
+    menuId           String?           @unique
     Merchant         Merchant?         @relation(fields: [merchantId], references: [id])
     merchantId       String?
     DetailPembayaran DetailPembayaran?
@@ -133,14 +153,16 @@ model DetailPembayaran {
 }
 
 model Cart {
-    id      String @id @default(cuid())
-    userId  String
-    menuId  String
-    qty     Int
-    user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-    menu    Menu   @relation(fields: [menuId], references: [id], onDelete: Cascade)
-    Order   Order  @relation(fields: [orderId], references: [id])
-    orderId String @unique
+    id         String   @id @default(cuid())
+    userId     String
+    menuId     String
+    qty        Int
+    user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    menu       Menu     @relation(fields: [menuId], references: [id], onDelete: Cascade)
+    Order      Order    @relation(fields: [orderId], references: [id])
+    orderId    String   @unique
+    merchantId String
+    merchant   Merchant @relation(fields: [merchantId], references: [id])
 }
 
 model Voucher {
