@@ -10,7 +10,8 @@ import { Literata } from "@next/font/google";
 import localFont from "@next/font/local";
 
 const literata = Literata({
-  weight: ["400"],
+  // weight: ["200", "300", "500", "700", "400", "600", "800", "900"],
+  // weight: ["variable"],
   subsets: ["latin"],
   variable: "--font-literata",
 });
