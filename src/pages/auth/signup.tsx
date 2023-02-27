@@ -9,10 +9,12 @@ import Image from "next/image";
 import "@fortawesome/fontawesome-free/css/all.css";
 
 type FormValues = {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   telepon: string;
+  alamat: string;
   apiError?: string;
 };
 
@@ -24,10 +26,12 @@ const SignUp: NextPage = () => {
   const signUpHandler = (data: FormValues) => {
     signUp
       .mutateAsync({
-        name: data.name,
+        firstName: data.firstName,
+        lastName: data.lastName,
         email: data.email,
         password: hashPassword(data.password),
         telepon: data.telepon,
+        alamat: data.alamat,
       })
       .then(async () => {
         return await router.push("/auth/signin");
@@ -125,9 +129,14 @@ const SignUp: NextPage = () => {
       </form>
       {/* <form onSubmit={handleSubmit(signUpHandler)}>
         <input type="text" {...register("name")} />
+    <div>
+      <form onSubmit={handleSubmit(signUpHandler)}>
+        <input type="text" {...register("firstName")} />
+        <input type="text" {...register("lastName")} />
         <input type="email" {...register("email")} />
         <input type="password" {...register("password")} />
         <input type="tel" {...register("telepon")} />
+        <input type="text" {...register("alamat")} />
         <button type="submit">Signup</button>
       </form> */}
     </div>

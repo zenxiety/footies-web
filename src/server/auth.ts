@@ -31,8 +31,16 @@ declare module "next-auth" {
 
   interface User {
     roles: Role[];
+    firstName?: string | null;
+    lastName?: string | null;
+    emailVerified?: Date | null;
     // ...other properties
     // role: UserRole;
+  }
+
+  interface Profile {
+    given_name: string;
+    family_name: string;
   }
 }
 
@@ -66,6 +74,13 @@ export const authOptions: NextAuthOptions = {
         // token.role = user.role; <-- put other properties on the token here
       }
       return token;
+    },
+    signIn({ user, profile }) {
+      if (user.firstName == null) {
+        user.firstName = profile?.given_name ?? "";
+        user.lastName = profile?.family_name ?? "";
+      }
+      return true;
     },
   },
   adapter: PrismaAdapter(prisma),
