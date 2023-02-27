@@ -12,11 +12,11 @@ export default function TipeAkun() {
           Tipe Akun
         </span>
         <div className="mt-[1vh] flex justify-between gap-x-1">
-          {types.map((type: any, i: number) => (
+          {types.map((type: string, i: number) => (
             <div
               key={i}
               className={`py- flex w-1/3 cursor-pointer flex-col justify-between gap-y-1 rounded-md pb-2 pt-3 duration-500 ${
-                active == i && "bg-primary-300"
+                active == i ? "bg-primary-300" : ""
               }`}
               onClick={() => setActive(i)}
             >
