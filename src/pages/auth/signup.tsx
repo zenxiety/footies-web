@@ -4,6 +4,9 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { api } from "../../utils/api";
 import { hashPassword } from "../../utils/auth";
+import logo from "../../../public/icon-512x512.png";
+import Image from "next/image";
+import "@fortawesome/fontawesome-free/css/all.css";
 
 type FormValues = {
   name: string;
@@ -17,7 +20,7 @@ const SignUp: NextPage = () => {
   const { register, handleSubmit } = useForm<FormValues>();
   const router = useRouter();
   const signUp = api.auth.signUp.useMutation();
-
+  const value = null;
   const signUpHandler = (data: FormValues) => {
     signUp
       .mutateAsync({
@@ -35,14 +38,98 @@ const SignUp: NextPage = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit(signUpHandler)}>
+    <div className="relative h-screen w-full overflow-hidden bg-[#141313] p-12">
+      <Image src={logo} alt="logo" className="w-[6vh]" />
+      <h1 className="py-12 font-literata text-xl text-[#F4B829]">
+        Buat akun Footies anda
+      </h1>
+      <form
+        onSubmit={handleSubmit(signUpHandler)}
+        className="flex flex-col gap-y-2 pb-2"
+      >
+        <h1 className={value == null ? "hidden" : "font-louis text-[#635E5E]"}>
+          Email
+        </h1>
+        <input
+          type="email"
+          {...register("email")}
+          className={
+            value == null
+              ? "h-[6vh] w-full border-b-2 border-[#d9d9d9] bg-[#141313] text-white underline"
+              : "h-[6vh] w-full border-b-2 border-[#F4B829] bg-[#141313] text-white underline"
+          }
+          placeholder="Email"
+        />
+        <h1 className={value == null ? "hidden" : "font-louis text-[#635E5E]"}>
+          Kata Sandi
+        </h1>
+        <input
+          type="password"
+          {...register("password")}
+          className={
+            value == null
+              ? "h-[6vh] w-full border-b-2 border-[#d9d9d9] bg-[#141313] text-white underline"
+              : "h-[6vh] w-full border-b-2 border-[#F4B829] bg-[#141313] text-white underline"
+          }
+          placeholder="Kata Sandi"
+        />
+        <h1 className={value == null ? "hidden" : "font-louis text-[#635E5E]"}>
+          Kata Sandi
+        </h1>
+        <input
+          type="password"
+          {...register("password")}
+          className={
+            value == null
+              ? "h-[6vh] w-full border-b-2 border-[#d9d9d9] bg-[#141313] text-white underline"
+              : "h-[6vh] w-full border-b-2 border-[#F4B829] bg-[#141313] text-white underline"
+          }
+          placeholder="Konfirmasi Kata Sandi"
+        />
+        <h1 className="text-[10px] text-[#635E5E]">
+          Kata sandi harus memuat 8 karakter, huruf kapital, dan angka.
+        </h1>
+        <div className="flex flex-row gap-x-2">
+          <input type="checkbox" value="Paneer" className="text-white" />
+          <span className="font-louis text-[12px] text-white">
+            Perlihatkan kata sandi
+          </span>
+        </div>
+        <div className="flex flex-row items-center justify-between">
+          <h1 className="font-louis text-[#F4B829]">Masuk</h1>
+          <button
+            type="submit"
+            className="h-[6vh] w-1/2 rounded-md bg-[#F4B829] font-louis"
+          >
+            Selanjutnya
+          </button>
+        </div>
+        <div className="flex flex-row items-center justify-center">
+          <div className="border-t-2 text-white" />
+          <h1 className="font-louis text-[12px] text-white">
+            atau masuk dengan
+          </h1>
+          <div className="border-t-2 text-white" />
+        </div>
+        <button
+          className="h-[6vh] w-full rounded-md bg-[#F4B829] font-louis"
+          onClick={() =>
+            signUp("google", {
+              callbackUrl: "/",
+              redirect: false,
+            })
+          }
+        >
+          Google
+        </button>
+      </form>
+      {/* <form onSubmit={handleSubmit(signUpHandler)}>
         <input type="text" {...register("name")} />
         <input type="email" {...register("email")} />
         <input type="password" {...register("password")} />
         <input type="tel" {...register("telepon")} />
         <button type="submit">Signup</button>
-      </form>
+      </form> */}
     </div>
   );
 };

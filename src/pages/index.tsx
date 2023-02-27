@@ -14,6 +14,7 @@ const Home: NextPage = () => {
       </Head>
       {/* <Layout> */}
       <main className="flex h-screen flex-col justify-between gap-y-8 bg-secondary-500 text-center">
+        
         <h1 className="font-literata text-5xl text-primary-300">
           Your feet are cute :)
         </h1>
