@@ -6,6 +6,8 @@ import { api } from "../../utils/api";
 import { hashPassword } from "../../utils/auth";
 import logo from "../../../public/icon-512x512.png";
 import Image from "next/image";
+import Link from "next/link";
+import { signIn } from "next-auth/react";
 import "@fortawesome/fontawesome-free/css/all.css";
 
 type FormValues = {
@@ -43,7 +45,7 @@ const SignUp: NextPage = () => {
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-[#141313] p-12">
-      <Image src={logo} alt="logo" className="w-[6vh]" />
+      <Image src={logo} alt="logo" className="w-[10vh]" />
       <h1 className="py-12 font-literata text-xl text-[#F4B829]">
         Buat akun Footies anda
       </h1>
@@ -58,9 +60,7 @@ const SignUp: NextPage = () => {
           type="email"
           {...register("email")}
           className={
-            value == null
-              ? "h-[6vh] w-full border-b-2 border-[#d9d9d9] bg-[#141313] text-white underline"
-              : "h-[6vh] w-full border-b-2 border-[#F4B829] bg-[#141313] text-white underline"
+            "h-[6vh] w-full border-b-2 bg-[#141313] text-white focus:border-[#F4B829] focus:outline-none"
           }
           placeholder="Email"
         />
@@ -71,9 +71,7 @@ const SignUp: NextPage = () => {
           type="password"
           {...register("password")}
           className={
-            value == null
-              ? "h-[6vh] w-full border-b-2 border-[#d9d9d9] bg-[#141313] text-white underline"
-              : "h-[6vh] w-full border-b-2 border-[#F4B829] bg-[#141313] text-white underline"
+            "h-[6vh] w-full border-b-2 bg-[#141313] text-white focus:border-[#F4B829] focus:outline-none"
           }
           placeholder="Kata Sandi"
         />
@@ -84,9 +82,7 @@ const SignUp: NextPage = () => {
           type="password"
           {...register("password")}
           className={
-            value == null
-              ? "h-[6vh] w-full border-b-2 border-[#d9d9d9] bg-[#141313] text-white underline"
-              : "h-[6vh] w-full border-b-2 border-[#F4B829] bg-[#141313] text-white underline"
+            "h-[6vh] w-full border-b-2 bg-[#141313] text-white focus:border-[#F4B829] focus:outline-none"
           }
           placeholder="Konfirmasi Kata Sandi"
         />
@@ -100,13 +96,18 @@ const SignUp: NextPage = () => {
           </span>
         </div>
         <div className="flex flex-row items-center justify-between">
-          <h1 className="font-louis text-[#F4B829]">Masuk</h1>
-          <button
-            type="submit"
-            className="h-[6vh] w-1/2 rounded-md bg-[#F4B829] font-louis"
-          >
-            Selanjutnya
-          </button>
+          <Link href="/auth/signin">
+            <h1 className="font-louis text-[#F4B829]">Masuk</h1>
+          </Link>
+
+          <Link href="/auth/biodata">
+            <button
+              type="submit"
+              className="h-[6vh] rounded-md bg-[#F4B829] px-3 font-louis"
+            >
+              Selanjutnya
+            </button>
+          </Link>
         </div>
         <div className="flex flex-row items-center justify-center">
           <div className="border-t-2 text-white" />
@@ -118,7 +119,7 @@ const SignUp: NextPage = () => {
         <button
           className="h-[6vh] w-full rounded-md bg-[#F4B829] font-louis"
           onClick={() =>
-            signUp("google", {
+            signIn("google", {
               callbackUrl: "/",
               redirect: false,
             })
