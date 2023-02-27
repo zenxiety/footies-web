@@ -7,6 +7,7 @@ import { hashPassword } from "../../utils/auth";
 import logo from "../../../public/icon-512x512.png";
 import Image from "next/image";
 import "@fortawesome/fontawesome-free/css/all.css";
+import { signIn } from "next-auth/react";
 
 type FormValues = {
   firstName: string;
@@ -118,7 +119,7 @@ const SignUp: NextPage = () => {
         <button
           className="h-[6vh] w-full rounded-md bg-[#F4B829] font-louis"
           onClick={() =>
-            signUp("google", {
+            signIn("google", {
               callbackUrl: "/",
               redirect: false,
             })
