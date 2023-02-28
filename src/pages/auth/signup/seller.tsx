@@ -52,7 +52,7 @@ export default function Seller() {
             <div className="px-8">
               <div>
                 <span className="font-literata text-2xl font-semibold text-primary-300">
-                  Let's Get Started!
+                  Let&apos;s Get Started!
                 </span>
                 <p className="text-others-white">
                   Kamu hanya perlu 4 cara untuk menjadi penjual di aplikasi
@@ -61,7 +61,7 @@ export default function Seller() {
               </div>
               <div className="mt-8">
                 {steps.map((step, i) => (
-                  <div className="mb-5 flex items-center">
+                  <div className="mb-5 flex items-center" key={i}>
                     <div className="relative mr-3 w-11">
                       <span className="flex h-11 w-11 items-center justify-center rounded-full bg-primary-300 font-literata text-2xl font-semibold text-secondary-500">
                         {i != 5 ? (
@@ -281,7 +281,10 @@ export default function Seller() {
               </div>
               <div className="ml-5 mt-5 flex flex-wrap gap-2">
                 {labels.map((label, i) => (
-                  <div className="flex items-center gap-x-3 bg-primary-300 px-2 py-1 font-louis text-base text-secondary-500">
+                  <div
+                    key={i}
+                    className="flex items-center gap-x-3 bg-primary-300 px-2 py-1 font-louis text-base text-secondary-500"
+                  >
                     <p>{label}</p>
                     <button>
                       <svg

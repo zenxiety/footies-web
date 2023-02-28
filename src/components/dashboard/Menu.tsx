@@ -37,9 +37,8 @@ function MenuBar(menu: string, i: number) {
   );
 
   return menu == "keluar" ? (
-    <button className="block w-full" onClick={() => signOut()}>
-      {children}
-    </button>
+    // <button className="block w-full" onClick={() => signOut()}>
+    <button className="block w-full">{children}</button>
   ) : (
     <>
       <button onClick={() => setPopup(true)} className="block w-full">
