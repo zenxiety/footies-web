@@ -1,7 +1,7 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { ErrorCode } from "../../../utils/auth";
+import { ErrorCode, hashPassword } from "../../../utils/auth";
 
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 
@@ -25,7 +25,7 @@ export const authRouter = createTRPCRouter({
         .create({
           data: {
             email: input.email.toLowerCase(),
-            password: input.password,
+            password: hashPassword(input.password),
             name: input.firstName + " " + input.lastName,
             firstName: input.firstName,
             lastName: input.lastName,
