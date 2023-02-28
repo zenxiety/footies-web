@@ -1,11 +1,13 @@
 import Link from "next/link";
+import { useState } from "react";
+import { roles } from "../../pages/dashboard";
 
-export default function General() {
+export default function General({ roles }: { roles: roles }) {
   const generals = [
-    "settings",
-    "support and tickets",
-    "terms and privacy",
-    "rate footies app",
+    "pengaturan",
+    "bantuan dan tiket",
+    "kebijakan privasi",
+    "nilai aplikasi footies",
   ];
 
   return (
@@ -15,31 +17,82 @@ export default function General() {
           General
         </span>
       </div>
-      <div className="mt-[.5vh]">{generals.map((menu) => MenuBar(menu))}</div>
+      <div className="mt-[.5vh]">
+        {generals.map((menu, i) => MenuBar(menu, i))}
+      </div>
     </>
   );
 }
 
-function MenuBar(menu: string) {
+function MenuBar(menu: string, i: number) {
+  const [popup, setPopup] = useState(false);
   return (
-    <Link href="#">
-      <div className="flex items-center justify-between border-b border-others-white bg-secondary-400 px-5 py-3 duration-500 active:bg-secondary-300">
-        <div className="flex items-center justify-center gap-x-3 text-others-white">
-          <div className="flex w-7 items-center justify-center">
-            {MenuIcon(menu)}
+    <>
+      <button onClick={() => setPopup(true)} className="block w-full">
+        <div
+          className={`flex items-center justify-between border-others-white bg-others-black px-5 py-3 duration-500 active:bg-secondary-400 ${
+            i == 0 ? "border-y" : "border-b"
+          }`}
+        >
+          <div className="flex items-center justify-center gap-x-3 text-others-white">
+            <div className="flex w-7 items-center justify-center">
+              {MenuIcon(menu)}
+            </div>
+            <span className="font-literata text-[15px] font-medium capitalize">
+              {menu}
+            </span>
           </div>
-          <span className="font-literata text-[15px] font-medium capitalize">
-            {menu}
-          </span>
+          {Arrow()}
         </div>
-        {Arrow()}
+      </button>
+      <div
+        className={`fixed inset-0 flex h-screen w-screen items-center justify-center duration-1000 ${
+          popup ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div
+          className={`fixed inset-0 h-screen w-screen backdrop-blur delay-200 duration-1000 ${
+            popup ? "opacity-100" : "opacity-0"
+          }`}
+        />
+        <div className="relative mx-6 border-2 border-primary-300 bg-secondary-500 py-6 text-center delay-200">
+          <button
+            onClick={() => setPopup(false)}
+            className="absolute top-4 left-4"
+          >
+            <svg
+              width={17}
+              height={17}
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect
+                y={1.414}
+                width={2}
+                height={21}
+                rx={1}
+                transform="rotate(-45 0 1.414)"
+                fill="#F6C73B"
+              />
+              <rect
+                x={14.849}
+                width={2}
+                height={21}
+                rx={1}
+                transform="rotate(45 14.85 0)"
+                fill="#F6C73B"
+              />
+            </svg>
+          </button>
+          <p className="font-literata text-6xl text-primary-300">Coming Soon</p>
+        </div>
       </div>
-    </Link>
+    </>
   );
 }
 
 function MenuIcon(menu: string) {
-  if (menu == "settings")
+  if (menu == "pengaturan")
     return (
       <svg
         width={21}
@@ -53,7 +106,7 @@ function MenuIcon(menu: string) {
         />
       </svg>
     );
-  else if (menu == "support and tickets")
+  else if (menu == "bantuan dan tiket")
     return (
       <svg
         width={21}
@@ -67,7 +120,7 @@ function MenuIcon(menu: string) {
         />
       </svg>
     );
-  else if (menu == "terms and privacy")
+  else if (menu == "kebijakan privasi")
     return (
       <svg
         width={18}
@@ -81,7 +134,7 @@ function MenuIcon(menu: string) {
         />
       </svg>
     );
-  else if (menu == "rate footies app")
+  else if (menu == "nilai aplikasi footies")
     return (
       <svg
         width={23}

@@ -1,13 +1,14 @@
 import Link from "next/link";
+import { useState } from "react";
 import General from "../components/dashboard/General";
 import Menu from "../components/dashboard/Menu";
 import SaldoPoin from "../components/dashboard/SaldoPoin";
 import TipeAkun from "../components/dashboard/TipeAkun";
 
+export type roles = "pembeli" | "penjual" | "pengemudi";
+
 export default function Dashboard() {
-  function penColor() {
-    return "fill='#FF0000'";
-  }
+  const [roles, setRoles] = useState<roles>("pembeli");
 
   return (
     <>
@@ -57,7 +58,28 @@ export default function Dashboard() {
                   Raden Bagus Putra
                 </p>
                 <p>(+62) 812-3456-7890</p>
-                <p>john.doe@gmail.com</p>
+                {roles == "pembeli" ? (
+                  <p>john.doe@gmail.com</p>
+                ) : roles == "penjual" ? (
+                  <div className="mt-1 flex w-40 cursor-pointer items-center justify-between gap-x-4 rounded-md bg-primary-300 px-2 py-1">
+                    <p className="max-w-[7rem] overflow-hidden text-ellipsis whitespace-nowrap text-others-black">
+                      Jl. Sendiri Mululuululluluululul
+                    </p>
+                    <svg
+                      width={12}
+                      height={14}
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M6 7c.367 0 .68-.13.942-.392.261-.261.392-.575.391-.941 0-.367-.13-.681-.392-.942A1.281 1.281 0 006 4.333c-.367 0-.68.131-.942.392a1.281 1.281 0 00-.391.942c0 .366.13.68.392.942.26.261.575.391.94.391zm0 6.417a.797.797 0 01-.5-.183C3.878 11.8 2.667 10.468 1.867 9.24c-.8-1.228-1.2-2.375-1.2-3.441 0-1.667.536-2.994 1.608-3.983C3.348.827 4.59.333 6 .333c1.41 0 2.653.495 3.725 1.484 1.073.989 1.609 2.316 1.608 3.983 0 1.067-.4 2.214-1.2 3.442-.8 1.228-2.01 2.558-3.633 3.991a.798.798 0 01-.5.184z"
+                        fill="#1D1D1D"
+                      />
+                    </svg>
+                  </div>
+                ) : (
+                  <p>pengemudi</p>
+                )}
               </div>
             </div>
             {/* Edit Button */}
@@ -82,11 +104,11 @@ export default function Dashboard() {
               </svg>
             </div>
           </div>
-          <TipeAkun />
-          <SaldoPoin />
+          <TipeAkun roles={roles} setRoles={setRoles} />
+          <SaldoPoin roles={roles} />
         </div>
-        <Menu />
-        <General />
+        <Menu roles={roles} />
+        <General roles={roles} />
         <footer className="grid py-4">
           <span className="text-center text-[14px] text-others-white">
             v1.6.9
