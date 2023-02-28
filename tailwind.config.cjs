@@ -28,6 +28,9 @@ module.exports = {
         literata: ["var(--font-literata)", ...fontFamily.serif],
         louis: ["var(--font-louis)", ...fontFamily.sans],
       },
+      animation: {
+        "spin-fast": "spin .75s linear infinite reverse",
+      },
     },
   },
   plugins: [],
