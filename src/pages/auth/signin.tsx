@@ -72,8 +72,8 @@ const SignIn: NextPage = () => {
             <h1
               className={
                 !focus
-                  ? "absolute top-[365px] z-50 translate-y-12 text-[16px] text-[#635E5E] duration-500"
-                  : "absolute z-50 font-louis text-[10px] text-[#635E5E] duration-500 "
+                ? "absolute top-[367px] z-50 translate-y-12 text-[16px] text-secondary-100 duration-500 font-louis"
+                : "absolute top-[400px] z-50 font-louis text-[10px] text-secondary-100 duration-500 "
               }
             >
               Email
@@ -82,7 +82,7 @@ const SignIn: NextPage = () => {
               type="email"
               {...register("email")}
               className={
-                "relative z-0 h-[6vh] w-full border-b-2 border-[#d9d9d9] bg-[#141313] text-white focus:border-[#F4B829] focus:outline-none"
+                "relative z-0 h-[6vh] w-full border-b-2 border-secondary-100 bg-[#141313] text-white focus:border-[#F4B829] focus:outline-none"
               }
               onClick={toggleFocus}
             />
@@ -90,13 +90,13 @@ const SignIn: NextPage = () => {
               <h1
                 className={
                   !focus1
-                    ? "absolute top-[425px] z-50 translate-y-12 text-[16px] text-[#635E5E] duration-500"
-                    : "absolute z-50 font-louis text-[10px] text-[#635E5E] duration-500 "
+                  ? "absolute top-[473px] z-50 text-[16px] text-secondary-100 duration-500 font-louis"
+                  : "absolute top-[460px] z-50 font-louis text-[10px] text-secondary-100 duration-500 "
                 }
               >
                 Kata Sandi
               </h1>
-              <div className="flex flex-row items-center justify-between border-b-2 border-[#d9d9d9] focus:border-[#F4B829]">
+              <div className="flex flex-row items-center justify-between border-b-2 border-secondary-100 focus:border-[#F4B829]">
                 <input
                   type={passwordVisible ? "text" : "password"}
                   {...register("password")}
@@ -128,7 +128,7 @@ const SignIn: NextPage = () => {
                   <span // custom checkbox style
                     className={
                       isChecked
-                        ? "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-[#F4B829] pt-0"
+                        ? "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-[#F4B829]  pt-0 outline-[#F4B829] outline-double"
                         : "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-white"
                     }
                   />
