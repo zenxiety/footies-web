@@ -2,10 +2,12 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { api } from "../../utils/api";
+import { useState } from "react";
 import { hashPassword } from "../../utils/auth";
 import logo from "../../../public/icon-512x512.png";
 import Image from "next/image";
 import Link from "next/link";
+import SignUp from "./signup";
 import "@fortawesome/fontawesome-free/css/all.css";
 
 type FormValues = {
@@ -23,6 +25,10 @@ const Biodata: NextPage = () => {
   const router = useRouter();
   const signUp = api.auth.signUp.useMutation();
   const value = null;
+  const [biodata, setBiodata] = useState(false);
+  const toggleBiodata = () => {
+    setBiodata((prev) => !prev);
+  };
   const signUpHandler = (data: FormValues) => {
     signUp
       .mutateAsync({
@@ -42,7 +48,7 @@ const Biodata: NextPage = () => {
   };
   return (
     <>
-      <div className="font-loius relative h-screen w-full overflow-hidden bg-[#141313] p-12">
+      <div className={ !biodata ? "font-loius relative h-screen w-full overflow-hidden bg-[#141313] p-12": "hidden"}>
         <Image src={logo} alt="logo" className="w-[10vh]" />
         <h1 className="py-12 font-literata text-xl text-[#F4B829]">
           Isi data diri anda
@@ -123,9 +129,8 @@ const Biodata: NextPage = () => {
             </span>
           </div>
           <div className="flex flex-row items-center justify-between">
-            <Link href="/auth/signup">
-              <h1 className="font-louis text-[#F4B829]">Kembali</h1>
-            </Link>
+            
+              <h1 className="font-louis text-[#F4B829]" onClick={toggleBiodata}>Kembali</h1>
 
             <button
               type="submit"
@@ -136,6 +141,7 @@ const Biodata: NextPage = () => {
           </div>
         </form>
       </div>
+      {biodata ? <SignUp /> : null}
     </>
   );
 };
