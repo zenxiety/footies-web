@@ -24,8 +24,6 @@ declare module "next-auth" {
     user: {
       id: string;
       roles: Role[];
-      // ...other properties
-      // role: UserRole;
     } & DefaultSession["user"];
   }
 
@@ -33,14 +31,20 @@ declare module "next-auth" {
     roles: Role[];
     firstName?: string | null;
     lastName?: string | null;
-    emailVerified?: Date | null;
-    // ...other properties
-    // role: UserRole;
+    isVerified: boolean;
   }
 
   interface Profile {
     given_name: string;
     family_name: string;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string;
+    isVerified: boolean;
+    roles: Role[];
   }
 }
 
@@ -54,6 +58,7 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/signin",
     signOut: "/auth/signout",
+    newUser: "/auth/newuser",
   },
   session: {
     strategy: "jwt",
@@ -61,17 +66,36 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string;
-        session.user.roles = token.roles as Role[];
+        session.user.id = token.id;
+        session.user.roles = token.roles;
         // session.user.role = user.role; <-- put other properties on the session here
       }
       return session;
     },
-    jwt({ token, user }) {
+    async jwt({ token, user }) {
       if (user) {
+        token.isVerified = user.isVerified;
         token.id = user.id;
         token.roles = user.roles;
         // token.role = user.role; <-- put other properties on the token here
+      } else {
+        const user = await prisma.user.findUnique({
+          where: {
+            id: token.id,
+          },
+
+          select: {
+            id: true,
+            roles: true,
+            isVerified: true,
+          },
+        });
+
+        if (user) {
+          token.isVerified = user.isVerified;
+          token.id = user.id;
+          token.roles = user.roles;
+        }
       }
       return token;
     },
