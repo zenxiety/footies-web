@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import type { NextPage } from "next";
 import { signIn } from "next-auth/react";
@@ -5,6 +7,7 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import logo from "../../../public/icon-512x512.png";
 import Image from "next/image";
+import Link from "next/link";
 import "@fortawesome/fontawesome-free/css/all.css";
 import { useState } from "react";
 type FormValues = {
@@ -16,7 +19,25 @@ const value = null;
 const SignIn: NextPage = () => {
   const { register, handleSubmit } = useForm<FormValues>();
   const router = useRouter();
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [focus, setFocus] = useState(false);
+  const [focus1, setFocus1] = useState(false);
+  const toggleFocus = () => {
+    setFocus((prev) => !prev);
+  };
+  const toggleFocus1 = () => {
+    setFocus1((prev) => !prev);
+  };
+  const togglePasswordVisibility = () => {
+    setPasswordVisible((prev) => !prev);
+  };
+  const [isChecked, setIsChecked] = useState(false);
 
+  const handleCheckboxChange = (event: {
+    target: { checked: boolean | ((prevState: boolean) => boolean) };
+  }) => {
+    setIsChecked(event.target.checked);
+  };
   const signinHandler = async (data: FormValues) => {
     const res = await signIn("credentials", {
       ...data,
@@ -49,7 +70,11 @@ const SignIn: NextPage = () => {
             className="flex flex-col gap-y-2 pb-2"
           >
             <h1
-              className={value == null ? "hidden" : "font-louis text-[#635E5E]"}
+              className={
+                !focus
+                ? "absolute top-[367px] z-50 translate-y-12 text-[16px] text-secondary-100 duration-500 font-louis"
+                : "absolute top-[400px] z-50 font-louis text-[10px] text-secondary-100 duration-500 "
+              }
             >
               Email
             </h1>
@@ -57,36 +82,60 @@ const SignIn: NextPage = () => {
               type="email"
               {...register("email")}
               className={
-                value == null
-                  ? "h-[6vh] w-full border-b-2 border-[#d9d9d9] bg-[#141313] text-white underline"
-                  : "h-[6vh] w-full border-b-2 border-[#F4B829] bg-[#141313] text-white underline"
+                "relative z-0 h-[6vh] w-full border-b-2 border-secondary-100 bg-[#141313] text-white focus:border-[#F4B829] focus:outline-none"
               }
-              placeholder="Email"
+              onClick={toggleFocus}
             />
-            <h1
-              className={value == null ? "hidden" : "font-louis text-[#635E5E]"}
-            >
-              Kata Sandi
-            </h1>
-            <input
-              type="password"
-              {...register("password")}
-              className={
-                value == null
-                  ? "h-[6vh] w-full border-b-2 border-[#d9d9d9] bg-[#141313] text-white underline"
-                  : "h-[6vh] w-full border-b-2 border-[#F4B829] bg-[#141313] text-white underline"
-              }
-              placeholder="Kata Sandi"
-            />
-
-            <div className="flex flex-row justify-between">
-              <div className="flex flex-row gap-x-2">
-                <input type="checkbox" value="Paneer" className="text-white" />
-                <span className="font-louis text-[12px] text-white">
-                  Ingat saya
-                </span>
+            <div className="flex flex-col">
+              <h1
+                className={
+                  !focus1
+                  ? "absolute top-[473px] z-50 text-[16px] text-secondary-100 duration-500 font-louis"
+                  : "absolute top-[460px] z-50 font-louis text-[10px] text-secondary-100 duration-500 "
+                }
+              >
+                Kata Sandi
+              </h1>
+              <div className="flex flex-row items-center justify-between border-b-2 border-secondary-100 focus:border-[#F4B829]">
+                <input
+                  type={passwordVisible ? "text" : "password"}
+                  {...register("password")}
+                  className={
+                    "h-[6vh] w-full bg-[#141313] text-white  focus:outline-none"
+                  }
+                  onClick={toggleFocus1}
+                />
+                <i
+                  className={
+                    passwordVisible
+                      ? "fas fa-eye-slash text-[#F4B829]"
+                      : "fas fa-eye text-[#F4B829]"
+                  }
+                  onClick={togglePasswordVisibility}
+                />
               </div>
-              <p className="font-louis text-[12px] text-[#F4B829]">
+            </div>
+
+            <div className="flex flex-row justify-between py-4">
+              <div className="flex flex-row items-center justify-center gap-x-2">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={handleCheckboxChange}
+                    style={{ display: "none" }} // hide default checkbox
+                  />
+                  <span // custom checkbox style
+                    className={
+                      isChecked
+                        ? "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-[#F4B829]  pt-0 outline-[#F4B829] outline-double"
+                        : "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-white"
+                    }
+                  />
+                </label>
+                <h1 className="font-louis text-white">Ingat saya</h1>
+              </div>
+              <p className="pt-1 font-louis text-[12px] text-[#F4B829]">
                 Lupa kata sandi?
               </p>
             </div>
@@ -96,16 +145,23 @@ const SignIn: NextPage = () => {
             >
               Masuk
             </button>
-            <h1 className="mx-auto block font-louis text-[8px] text-[#999999]">
-              Belum punya akun?{" "}
-              <span className="font-louis text-white">Daftar sekarang!</span>
-            </h1>
+            <div className="mx-auto block">
+              <Link href="/auth/signup">
+                <h1 className="mx-auto block font-louis text-[12px] text-[#999999]">
+                  Belum punya akun?{" "}
+                  <span className="font-louis text-white">
+                    Daftar sekarang!
+                  </span>
+                </h1>
+              </Link>
+            </div>
+
             <div className="flex flex-row items-center justify-center">
-              <div className="border-t-2 text-white" />
-              <h1 className="font-louis text-[12px] text-white">
-                atau masuk dengan
+              <div className="absolute border-t-2 border-white" />
+              <h1 className="font-louis text-[16px] text-white">
+                atau daftar dengan
               </h1>
-              <div className="border-t-2 text-white" />
+              <div className="border-t-2 border-white" />
             </div>
 
             <button
