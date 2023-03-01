@@ -1,15 +1,15 @@
-import { roles } from "../../pages/dashboard";
+import { Role } from "@prisma/client";
 
-export default function SaldoPoin({ roles }: { roles: roles }) {
+export default function SaldoPoin({ roles }: { roles: Role }) {
   return (
     <>
       <div className="mt-[2.5vh] text-secondary-500">
         <span className="font-literata text-[15px] font-medium text-primary-300">
-          {roles == "pembeli" ? "Saldo & Poin" : "Saldo"}
+          {roles == "USER" ? "Saldo & Poin" : "Saldo"}
         </span>
         <div className={`relative mt-[1vh] rounded-md bg-primary-300`}>
           {/* Pembeli */}
-          {roles == "pembeli" ? (
+          {roles == "USER" ? (
             <div className="grid grid-cols-2 px-4 pb-3 pt-4">
               <div className="flex flex-col items-start">
                 <svg
