@@ -1,8 +1,8 @@
+import { Role } from "@prisma/client";
 import Link from "next/link";
 import { useState } from "react";
-import { roles } from "../../pages/dashboard";
 
-export default function General({ roles }: { roles: roles }) {
+export default function General({ roles }: { roles: Role }) {
   const generals = [
     "pengaturan",
     "bantuan dan tiket",

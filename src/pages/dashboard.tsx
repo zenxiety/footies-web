@@ -1,3 +1,4 @@
+import { Role } from "@prisma/client";
 import Link from "next/link";
 import { useState } from "react";
 import General from "../components/dashboard/General";
@@ -5,10 +6,10 @@ import Menu from "../components/dashboard/Menu";
 import SaldoPoin from "../components/dashboard/SaldoPoin";
 import TipeAkun from "../components/dashboard/TipeAkun";
 
-export type roles = "pembeli" | "penjual" | "pengemudi";
+// export type roles = "pembeli" | "penjual" | "pengemudi";
 
 export default function Dashboard() {
-  const [roles, setRoles] = useState<roles>("pembeli");
+  const [roles, setRoles] = useState<Role>("USER");
 
   return (
     <>
@@ -58,9 +59,9 @@ export default function Dashboard() {
                   Raden Bagus Putra
                 </p>
                 <p>(+62) 812-3456-7890</p>
-                {roles == "pembeli" ? (
+                {roles == "USER" ? (
                   <p>john.doe@gmail.com</p>
-                ) : roles == "penjual" ? (
+                ) : roles == "MERCHANT" ? (
                   <div className="mt-1 flex w-40 cursor-pointer items-center justify-between gap-x-4 rounded-md bg-primary-300 px-2 py-1">
                     <p className="max-w-[7rem] overflow-hidden text-ellipsis whitespace-nowrap text-others-black">
                       Jl. Sendiri Mululuululluluululul

@@ -3,9 +3,11 @@ import { type NextRequest, NextResponse } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const token = await getToken({ req, secret: process.env.JWT_SECRET });
-  console.log(token);
-  if (pathname.startsWith("/auth") && !pathname.includes("newuser")) {
+  const authIncludes = ["newuser", "seller"];
+  if (
+    pathname.startsWith("/auth") &&
+    !authIncludes.some((path) => pathname.includes(path))
+  ) {
     const token = await getToken({ req, secret: process.env.JWT_SECRET });
     if (token) {
       const url = req.nextUrl.clone();

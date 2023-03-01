@@ -1,9 +1,9 @@
+import { Role } from "@prisma/client";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
-import { roles } from "../../pages/dashboard";
 
-export default function Menu({ roles }: { roles: roles }) {
+export default function Menu({ roles }: { roles: Role }) {
   const menus = ["pesanan", "langganan", "promo", "pesan", "keluar"];
 
   return (
@@ -38,7 +38,9 @@ function MenuBar(menu: string, i: number) {
 
   return menu == "keluar" ? (
     // <button className="block w-full" onClick={() => signOut()}>
-    <button className="block w-full">{children}</button>
+    <button className="block w-full" onClick={() => void signOut()}>
+      {children}
+    </button>
   ) : (
     <>
       <button onClick={() => setPopup(true)} className="block w-full">

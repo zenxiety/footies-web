@@ -85,8 +85,8 @@ export const authRouter = createTRPCRouter({
       z.object({
         nama: z.string().min(2),
         alamat: z.string().min(10),
-        jamBuka: z.string().min(4),
-        jamTutup: z.string().min(4),
+        jamBuka: z.string().min(2),
+        jamTutup: z.string().min(2),
         deskripsi: z.string().min(10).nullish(),
         labels: z.array(z.string()).min(1),
         dokumen: z.string().min(10),
@@ -125,6 +125,14 @@ export const authRouter = createTRPCRouter({
 
       return true;
     }),
+
+  checkRegister: protectedProcedure.query(({ ctx }) => {
+    console.log("ctx");
+    return ctx.prisma.user.findUnique({
+      where: { id: ctx.session.user.id },
+      include: { Merchant: true, Mitra: true },
+    });
+  }),
 
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.example.findMany();

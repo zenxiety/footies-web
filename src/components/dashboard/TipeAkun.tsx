@@ -1,14 +1,35 @@
-import { Dispatch, SetStateAction, useState } from "react";
-import { roles } from "../../pages/dashboard";
+import { Role } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { MouseEvent, type Dispatch, type SetStateAction } from "react";
 
 export default function TipeAkun({
   roles,
   setRoles,
 }: {
-  roles: roles;
-  setRoles: Dispatch<SetStateAction<roles>>;
+  roles: Role;
+  setRoles: Dispatch<SetStateAction<Role>>;
 }) {
-  const types: roles[] = ["pembeli", "penjual", "pengemudi"];
+  const types: Role[] = ["USER", "MERCHANT", "MITRA"];
+  const roleIndo = ["pembeli", "penjual", "pengemudi"];
+  const router = useRouter();
+
+  const { data: dataUser } = useSession();
+
+  const handleClick = async (
+    e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>,
+    i: number
+  ) => {
+    e.preventDefault();
+
+    if (dataUser?.user.roles.includes(types[i] as Role)) {
+      setRoles(() => types[i] as Role);
+    } else {
+      await router.push(
+        `/auth/signup/${(types[i] as Role) == "MERCHANT" ? "seller" : "driver"}`
+      );
+    }
+  };
 
   return (
     <>
@@ -18,13 +39,13 @@ export default function TipeAkun({
           Tipe Akun
         </span>
         <div className="mt-[1vh] flex justify-between gap-x-2">
-          {types.map((type: string, i: number) => (
+          {types.map((_, i: number) => (
             <div
               key={i}
               className={`flex w-1/3 cursor-pointer flex-col justify-between gap-y-1 rounded-md px-2 pb-2 pt-3 duration-500 ${
                 roles == types[i] ? "bg-primary-300" : ""
               }`}
-              onClick={() => setRoles(() => types[i]!)}
+              onClick={(e) => void handleClick(e, i)}
             >
               {/* Type Icon */}
               <div className="m-auto flex scale-110">
@@ -38,38 +59,41 @@ export default function TipeAkun({
                       : "text-others-white"
                   }`}
                 >
-                  {type}
+                  {roleIndo[i]}
                 </span>
                 {/* Check Icon */}
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M5.25 0.25C4.21165 0.25 3.19662 0.557907 2.33326 1.13478C1.4699 1.71166 0.796995 2.5316 0.399635 3.49091C0.00227474 4.45022 -0.101693 5.50582 0.10088 6.52422C0.303452 7.54262 0.803466 8.47808 1.53769 9.21231C2.27192 9.94654 3.20738 10.4466 4.22578 10.6491C5.24418 10.8517 6.29978 10.7477 7.25909 10.3504C8.2184 9.95301 9.03834 9.2801 9.61522 8.41674C10.1921 7.55339 10.5 6.53835 10.5 5.5C10.5 4.10761 9.94688 2.77226 8.96231 1.78769C7.97775 0.803123 6.64239 0.25 5.25 0.25ZM4.5 7.59625L2.625 5.72125L3.22125 5.125L4.5 6.40375L7.27875 3.625L7.87725 4.21975L4.5 7.59625Z"
-                    fill={roles == types[i] ? "#1F1F1F" : "#EAEAEA"}
-                    className="duration-500"
-                  />
-                </svg>
+                {dataUser?.user.roles == types[i] ? (
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.25 0.25C4.21165 0.25 3.19662 0.557907 2.33326 1.13478C1.4699 1.71166 0.796995 2.5316 0.399635 3.49091C0.00227474 4.45022 -0.101693 5.50582 0.10088 6.52422C0.303452 7.54262 0.803466 8.47808 1.53769 9.21231C2.27192 9.94654 3.20738 10.4466 4.22578 10.6491C5.24418 10.8517 6.29978 10.7477 7.25909 10.3504C8.2184 9.95301 9.03834 9.2801 9.61522 8.41674C10.1921 7.55339 10.5 6.53835 10.5 5.5C10.5 4.10761 9.94688 2.77226 8.96231 1.78769C7.97775 0.803123 6.64239 0.25 5.25 0.25ZM4.5 7.59625L2.625 5.72125L3.22125 5.125L4.5 6.40375L7.27875 3.625L7.87725 4.21975L4.5 7.59625Z"
+                      fill={roles == types[i] ? "#1F1F1F" : "#EAEAEA"}
+                      className="duration-500"
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M5.75 11a5.25 5.25 0 100-10.5 5.25 5.25 0 000 10.5zm.491-8.15h-1.04c.06 2.372.122 4.146.122 4.146v.009h.787l.008-.009c.04-1.597.072-2.564.096-3.268l.027-.878zm-.098 5.18a.52.52 0 00-.418-.213c-.137 0-.26.05-.37.148a.505.505 0 00-.155.352v.033a.525.525 0 00.221.402.471.471 0 00.271.098h.057a.868.868 0 00.099-.008.556.556 0 00.23-.131c.108-.11.163-.23.163-.361v-.033a.492.492 0 00-.098-.287z"
+                      fill={roles == types[i] ? "#1F1F1F" : "#EAEAEA"}
+                      className="duration-500"
+                    />
+                  </svg>
+                )}
                 {/* Warning icon */}
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M5.75 11a5.25 5.25 0 100-10.5 5.25 5.25 0 000 10.5zm.491-8.15h-1.04c.06 2.372.122 4.146.122 4.146v.009h.787l.008-.009c.04-1.597.072-2.564.096-3.268l.027-.878zm-.098 5.18a.52.52 0 00-.418-.213c-.137 0-.26.05-.37.148a.505.505 0 00-.155.352v.033a.525.525 0 00.221.402.471.471 0 00.271.098h.057a.868.868 0 00.099-.008.556.556 0 00.23-.131c.108-.11.163-.23.163-.361v-.033a.492.492 0 00-.098-.287z"
-                    fill={roles == types[i] ? "#1F1F1F" : "#EAEAEA"}
-                    className="duration-500"
-                  />
-                </svg>
               </div>
             </div>
           ))}
@@ -84,8 +108,8 @@ export default function TipeAkun({
 //   return "#EAEAEA";
 // }
 
-function TypeIcon(roles: roles, types: roles[], i: number) {
-  if (types[i] == "pembeli")
+function TypeIcon(roles: Role, types: Role[], i: number) {
+  if (types[i] == "USER")
     return (
       <svg
         width="30"
@@ -120,7 +144,7 @@ function TypeIcon(roles: roles, types: roles[], i: number) {
         />
       </svg>
     );
-  else if (types[i] == "penjual")
+  else if (types[i] == "MERCHANT")
     return (
       <svg
         width="24"
