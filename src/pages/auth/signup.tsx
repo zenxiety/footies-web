@@ -22,7 +22,13 @@ type FormValues = {
 };
 
 const SignUp: NextPage = () => {
-  const { register, handleSubmit, watch } = useForm<FormValues>();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<FormValues>();
+  const onSubmit = (data: any) => console.log(data);
   const router = useRouter();
   const signUp = api.auth.signUp.useMutation();
   const [biodata, setBiodata] = useState(false);
@@ -35,6 +41,7 @@ const SignUp: NextPage = () => {
   const toggleBiodata = () => {
     if (watch("email") && watch("password") && watch("confirmPassword")) {
       setBiodata((prev) => !prev);
+      formState: { errors };
     }
   };
   const signUpHandler = (data: FormValues) => {
@@ -69,13 +76,14 @@ const SignUp: NextPage = () => {
           onSubmit={(e) => {
             e.preventDefault();
             signUpHandler(watch());
+            handleSubmit(onSubmit);
           }}
           className="flex flex-col gap-y-2 pb-2"
         >
           <div className={biodata ? "" : "hidden"}>
             <div className="relative z-0 mb-2 font-louis">
               <input
-                {...register("firstName")}
+                {...register("firstName", { required: true, maxLength: 30 })}
                 type="text"
                 className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                 placeholder=" "
@@ -83,10 +91,15 @@ const SignUp: NextPage = () => {
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Nama Depan
               </label>
+              {errors.firstName && errors.firstName.type === "required" && (
+                <span className="text-[12px] text-[#F51C2F]" role="alert">
+                  This is required
+                </span>
+              )}
             </div>
             <div className="relative z-0 mb-2 font-louis">
               <input
-                {...register("lastName")}
+                {...register("lastName", { required: true, maxLength: 30 })}
                 type="text"
                 className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                 placeholder=" "
@@ -94,6 +107,11 @@ const SignUp: NextPage = () => {
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Nama Belakang
               </label>
+              {errors.lastName && errors.lastName.type === "required" && (
+                <span className="text-[12px] text-[#F51C2F]" role="alert">
+                  This is required
+                </span>
+              )}
             </div>
             <div className="flex flex-row items-center justify-between gap-x-6">
               <select
@@ -107,7 +125,7 @@ const SignUp: NextPage = () => {
               </select>
               <div className="relative z-0 flex-grow font-louis">
                 <input
-                  {...register("telepon")}
+                  {...register("telepon", { required: true, maxLength: 30 })}
                   type="number"
                   className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                   placeholder=" "
@@ -115,11 +133,16 @@ const SignUp: NextPage = () => {
                 <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                   No Telepon
                 </label>
+                {errors.telepon && errors.telepon.type === "required" && (
+                  <span className="text-[12px] text-[#F51C2F]" role="alert">
+                    This is required
+                  </span>
+                )}
               </div>
             </div>
             <div className="relative z-0 flex font-louis">
               <input
-                {...register("alamat")}
+                {...register("alamat", { required: true, maxLength: 30 })}
                 type="text"
                 className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 pr-5 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                 placeholder=" "
@@ -128,6 +151,11 @@ const SignUp: NextPage = () => {
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Alamat
               </label>
+              {errors.alamat && errors.alamat.type === "required" && (
+                <span className="text-[12px] text-[#F51C2F]" role="alert">
+                  This is required
+                </span>
+              )}
             </div>
             <div className="flex flex-row items-center gap-x-2 py-4">
               <label>
@@ -186,7 +214,7 @@ const SignUp: NextPage = () => {
           <div className={biodata ? "hidden" : ""}>
             <div className="relative z-0 mb-2 font-louis">
               <input
-                {...register("email")}
+                {...register("email", { required: true, maxLength: 30 })}
                 type="email"
                 className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                 placeholder=" "
@@ -194,17 +222,27 @@ const SignUp: NextPage = () => {
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Email
               </label>
+              {errors.email && errors.email.type === "required" && (
+                <span className="text-[12px] text-[#F51C2F]" role="alert">
+                  This is required
+                </span>
+              )}
             </div>
             <div className="relative z-0 mb-2 font-louis">
               <input
                 type={passwordVisible ? "text" : "password"}
-                {...register("password")}
+                {...register("password", { required: true, maxLength: 30 })}
                 className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                 placeholder=" "
               />
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Kata Sandi
               </label>
+              {errors.password && errors.password.type === "required" && (
+                <span className="text-[12px] text-[#F51C2F]" role="alert">
+                  This is required
+                </span>
+              )}
             </div>
             <div className="relative z-0 mb-2 font-louis">
               <input
@@ -222,6 +260,11 @@ const SignUp: NextPage = () => {
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Konfirmasi Kata Sandi
               </label>
+              {errors.password && errors.password.type === "required" && (
+                <span className="text-[12px] text-[#F51C2F]" role="alert">
+                  This is required
+                </span>
+              )}
             </div>
             <h1 className="text-[10px] text-[#635E5E]">
               Kata sandi harus memuat 8 karakter, huruf kapital, dan angka.

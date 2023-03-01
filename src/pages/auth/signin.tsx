@@ -15,19 +15,15 @@ type FormValues = {
   password: string;
   apiError?: string;
 };
-const value = null;
 const SignIn: NextPage = () => {
-  const { register, handleSubmit } = useForm<FormValues>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>();
+  const onSubmit = (data: any) => console.log(data);
   const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const [focus, setFocus] = useState(false);
-  const [focus1, setFocus1] = useState(false);
-  const toggleFocus = () => {
-    setFocus((prev) => !prev);
-  };
-  const toggleFocus1 = () => {
-    setFocus1((prev) => !prev);
-  };
   const togglePasswordVisibility = () => {
     setPasswordVisible((prev) => !prev);
   };
@@ -69,51 +65,45 @@ const SignIn: NextPage = () => {
             onSubmit={handleSubmit(signinHandler)}
             className="flex flex-col gap-y-2 pb-2"
           >
-            <h1
-              className={
-                !focus
-                ? "absolute top-[367px] z-50 translate-y-12 text-[16px] text-secondary-100 duration-500 font-louis"
-                : "absolute top-[400px] z-50 font-louis text-[10px] text-secondary-100 duration-500 "
-              }
-            >
-              Email
-            </h1>
-            <input
-              type="email"
-              {...register("email")}
-              className={
-                "relative z-0 h-[6vh] w-full border-b-2 border-secondary-100 bg-[#141313] text-white focus:border-[#F4B829] focus:outline-none"
-              }
-              onClick={toggleFocus}
-            />
-            <div className="flex flex-col">
-              <h1
+            <div className="relative z-0 mb-2 font-louis">
+              <input
+                {...register("email", { required: true, maxLength: 30 })}
+                type="text"
+                className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
+                placeholder=" "
+              />
+              <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
+                Email
+              </label>
+              {errors.email && errors.email.type === "required" && (
+                <span className="text-[12px] text-[#F51C2F]">
+                  This is required
+                </span>
+              )}
+            </div>
+            <div className="relative z-0 mb-2 font-louis">
+              <input
+                type={passwordVisible ? "text" : "password"}
+                {...register("password", { required: true, maxLength: 30 })}
+                className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
+                placeholder=" "
+              />
+              <i
                 className={
-                  !focus1
-                  ? "absolute top-[473px] z-50 text-[16px] text-secondary-100 duration-500 font-louis"
-                  : "absolute top-[460px] z-50 font-louis text-[10px] text-secondary-100 duration-500 "
+                  !passwordVisible
+                    ? "fas fa-eye absolute right-0 top-1/2 -translate-y-1/2 text-white"
+                    : "fas fa-eye-slash absolute right-0 top-1/2 -translate-y-1/2 text-white"
                 }
-              >
+                onClick={togglePasswordVisibility}
+              />
+              <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Kata Sandi
-              </h1>
-              <div className="flex flex-row items-center justify-between border-b-2 border-secondary-100 focus:border-[#F4B829]">
-                <input
-                  type={passwordVisible ? "text" : "password"}
-                  {...register("password")}
-                  className={
-                    "h-[6vh] w-full bg-[#141313] text-white  focus:outline-none"
-                  }
-                  onClick={toggleFocus1}
-                />
-                <i
-                  className={
-                    passwordVisible
-                      ? "fas fa-eye-slash text-[#F4B829]"
-                      : "fas fa-eye text-[#F4B829]"
-                  }
-                  onClick={togglePasswordVisibility}
-                />
-              </div>
+              </label>
+              {errors.password && errors.password.type === "required" && (
+                <span className="text-[12px] text-[#F51C2F]">
+                  This is required
+                </span>
+              )}
             </div>
 
             <div className="flex flex-row justify-between py-4">
@@ -128,7 +118,7 @@ const SignIn: NextPage = () => {
                   <span // custom checkbox style
                     className={
                       isChecked
-                        ? "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-[#F4B829]  pt-0 outline-[#F4B829] outline-double"
+                        ? "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-[#F4B829]  pt-0 outline-double outline-[#F4B829]"
                         : "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-white"
                     }
                   />
