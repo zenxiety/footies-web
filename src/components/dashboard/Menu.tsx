@@ -4,7 +4,10 @@ import Link from "next/link";
 import { useState } from "react";
 
 export default function Menu({ roles }: { roles: Role }) {
-  const menus = ["pesanan", "langganan", "promo", "pesan", "keluar"];
+  const menuBuyer = ["pesanan", "langganan", "promo", "pesan", "keluar"];
+  const menuSeller = ["daganganku", ...menuBuyer];
+
+  const menus = roles == "USER" ? menuBuyer : menuSeller;
 
   return (
     <>
@@ -47,13 +50,14 @@ function MenuBar(menu: string, i: number) {
         {children}
       </button>
       <div
-        className={`fixed inset-0 flex h-screen w-screen items-center justify-center duration-1000 ${
-          popup ? "translate-x-0" : "-translate-x-full"
+        className={`fixed top-0 m-auto flex h-screen w-screen items-center justify-center overflow-hidden duration-500 ${
+          popup ? "scale-100" : "scale-0 opacity-0"
         }`}
       >
         <div
-          className={`fixed inset-0 h-screen w-screen backdrop-blur delay-200 duration-1000 ${
-            popup ? "opacity-100" : "opacity-0"
+          onClick={() => setPopup(false)}
+          className={`fixed inset-0 h-screen w-screen backdrop-blur delay-500 duration-1000 ${
+            popup ? "" : "opacity-0"
           }`}
         />
         <div className="relative mx-6 border-2 border-primary-300 bg-secondary-500 py-6 text-center delay-200">
@@ -108,6 +112,20 @@ function MenuIcon(menu: string) {
         <path
           d="M7.5 6.25H15v2.5H7.5v-2.5zm0 3.75H15v2.5H7.5V10zm8.75-3.75h2.5v2.5h-2.5v-2.5zm0 3.75h2.5v2.5h-2.5V10z"
           fill="#EAEAEA"
+        />
+      </svg>
+    );
+  else if (menu == "daganganku")
+    return (
+      <svg
+        width={24}
+        height={25}
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M3.042 22.375a2.328 2.328 0 01-1.708-.71 2.323 2.323 0 01-.709-1.707V3.042c0-.665.237-1.234.71-1.708A2.322 2.322 0 013.042.625h16.916c.665 0 1.234.237 1.708.71.473.474.71 1.043.709 1.707v10.663a5.986 5.986 0 00-1.148-.543 8.354 8.354 0 00-1.269-.333V3.042H3.042v16.916H11.5c0 .423.03.836.09 1.239.061.403.162.795.303 1.178H3.042zm14.5 2.417v-3.625h-3.625V18.75h3.625v-3.625h2.416v3.625h3.625v2.417h-3.625v3.625h-2.416zm-10.875-7.25c.342 0 .63-.116.861-.348.232-.232.348-.52.347-.86 0-.343-.116-.63-.348-.862a1.165 1.165 0 00-.86-.347c-.343 0-.63.116-.862.348a1.165 1.165 0 00-.347.86c0 .343.116.63.348.862.232.232.52.348.86.347zm0-4.834c.342 0 .63-.116.861-.348.232-.232.348-.518.347-.86 0-.342-.116-.63-.348-.861a1.165 1.165 0 00-.86-.347c-.343 0-.63.116-.862.348a1.164 1.164 0 00-.347.86c0 .342.116.63.348.861.232.232.52.348.86.347zm0-4.833c.342 0 .63-.116.861-.348.232-.232.348-.519.347-.86 0-.343-.116-.63-.348-.862a1.165 1.165 0 00-.86-.347c-.343 0-.63.116-.862.348a1.165 1.165 0 00-.347.86c0 .343.116.63.348.862.232.232.52.348.86.347zm3.625 4.833h7.25v-2.416h-7.25v2.416zm0-4.833h7.25V5.458h-7.25v2.417zm0 9.667h1.63a6.96 6.96 0 01.605-1.3c.242-.402.524-.775.846-1.117h-3.081v2.417z"
+          fill="#EFEFEF"
         />
       </svg>
     );

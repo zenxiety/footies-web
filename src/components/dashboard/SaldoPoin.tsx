@@ -7,10 +7,10 @@ export default function SaldoPoin({ roles }: { roles: Role }) {
         <span className="font-literata text-[15px] font-medium text-primary-300">
           {roles == "USER" ? "Saldo & Poin" : "Saldo"}
         </span>
-        <div className={`relative mt-[1vh] rounded-md bg-primary-300`}>
-          {/* Pembeli */}
+        <div className={`relative mt-[1vh]`}>
           {roles == "USER" ? (
-            <div className="grid grid-cols-2 px-4 pb-3 pt-4">
+            // Pembeli
+            <div className="grid grid-cols-2 rounded-md bg-primary-300 px-4 pb-3 pt-4">
               <div className="flex flex-col items-start">
                 <svg
                   width={16}
@@ -50,23 +50,30 @@ export default function SaldoPoin({ roles }: { roles: Role }) {
             </div>
           ) : (
             // Penjual
-            <div className="flex items-center justify-between px-2 py-2">
-              <div className="flex items-center">
-                <svg
-                  width={37}
-                  height={35}
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M34.605 28.42v1.896a3.79 3.79 0 01-3.79 3.789H4.29A3.79 3.79 0 01.5 30.315V3.79A3.79 3.79 0 014.29 0h26.526a3.79 3.79 0 013.79 3.79v1.894H17.552a3.79 3.79 0 00-3.79 3.79V24.63a3.79 3.79 0 003.79 3.79m0-3.79H36.5V9.474H17.553m7.579 10.42a2.842 2.842 0 110-5.684 2.842 2.842 0 010 5.685z"
-                    fill="#1D1D1D"
-                  />
-                </svg>
-                <span className="ml-2 mb-[6px] font-literata">Domfeet</span>
+            <>
+              <div className="flex items-center justify-between rounded-md bg-primary-300 px-4 py-2">
+                <div className="flex items-center">
+                  <svg
+                    width={37}
+                    height={35}
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M34.605 28.42v1.896a3.79 3.79 0 01-3.79 3.789H4.29A3.79 3.79 0 01.5 30.315V3.79A3.79 3.79 0 014.29 0h26.526a3.79 3.79 0 013.79 3.79v1.894H17.552a3.79 3.79 0 00-3.79 3.79V24.63a3.79 3.79 0 003.79 3.79m0-3.79H36.5V9.474H17.553m7.579 10.42a2.842 2.842 0 110-5.684 2.842 2.842 0 010 5.685z"
+                      fill="#1D1D1D"
+                    />
+                  </svg>
+                  <span className="ml-2 mb-[2px] font-literata text-[15px] font-medium">
+                    Domfeet
+                  </span>
+                </div>
+                <p className="font-bold">Rp169.069</p>
               </div>
-              <p className="font-bold">Rp169.069</p>
-            </div>
+              <button className="mt-4 block w-full rounded-md border border-primary-300 py-3 font-louis text-[12px] text-primary-300">
+                Saldo Analytics &gt;
+              </button>
+            </>
           )}
         </div>
       </div>
