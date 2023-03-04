@@ -2,6 +2,7 @@ import { Role } from "@prisma/client";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
+import ComingSoon from "./ComingSoon";
 
 export default function Menu({ roles }: { roles: Role }) {
   const menuBuyer = ["pesanan", "langganan", "promo", "pesan", "keluar"];
@@ -46,11 +47,12 @@ function MenuBar(menu: string, i: number) {
     </button>
   ) : (
     <>
-      <button onClick={() => setPopup(true)} className="block w-full">
+      <ComingSoon popup={popup} setPopup={setPopup} children={children} />
+      {/* <button onClick={() => setPopup(true)} className="block w-full">
         {children}
       </button>
       <div
-        className={`fixed top-0 m-auto flex h-screen w-screen items-center justify-center overflow-hidden duration-500 ${
+        className={`fixed top-0 m-auto flex h-full w-full max-w-[500px] items-center justify-center overflow-hidden duration-500 ${
           popup ? "scale-100" : "scale-0 opacity-0"
         }`}
       >
@@ -60,7 +62,7 @@ function MenuBar(menu: string, i: number) {
             popup ? "" : "opacity-0"
           }`}
         />
-        <div className="relative mx-6 border-2 border-primary-300 bg-secondary-500 py-6 text-center delay-200">
+        <div className="relative mx-6 border-2 border-primary-300 bg-secondary-500 px-12 py-6 text-center delay-200">
           <button
             onClick={() => setPopup(false)}
             className="absolute top-4 left-4"
@@ -89,9 +91,9 @@ function MenuBar(menu: string, i: number) {
               />
             </svg>
           </button>
-          <p className="font-literata text-6xl text-primary-300">Coming Soon</p>
+          <p className="font-literata text-5xl text-primary-300">Coming Soon</p>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

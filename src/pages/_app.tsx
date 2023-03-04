@@ -58,8 +58,10 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <>
-      <div className={`${literata.variable} font-serif`}>
-        <div className={`${louis.variable} font-sans`}>
+      <div className={`${literata.variable} bg-secondary-500 font-serif`}>
+        <div
+          className={`${louis.variable} relative mx-auto font-sans shadow-xl xs:max-w-[500px]`}
+        >
           <SessionProvider session={session}>
             <Component {...pageProps} />
           </SessionProvider>

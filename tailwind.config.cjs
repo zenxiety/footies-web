@@ -32,6 +32,9 @@ module.exports = {
       animation: {
         "spin-fast": "spin .75s linear infinite reverse",
       },
+      screens: {
+        xs: "500px",
+      },
     },
   },
   plugins: [],
