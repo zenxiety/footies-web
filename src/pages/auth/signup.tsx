@@ -27,7 +27,9 @@ const SignUp: NextPage = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({ mode: "onChange" });
+  const passDigital = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/);
+  const passDigital1 = new RegExp("[a-z,A-Z,0-9]+@gmail.com");
   const onSubmit = (data: any) => console.log(data);
   const router = useRouter();
   const signUp = api.auth.signUp.useMutation();
@@ -74,8 +76,8 @@ const SignUp: NextPage = () => {
       .then(async () => {
         return await router.push("/auth/signin");
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((onSubmit) => {
+        console.log(onSubmit);
       });
       
   };
@@ -101,7 +103,7 @@ const SignUp: NextPage = () => {
           <div className={biodata ? "" : "hidden"}>
             <div className="relative z-0 mb-2 font-louis">
               <input
-                {...register("firstName", { required: true, maxLength: 30 })}
+                {...register("firstName", { required: true, })}
                 type="text"
                 className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                 placeholder=" "
@@ -109,7 +111,7 @@ const SignUp: NextPage = () => {
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Nama Depan
               </label>
-              {errors.firstName && errors.firstName.type === "required" && (
+              {errors?.firstName?.type === "required" && (
                 <span className="text-[12px] text-[#F51C2F]" role="alert">
                   This is required
                 </span>
@@ -117,7 +119,7 @@ const SignUp: NextPage = () => {
             </div>
             <div className="relative z-0 mb-2 font-louis">
               <input
-                {...register("lastName", { required: true, maxLength: 30 })}
+                {...register("lastName", { required: true, })}
                 type="text"
                 className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                 placeholder=" "
@@ -232,24 +234,26 @@ const SignUp: NextPage = () => {
           <div className={biodata ? "hidden" : ""}>
             <div className="relative z-0 mb-2 font-louis">
               <input
-                {...register("email", { required: true, maxLength: 30 })}
+                {...register("email", { required: true, pattern: passDigital1 })}
                 type="email"
                 className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                 placeholder=" "
+                
               />
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Email
               </label>
-              {errors.email && errors.email.type === "required" && (
-                <span className="text-[12px] text-[#F51C2F]" role="alert">
+              {errors?.email?.type === "required" && (
+                <span className="text-[12px] text-[#F51C2F]">
                   This is required
                 </span>
               )}
+              {errors?.email?.type == "pattern" && <span className="text-red-500 font-louis text-[12px]">Harus sesuai format!</span> }
             </div>
             <div className="relative z-0 mb-2 font-louis">
               <input
                 type={passwordVisible ? "text" : "password"}
-                {...register("password", { required: true, maxLength: 30 })}
+                {...register("password", { required: true, pattern: passDigital, minLength: 8 })}
                 className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                 placeholder=" "
               />
@@ -261,6 +265,8 @@ const SignUp: NextPage = () => {
                   This is required
                 </span>
               )}
+              {errors?.password?.type == "pattern" && <span className="text-red-500 font-louis text-[12px]">Kata sandi harus memuat 8 karakter, huruf kapital, dan angka.</span> }
+              {errors?.password?.type == "minLength" && <span className="text-red-500 font-louis text-[12px]">Minimal 8 karakter</span> }
             </div>
             <div className="relative z-0 mb-2 font-louis">
               <input

@@ -20,8 +20,9 @@ const SignIn: NextPage = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>();
-  const onSubmit = (data: unknown) => console.log(data);
+  } = useForm<FormValues>({ mode: "onChange" });
+  const passDigital = new RegExp("[a-z,0-9,A-Z]+@gmail.com");
+  const onSubmit = (data: any) => console.log(data);
   const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {
@@ -50,7 +51,7 @@ const SignIn: NextPage = () => {
       <div className="relative flex h-screen w-full flex-col justify-between bg-[#141313] p-12">
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-row items-center justify-center gap-x-4">
-            <i className="fas fa-arrow-left text-white" />
+          
             <h1 className="font-louis text-white">Masuk</h1>
           </div>
           <i className="fas fa-question text-white" />
@@ -67,30 +68,34 @@ const SignIn: NextPage = () => {
           >
             <div className="relative z-0 mb-2 font-louis">
               <input
-                {...register("email", { required: true, maxLength: 30 })}
+                {...register("email", { required: true, maxLength: 30, pattern: passDigital })}
                 type="text"
                 className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                 placeholder=" "
+               
+                
               />
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Email
               </label>
-              {errors.email && errors.email.type === "required" && (
+              
+              {errors?.email?.type === "required" && (
                 <span className="text-[12px] text-[#F51C2F]">
                   This is required
                 </span>
               )}
+              {errors?.email?.type == "pattern" && <span className="text-red-500 font-louis text-[12px]">Harus sesuai format!</span> }
             </div>
             <div className="relative z-0 mb-2 font-louis">
               <input
                 type={passwordVisible ? "text" : "password"}
-                {...register("password", { required: true, maxLength: 30 })}
+                {...register("password", { required: true })}
                 className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                 placeholder=" "
               />
               <i
                 className={
-                  !passwordVisible
+                  passwordVisible
                     ? "fas fa-eye absolute right-0 top-1/2 -translate-y-1/2 text-white"
                     : "fas fa-eye-slash absolute right-0 top-1/2 -translate-y-1/2 text-white"
                 }
@@ -99,7 +104,7 @@ const SignIn: NextPage = () => {
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Kata Sandi
               </label>
-              {errors.password && errors.password.type === "required" && (
+              {errors?.password?.type === "required" && (
                 <span className="text-[12px] text-[#F51C2F]">
                   This is required
                 </span>
