@@ -34,8 +34,6 @@ function MapboxMap({
 
   const mapNode = useRef(null);
 
-  useEffect(() => {}, []);
-
   useEffect(() => {
     const node = mapNode.current;
 
@@ -69,13 +67,16 @@ function MapboxMap({
       // console.log(map.getCenter().lng);
       setLat(map.getCenter().lat);
       // console.log(map.getCenter().lat);
-      navigator.geolocation.getCurrentPosition(async (pos) => {
+      navigator.geolocation.getCurrentPosition((pos) => {
         // const { lng, lat } = lonlat;
-        const res = await fetch(
+        fetch(
           `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&featureTypes=&location=${lng}%2C${lat}`
-        );
-        const data = await res.json();
-        setLocation(data.address.Match_addr);
+        )
+          .then((res) => res.json())
+          .then((data: { address: { Match_addr: string } }) =>
+            setLocation(data.address.Match_addr)
+          )
+          .catch((e) => console.log(e));
         // console.log(data.address.Match_addr);
       });
     });
