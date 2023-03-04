@@ -31,21 +31,21 @@ type FormValues = {
   apiError?: string;
 };
 
-// // eslint-disable-next-line @typescript-eslint/require-await
-// export async function getServerSideProps(ctx: CreateNextContextOptions) {
-//   // const ssg = await ssgHelpers(ctx);
-//   const ssg = createProxySSGHelpers({
-//     router: appRouter,
-//     ctx: await createTRPCContext(ctx),
-//     transformer: superjson,
-//   });
-//   const data = await ssg.auth.checkRegister.fetch();
-//   return {
-//     props: {
-//       data,
-//     }, // will be passed to the page component as props
-//   };
-// }
+// eslint-disable-next-line @typescript-eslint/require-await
+export async function getServerSideProps(ctx: CreateNextContextOptions) {
+  // const ssg = await ssgHelpers(ctx);
+  const ssg = createProxySSGHelpers({
+    router: appRouter,
+    ctx: await createTRPCContext(ctx),
+    transformer: superjson,
+  });
+  const data = await ssg.auth.checkRegister.fetch();
+  return {
+    props: {
+      data,
+    }, // will be passed to the page component as props
+  };
+}
 
 export default function Seller(props: {
   data:

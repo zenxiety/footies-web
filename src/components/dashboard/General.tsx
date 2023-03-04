@@ -1,6 +1,7 @@
 import { Role } from "@prisma/client";
 import Link from "next/link";
 import { useState } from "react";
+import ComingSoon from "./ComingSoon";
 
 export default function General({ roles }: { roles: Role }) {
   const generals = [
@@ -45,48 +46,9 @@ function MenuBar(menu: string, i: number) {
           {Arrow()}
         </div>
       </button>
-      <div
-        className={`fixed inset-0 flex h-screen w-screen items-center justify-center duration-1000 ${
-          popup ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div
-          className={`fixed inset-0 h-screen w-screen backdrop-blur delay-200 duration-1000 ${
-            popup ? "opacity-100" : "opacity-0"
-          }`}
-        />
-        <div className="relative mx-6 border-2 border-primary-300 bg-secondary-500 py-6 text-center delay-200">
-          <button
-            onClick={() => setPopup(false)}
-            className="absolute top-4 left-4"
-          >
-            <svg
-              width={17}
-              height={17}
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect
-                y={1.414}
-                width={2}
-                height={21}
-                rx={1}
-                transform="rotate(-45 0 1.414)"
-                fill="#F6C73B"
-              />
-              <rect
-                x={14.849}
-                width={2}
-                height={21}
-                rx={1}
-                transform="rotate(45 14.85 0)"
-                fill="#F6C73B"
-              />
-            </svg>
-          </button>
-          <p className="font-literata text-6xl text-primary-300">Coming Soon</p>
-        </div>
-      </div>
+      <ComingSoon popup={popup} setPopup={setPopup}>
+        {}
+      </ComingSoon>
     </>
   );
 }
