@@ -21,7 +21,7 @@ const SignIn: NextPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
-  const onSubmit = (data: any) => console.log(data);
+  const onSubmit = (data: unknown) => console.log(data);
   const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {

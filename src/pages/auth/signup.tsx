@@ -37,11 +37,28 @@ const SignUp: NextPage = () => {
   const [isChecked1, setIsChecked1] = useState(false);
   const [isChecked2, setIsChecked2] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const togglePasswordVisibility = () => {
+    setPasswordVisible((prev) => !prev);
+  };
+  const handleCheckboxChange = (event: {
+    target: { checked: boolean | ((prevState: boolean) => boolean) };
+  }) => {
+    setIsChecked(event.target.checked);
+  };
+  const handleCheckboxChange1 = (event: {
+    target: { checked: boolean | ((prevState: boolean) => boolean) };
+  }) => {
+    setIsChecked1(event.target.checked);
+  };
+  const handleCheckboxChange2 = (event: {
+    target: { checked: boolean | ((prevState: boolean) => boolean) };
+  }) => {
+    setIsChecked2(event.target.checked);
+  };
 
   const toggleBiodata = () => {
     if (watch("email") && watch("password") && watch("confirmPassword")) {
       setBiodata((prev) => !prev);
-      formState: { errors };
     }
   };
   const signUpHandler = (data: FormValues) => {
@@ -60,6 +77,7 @@ const SignUp: NextPage = () => {
       .catch((err) => {
         console.log(err);
       });
+      
   };
   return (
     <>
@@ -162,7 +180,7 @@ const SignUp: NextPage = () => {
                 <input
                   type="checkbox"
                   checked={isChecked1}
-                  // onChange={handleCheckboxChange1}
+                  onChange={handleCheckboxChange1}
                   style={{ display: "none" }} // hide default checkbox
                 />
                 <span // custom checkbox style
@@ -182,7 +200,7 @@ const SignUp: NextPage = () => {
                 <input
                   type="checkbox"
                   checked={isChecked2}
-                  // onChange={handleCheckboxChange2}
+                  onChange={handleCheckboxChange2}
                   style={{ display: "none" }} // hide default checkbox
                 />
                 <span // custom checkbox style
@@ -274,9 +292,9 @@ const SignUp: NextPage = () => {
                 <label>
                   <input
                     type="checkbox"
-                    // checked={isChecked}
-                    // onChange={handleCheckboxChange}
-                    // onClick={togglePasswordVisibility}
+                    checked={isChecked}
+                    onChange={handleCheckboxChange}
+                    onClick={togglePasswordVisibility}
                     style={{ display: "none" }} // hide default checkbox
                   />
                   <span // custom checkbox style
