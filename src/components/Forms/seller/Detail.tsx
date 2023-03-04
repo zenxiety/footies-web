@@ -29,7 +29,11 @@ export default function Detail({
   const [labels, setLabels] = useState(["Chinese"]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="relative h-screen pt-20">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="relative h-screen pt-20"
+      hidden={formStep != 3}
+    >
       <div className="z-10 w-screen">
         <div className="flex flex-col justify-between">
           <p>Detail Toko</p>

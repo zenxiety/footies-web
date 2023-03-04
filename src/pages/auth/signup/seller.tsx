@@ -32,20 +32,20 @@ type FormValues = {
 };
 
 // // eslint-disable-next-line @typescript-eslint/require-await
-// export async function getServerSideProps(ctx: CreateNextContextOptions) {
-//   // const ssg = await ssgHelpers(ctx);
-//   const ssg = createProxySSGHelpers({
-//     router: appRouter,
-//     ctx: await createTRPCContext(ctx),
-//     transformer: superjson,
-//   });
-//   const data = await ssg.auth.checkRegister.fetch();
-//   return {
-//     props: {
-//       data,
-//     }, // will be passed to the page component as props
-//   };
-// }
+export async function getServerSideProps(ctx: CreateNextContextOptions) {
+  // const ssg = await ssgHelpers(ctx);
+  const ssg = createProxySSGHelpers({
+    router: appRouter,
+    ctx: await createTRPCContext(ctx),
+    transformer: superjson,
+  });
+  const data = await ssg.auth.checkRegister.fetch();
+  return {
+    props: {
+      data,
+    }, // will be passed to the page component as props
+  };
+}
 
 export default function Seller(props: {
   data:
@@ -298,17 +298,7 @@ export default function Seller(props: {
               // onSubmit={handleSubmit(submitHandler)}
               className={`${
                 page !== 5 ? "z-10 flex duration-1000" : "hidden"
-              } ${
-                page == 1
-                  ? "translate-x-[50%]"
-                  : page == 2
-                  ? "translate-x-[25%]"
-                  : page == 3
-                  ? "translate-x-[0%]"
-                  : page == 4
-                  ? "-translate-x-[25%]"
-                  : "translate-x-[50%] -translate-y-full"
-              }`}
+              } `}
             >
               <FormProvider>
                 {/* 1) Informasi Toko */}
@@ -337,7 +327,7 @@ export default function Seller(props: {
                 />
               </FormProvider>
             </div>
-            <div className={``}>
+            <div className={`${page != 5 ? "hidden" : ""}`}>
               {/* 5) Verifikasi */}
               <div className="z-10 flex w-screen flex-col items-center justify-between">
                 <p className="px-20">Sedang Dalam Proses Verifikasi</p>

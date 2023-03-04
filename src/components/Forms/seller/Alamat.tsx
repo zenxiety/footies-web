@@ -30,6 +30,7 @@ export default function Alamat({
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="relative h-screen pt-20"
+        hidden={formStep != 2}
       >
         <div className={`z-10 w-screen`}>
           <div className="z-10 w-screen">

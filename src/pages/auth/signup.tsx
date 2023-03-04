@@ -18,6 +18,7 @@ type FormValues = {
   telepon: string;
   alamat: string;
   confirmPassword: string;
+  remember?: boolean;
   apiError?: string;
 };
 
@@ -35,29 +36,10 @@ const SignUp: NextPage = () => {
   const signUp = api.auth.signUp.useMutation();
   const [biodata, setBiodata] = useState(false);
   // const [biodata1, setBiodata1] = useState(false)
-  const [isChecked, setIsChecked] = useState(false);
-  const [isChecked1, setIsChecked1] = useState(false);
-  const [isChecked2, setIsChecked2] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {
     setPasswordVisible((prev) => !prev);
   };
-  const handleCheckboxChange = (event: {
-    target: { checked: boolean | ((prevState: boolean) => boolean) };
-  }) => {
-    setIsChecked(event.target.checked);
-  };
-  const handleCheckboxChange1 = (event: {
-    target: { checked: boolean | ((prevState: boolean) => boolean) };
-  }) => {
-    setIsChecked1(event.target.checked);
-  };
-  const handleCheckboxChange2 = (event: {
-    target: { checked: boolean | ((prevState: boolean) => boolean) };
-  }) => {
-    setIsChecked2(event.target.checked);
-  };
-
   const toggleBiodata = () => {
     if (watch("email") && watch("password") && watch("confirmPassword")) {
       setBiodata((prev) => !prev);
@@ -179,19 +161,19 @@ const SignUp: NextPage = () => {
             </div>
             <div className="flex flex-row items-center gap-x-2 py-4">
               <label>
-                <input
-                  type="checkbox"
-                  checked={isChecked1}
-                  onChange={handleCheckboxChange1}
-                  style={{ display: "none" }} // hide default checkbox
-                />
-                <span // custom checkbox style
-                  className={
-                    isChecked1
-                      ? "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-[#F4B829] pt-0 outline-double outline-[#F4B829]"
-                      : "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-white"
-                  }
-                />
+              <input
+                    type="checkbox"
+                    {...register("remember")}
+                    // checked={isChecked}
+                    // onChange={handleCheckboxChange}
+                    className="peer hidden"
+                    // style={{ display: "none" }} // hide default checkbox
+                  />
+                  <span // custom checkbox style
+                    className={
+                      "flex h-[20px] w-[20px] scale-100 items-center justify-center  rounded-[4px] bg-white peer-checked:scale-[0.8] peer-checked:bg-[#F4B829]  peer-checked:pt-0 peer-checked:outline-double peer-checked:outline-[#F4B829]"
+                    }
+                  />
               </label>
               <span className="font-louis text-[10px] text-white">
                 Gunakan lokasi anda sekarang
@@ -199,23 +181,23 @@ const SignUp: NextPage = () => {
             </div>
             <div className="flex flex-row items-center gap-x-2 pb-4">
               <label>
-                <input
-                  type="checkbox"
-                  checked={isChecked2}
-                  onChange={handleCheckboxChange2}
-                  style={{ display: "none" }} // hide default checkbox
-                />
-                <span // custom checkbox style
-                  className={
-                    isChecked2
-                      ? "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-[#F4B829] pt-0 outline-double outline-[#F4B829]"
-                      : "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-white"
-                  }
-                />
+              <input
+                    type="checkbox"
+                    {...register("remember")}
+                    // checked={isChecked}
+                    // onChange={handleCheckboxChange}
+                    className="peer hidden"
+                    // style={{ display: "none" }} // hide default checkbox
+                  />
+                  <span // custom checkbox style
+                    className={
+                      "flex h-[20px] w-[20px] scale-100 items-center justify-center  rounded-[4px] bg-white peer-checked:scale-[0.8] peer-checked:bg-[#F4B829]  peer-checked:pt-0 peer-checked:outline-double peer-checked:outline-[#F4B829]"
+                    }
+                  />
               </label>
               <span className="font-louis text-[10px] text-white">
-                Setuju dengan <span className="text-[#F4B829]">Terms</span> dan{" "}
-                <span className="text-[#F4B829]">Provacy Policy</span> kami.
+                Setuju dengan <span className="text-[#F4B829] font-italic">Terms</span> dan{" "}
+                <span className="text-[#F4B829] font-italic">Provacy Policy</span> kami.
               </span>
             </div>
             <div className="flex flex-row items-center justify-between">
@@ -296,18 +278,18 @@ const SignUp: NextPage = () => {
             <div className="flex flex-row gap-x-2">
               <div className="flex flex-row items-center justify-center gap-x-2">
                 <label>
-                  <input
+                <input
                     type="checkbox"
-                    checked={isChecked}
-                    onChange={handleCheckboxChange}
+                    {...register("remember")}
+                    // checked={isChecked}
+                    // onChange={handleCheckboxChange}
+                    className="peer hidden"
+                    // style={{ display: "none" }} // hide default checkbox
                     onClick={togglePasswordVisibility}
-                    style={{ display: "none" }} // hide default checkbox
                   />
                   <span // custom checkbox style
                     className={
-                      isChecked
-                        ? "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-[#F4B829] pt-0 outline-double outline-[#F4B829]"
-                        : "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-white"
+                      "flex h-[20px] w-[20px] scale-100 items-center justify-center  rounded-[4px] bg-white peer-checked:scale-[0.8] peer-checked:bg-[#F4B829]  peer-checked:pt-0 peer-checked:outline-double peer-checked:outline-[#F4B829]"
                     }
                   />
                 </label>

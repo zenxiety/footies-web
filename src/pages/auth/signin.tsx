@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import type { NextPage } from "next";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -13,6 +10,7 @@ import { useState } from "react";
 type FormValues = {
   email: string;
   password: string;
+  remember?: boolean;
   apiError?: string;
 };
 const SignIn: NextPage = () => {
@@ -27,13 +25,6 @@ const SignIn: NextPage = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {
     setPasswordVisible((prev) => !prev);
-  };
-  const [isChecked, setIsChecked] = useState(false);
-
-  const handleCheckboxChange = (event: {
-    target: { checked: boolean | ((prevState: boolean) => boolean) };
-  }) => {
-    setIsChecked(event.target.checked);
   };
   const signinHandler = async (data: FormValues) => {
     const res = await signIn("credentials", {
@@ -116,15 +107,15 @@ const SignIn: NextPage = () => {
                 <label>
                   <input
                     type="checkbox"
-                    checked={isChecked}
-                    onChange={handleCheckboxChange}
-                    style={{ display: "none" }} // hide default checkbox
+                    {...register("remember")}
+                    // checked={isChecked}
+                    // onChange={handleCheckboxChange}
+                    className="peer hidden"
+                    // style={{ display: "none" }} // hide default checkbox
                   />
                   <span // custom checkbox style
                     className={
-                      isChecked
-                        ? "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-[#F4B829]  pt-0 outline-double outline-[#F4B829]"
-                        : "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-white"
+                      "flex h-[20px] w-[20px] scale-100 items-center justify-center  rounded-[4px] bg-white peer-checked:scale-[0.8] peer-checked:bg-[#F4B829]  peer-checked:pt-0 peer-checked:outline-double peer-checked:outline-[#F4B829]"
                     }
                   />
                 </label>

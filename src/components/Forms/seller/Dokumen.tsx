@@ -47,6 +47,7 @@ export default function Dokumen({
     <form
       onSubmit={handleSubmit(onSubmit)}
       className={`relative h-screen pt-20`}
+      hidden={formStep != 4}
     >
       <div className="z-10 w-screen">
         <p className="mb-5">Verifikasi Dokumen</p>
