@@ -21,7 +21,6 @@ export default function Detail({
   } = useForm<FormValues>({ mode: "all" });
 
   const onSubmit = (values: FormValues) => {
-    console.log(data);
     setFormValues(values);
     nextFormStep();
   };
@@ -34,7 +33,7 @@ export default function Detail({
   const [labels, setLabels] = useState(["Chinese"]);
 
   return (
-    <form onSubmit={nextFormStep} className="relative h-screen pt-20">
+    <form onSubmit={handleSubmit(onSubmit)} className="relative h-screen pt-20">
       <div className="z-10 mx-auto w-screen xs:max-w-[500px]">
         <div className="flex flex-col justify-between">
           <p>Detail Toko</p>
