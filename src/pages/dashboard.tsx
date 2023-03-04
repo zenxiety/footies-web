@@ -8,7 +8,7 @@ import SaldoPoin from "../components/dashboard/SaldoPoin";
 import TipeAkun from "../components/dashboard/TipeAkun";
 
 export default function Dashboard() {
-  const [roles, setRoles] = useState<Role>("MERCHANT");
+  const [roles, setRoles] = useState<Role>("USER");
 
   return (
     <>
