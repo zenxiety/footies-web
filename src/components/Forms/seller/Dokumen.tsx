@@ -47,12 +47,11 @@ export default function Dokumen({
     <form
       onSubmit={handleSubmit(onSubmit)}
       className={`relative h-screen pt-20`}
-      hidden={formStep != 4}
     >
-      <div className="z-10 w-screen">
+      <div className="z-10 mx-auto w-screen xs:max-w-[500px]">
         <p className="mb-5">Verifikasi Dokumen</p>
         <div className="mx-8">
-          <div>
+          <div className="w-full">
             <Image
               src="/signup/dokumen.png"
               alt=""
@@ -68,7 +67,7 @@ export default function Dokumen({
             <p className="mb-1 mr-auto text-start font-louis text-[12px] font-medium  text-others-white">
               Dokumen kepemilikan bisnis/bangunan
             </p>
-            <div className="mt-3 flex h-[200px] w-[300px] flex-col items-center justify-center rounded-md border border-dashed">
+            <div className="mt-3 flex h-[200px] w-full flex-col items-center justify-center rounded-md border border-dashed">
               <svg
                 width={41}
                 height={33}
