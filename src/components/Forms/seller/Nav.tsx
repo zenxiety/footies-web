@@ -1,15 +1,9 @@
-export default function Nav({
-  prevFormStep,
-  nextFormStep,
-}: {
-  prevFormStep: () => void;
-  nextFormStep: () => void;
-}) {
+export default function Nav({ prevFormStep }: { prevFormStep: () => void }) {
   return (
     // ini nav yang ngikut tiap step
     // ada ngebug juga walaupun merah tapi masi bisa next
     <nav className="absolute left-1/2 bottom-7 z-50 flex -translate-x-1/2 justify-between">
-      <button onClick={() => prevFormStep()} className="">
+      <button type="button" onClick={() => prevFormStep()} className="">
         <svg
           width={28}
           height={28}
@@ -30,7 +24,7 @@ export default function Nav({
         </svg>
       </button>
       <div className="w-52"></div>
-      <button onClick={nextFormStep} className="">
+      <button type="submit" className="">
         <svg
           width={28}
           height={28}

@@ -1,17 +1,27 @@
-import { useState, createContext, useContext } from "react";
-export type FormContext = {
-  data: object;
+import { useState, createContext, useContext, ReactNode } from "react";
+
+export type FormValues = {
+  nama: string;
+  alamat: string;
+  jamBuka: string;
+  jamTutup: string;
+  deskripsi?: string;
+  labels: string[];
+  dokumen: string;
+  apiError?: string;
+};
+
+type FormContext = {
+  data: FormValues;
   setFormValues: (values: object) => void;
 };
-export const FormContext = createContext<FormContext>({
-  data: {},
-  setFormValues: () => {},
-});
+export const FormContext = createContext<FormContext>({} as FormContext);
 
-export default function FormProvider({ children }: { children: any }) {
-  const [data, setData] = useState({});
+export default function FormProvider({ children }: { children: ReactNode }) {
+  const [data, setData] = useState<FormValues>({} as FormValues);
 
   const setFormValues = (values: object) => {
+    console.log(data, values);
     setData((prevValues) => ({
       ...prevValues,
       ...values,

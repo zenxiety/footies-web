@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useFormData } from "../../../context/seller";
+import { FormValues, useFormData } from "../../../context/seller";
 import Nav from "./Nav";
 
 export default function Alamat({
@@ -7,9 +7,9 @@ export default function Alamat({
   formStep,
   nextFormStep,
 }: {
-  prevFormStep: any;
-  formStep: any;
-  nextFormStep: any;
+  prevFormStep: () => void;
+  formStep: number;
+  nextFormStep: () => void;
 }) {
   const { setFormValues } = useFormData();
 
@@ -17,9 +17,10 @@ export default function Alamat({
     handleSubmit,
     formState: { errors },
     register,
-  } = useForm({ mode: "all" });
+  } = useForm<FormValues>();
 
-  const onSubmit = (values: object) => {
+  const onSubmit = (values: FormValues) => {
+    console.log(values);
     setFormValues(values);
     nextFormStep();
   };
@@ -55,7 +56,7 @@ export default function Alamat({
             </div>
           </div>
         </div>
-        <Nav prevFormStep={prevFormStep} nextFormStep={nextFormStep} />
+        <Nav prevFormStep={prevFormStep} />
       </form>
     );
   }

@@ -16,6 +16,7 @@ import Info from "../../../components/Forms/seller/Info";
 import { Alamat } from "../../../components/Forms/seller";
 import Detail from "../../../components/Forms/seller/Detail";
 import Dokumen from "../../../components/Forms/seller/Dokumen";
+import FormProvider from "../../../context/seller";
 
 const Map = dynamic(() => import("../../../components/Map"), { ssr: false });
 
@@ -56,6 +57,8 @@ export default function Seller(props: {
 }) {
   const { register, handleSubmit, watch } = useForm<FormValues>();
   const [page, setPage] = useState(props.data?.Merchant ? 5 : 0);
+  console.log(page);
+
   const steps = [
     "Isi informasi tentang tokomu mulai dari nama dan deskripsi tokomu.",
     "Atur alamat lokasi tokomu.",
@@ -66,12 +69,10 @@ export default function Seller(props: {
   ];
 
   const { data: dataUser } = useSession();
-  console.log(dataUser?.user);
   const signUp = api.auth.registerMerchant.useMutation();
   const router = useRouter();
 
   const submitHandler = async (data: FormValues) => {
-    console.log(data);
     await signUp
       .mutateAsync({
         alamat: data.alamat,
@@ -83,27 +84,27 @@ export default function Seller(props: {
         nama: data.nama,
       })
       .then(async (res) => {
-        console.log(res);
         await router.push("/dashboard");
       })
       .catch((e) => console.log(e));
   };
 
   const nextFormStep = () => {
-    if (page == 1) {
-      // watch("nama") && setPage((page) => page + 1);
-      setPage((page) => page + 1);
-    } else if (page == 2) {
-      // watch("alamat") && setPage((page) => page + 1);
-      setPage((page) => page + 1);
-    } else if (page == 3) {
-      // ("jamBuka") &&
-      //   ("jamTutup") &&
-      //   // watch("labels") &&
-      setPage((page) => page + 1);
-    } else if (page == 4) {
-      // watch("dokumen") && setPage((page) => page + 1);
-    }
+    setPage((page) => page + 1);
+    // if (page == 1) {
+    //   // watch("nama") && setPage((page) => page + 1);
+    //   setPage((page) => page + 1);
+    // } else if (page == 2) {
+    //   // watch("alamat") && setPage((page) => page + 1);
+    //   setPage((page) => page + 1);
+    // } else if (page == 3) {
+    //   // ("jamBuka") &&
+    //   //   ("jamTutup") &&
+    //   //   // watch("labels") &&
+    //   setPage((page) => page + 1);
+    // } else if (page == 4) {
+    //   // watch("dokumen") && setPage((page) => page + 1);
+    // }
   };
 
   const prevFormStep = () => {
@@ -309,30 +310,32 @@ export default function Seller(props: {
                   : "translate-x-[50%] -translate-y-full"
               }`}
             >
-              {/* 1) Informasi Toko */}
-              <Info
-                prevFormStep={prevFormStep}
-                formStep={page}
-                nextFormStep={nextFormStep}
-              />
-              {/* 2) Alamat Toko */}
-              <Alamat
-                prevFormStep={prevFormStep}
-                formStep={page}
-                nextFormStep={nextFormStep}
-              />
-              {/* 3) Detail Toko */}
-              <Detail
-                prevFormStep={prevFormStep}
-                formStep={page}
-                nextFormStep={nextFormStep}
-              />
-              {/* 4) Dokumen */}
-              <Dokumen
-                prevFormStep={prevFormStep}
-                formStep={page}
-                nextFormStep={nextFormStep}
-              />
+              <FormProvider>
+                {/* 1) Informasi Toko */}
+                <Info
+                  prevFormStep={prevFormStep}
+                  formStep={page}
+                  nextFormStep={nextFormStep}
+                />
+                {/* 2) Alamat Toko */}
+                <Alamat
+                  prevFormStep={prevFormStep}
+                  formStep={page}
+                  nextFormStep={nextFormStep}
+                />
+                {/* 3) Detail Toko */}
+                <Detail
+                  prevFormStep={prevFormStep}
+                  formStep={page}
+                  nextFormStep={nextFormStep}
+                />
+                {/* 4) Dokumen */}
+                <Dokumen
+                  prevFormStep={prevFormStep}
+                  formStep={page}
+                  nextFormStep={nextFormStep}
+                />
+              </FormProvider>
             </div>
             <div className={``}>
               {/* 5) Verifikasi */}
@@ -417,7 +420,7 @@ export default function Seller(props: {
                   }`}
                 />
               </div>
-              <button onClick={() => nextFormStep()}>
+              {/* <button onClick={() => nextFormStep()}>
                 <svg
                   width={28}
                   height={28}
@@ -437,7 +440,7 @@ export default function Seller(props: {
                     fill="#1D1D1D"
                   />
                 </svg>
-              </button>
+              </button> */}
               {/* dummy doang biar progress barnya di tengah */}
               <div className="h-[28px]"></div>
             </div>
