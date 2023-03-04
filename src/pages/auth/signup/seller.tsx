@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { appRouter } from "../../../server/api/root";
 import { createTRPCContext } from "../../../server/api/trpc";
@@ -12,6 +12,10 @@ import { api } from "../../../utils/api";
 import superjson from "superjson";
 import type { Merchant, Mitra, User } from "@prisma/client";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
+import Info from "../../../components/Forms/seller/Info";
+import { Alamat } from "../../../components/Forms/seller";
+import Detail from "../../../components/Forms/seller/Detail";
+import Dokumen from "../../../components/Forms/seller/Dokumen";
 
 const Map = dynamic(() => import("../../../components/Map"), { ssr: false });
 
@@ -26,21 +30,21 @@ type FormValues = {
   apiError?: string;
 };
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export async function getServerSideProps(ctx: CreateNextContextOptions) {
-  // const ssg = await ssgHelpers(ctx);
-  const ssg = createProxySSGHelpers({
-    router: appRouter,
-    ctx: await createTRPCContext(ctx),
-    transformer: superjson,
-  });
-  const data = await ssg.auth.checkRegister.fetch();
-  return {
-    props: {
-      data,
-    }, // will be passed to the page component as props
-  };
-}
+// // eslint-disable-next-line @typescript-eslint/require-await
+// export async function getServerSideProps(ctx: CreateNextContextOptions) {
+//   // const ssg = await ssgHelpers(ctx);
+//   const ssg = createProxySSGHelpers({
+//     router: appRouter,
+//     ctx: await createTRPCContext(ctx),
+//     transformer: superjson,
+//   });
+//   const data = await ssg.auth.checkRegister.fetch();
+//   return {
+//     props: {
+//       data,
+//     }, // will be passed to the page component as props
+//   };
+// }
 
 export default function Seller(props: {
   data:
@@ -58,9 +62,8 @@ export default function Seller(props: {
     "Tentukan jam toko buka dan tutup serta label tentang tokomu.",
     "Unggah dokumen yang diperlukan untuk menjadi Penjual Footies.",
     "Tunggu dokumenmu diverifikasi.",
-    "Selamat! Jejakmu sudah tertinggal di aplikasi Footies",
+    "Selamat! Jejakmu sudah tertinggal di aplikasi Footies!",
   ];
-  const labels = ["Chinese", "Chinese", "Chinese", "Kids", "BBC", "Chinese"];
 
   const { data: dataUser } = useSession();
   console.log(dataUser?.user);
@@ -86,60 +89,79 @@ export default function Seller(props: {
       .catch((e) => console.log(e));
   };
 
-  const incrementPage = () => {
+  const nextFormStep = () => {
     if (page == 1) {
-      watch("nama") && setPage((page) => page + 1);
+      // watch("nama") && setPage((page) => page + 1);
+      setPage((page) => page + 1);
     } else if (page == 2) {
-      watch("alamat") && setPage((page) => page + 1);
+      // watch("alamat") && setPage((page) => page + 1);
+      setPage((page) => page + 1);
     } else if (page == 3) {
-      watch("jamBuka") &&
-        watch("jamTutup") &&
-        // watch("labels") &&
-        setPage((page) => page + 1);
+      // ("jamBuka") &&
+      //   ("jamTutup") &&
+      //   // watch("labels") &&
+      setPage((page) => page + 1);
     } else if (page == 4) {
       // watch("dokumen") && setPage((page) => page + 1);
     }
   };
 
+  const prevFormStep = () => {
+    setPage((page) => page - 1);
+  };
+
+  const [domLoaded, setDomLoaded] = useState(false);
+
+  useEffect(() => {
+    // buat ngilangin hydration error things
+    setDomLoaded(true);
+  }, []);
+
   return (
     <>
-      <div className="relative flex min-h-screen flex-col items-center justify-between overflow-hidden bg-secondary-500 font-louis">
-        <div className="absolute top-6 left-6">
-          <Link href="/">
-            <svg
-              width={17}
-              height={17}
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect
-                y={1.414}
-                width={2}
-                height={21}
-                rx={1}
-                transform="rotate(-45 0 1.414)"
-                fill="#EFEFEF"
-              />
-              <rect
-                x={14.849}
-                width={2}
-                height={21}
-                rx={1}
-                transform="rotate(45 14.85 0)"
-                fill="#EFEFEF"
-              />
-            </svg>
-          </Link>
-        </div>
-        {page == 0 ? (
-          <div className="flex h-screen w-full flex-col justify-between pt-24">
+      {domLoaded && (
+        <div className="relative flex min-h-screen flex-col items-center justify-between overflow-hidden bg-secondary-500 font-louis">
+          {/* close button */}
+          <div className="absolute top-6 left-6 z-[100]">
+            <Link href="/dashboard">
+              <svg
+                width={17}
+                height={17}
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  y={1.414}
+                  width={2}
+                  height={21}
+                  rx={1}
+                  transform="rotate(-45 0 1.414)"
+                  fill="#EFEFEF"
+                />
+                <rect
+                  x={14.849}
+                  width={2}
+                  height={21}
+                  rx={1}
+                  transform="rotate(45 14.85 0)"
+                  fill="#EFEFEF"
+                />
+              </svg>
+            </Link>
+          </div>
+          {/* Page 0 */}
+          <div
+            className={`absolute inset-0 z-50 flex h-screen w-full flex-col justify-between bg-secondary-500 pt-24 duration-1000 ${
+              page == 0 ? "" : "-translate-y-full"
+            }`}
+          >
             <div className="px-8">
               <div>
                 <span className="font-literata text-2xl font-semibold text-primary-300">
                   Let&apos;s Get Started!
                 </span>
                 <p className="text-others-white">
-                  Kamu hanya perlu 4 cara untuk menjadi penjual di aplikasi
+                  Kamu hanya perlu 5 cara untuk menjadi penjual di aplikasi
                   Footies!
                 </p>
               </div>
@@ -179,16 +201,13 @@ export default function Seller(props: {
             </div>
             <button
               onClick={() => setPage(1)}
-              className="mx-8 mb-10 rounded-md bg-primary-300 py-3 font-louis text-[14px] font-bold"
+              className="mx-8 mb-10 rounded-md bg-primary-300 py-3 font-louis text-[14px] font-bold duration-500 active:bg-primary-100"
             >
               Daftar Sekarang
             </button>
           </div>
-        ) : (
           <div
-            className={`relative mt-20 flex justify-start text-center font-literata text-2xl font-semibold leading-tight text-primary-300 duration-500
-          
-          `}
+            className={`relative flex justify-start text-center font-literata text-2xl font-semibold leading-tight text-primary-300 duration-500`}
           >
             <svg
               width={1194}
@@ -273,193 +292,53 @@ export default function Seller(props: {
                 </filter>
               </defs>
             </svg>
-            <form
+            <div
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              onSubmit={handleSubmit(submitHandler)}
-              className={`${page !== 5 ? "w-screen" : "hidden"}`}
+              // onSubmit={handleSubmit(submitHandler)}
+              className={`${
+                page !== 5 ? "z-10 flex duration-1000" : "hidden"
+              } ${
+                page == 1
+                  ? "translate-x-[50%]"
+                  : page == 2
+                  ? "translate-x-[25%]"
+                  : page == 3
+                  ? "translate-x-[0%]"
+                  : page == 4
+                  ? "-translate-x-[25%]"
+                  : "translate-x-[50%] -translate-y-full"
+              }`}
             >
-              <div className={`${page == 1 ? "" : "hidden"}`}>
-                {/* 1) Informasi Toko */}
-                <div className="z-10 w-screen">
-                  <p>Informasi</p>
-                  <p>Toko</p>
-                  <div className="mt-5 flex w-full justify-center">
-                    <Image
-                      src="/signup/info.png"
-                      alt=""
-                      width={300}
-                      height={210}
-                    />
-                  </div>
-                  <p className="ml-9 mt-6 mr-auto text-start text-sm text-secondary-100">
-                    Nama Toko <span className="text-failed">*</span>
-                  </p>
-                  <input
-                    {...register("nama", {
-                      required: "Nama Toko tidak boleh kosong",
-                    })}
-                    type="text"
-                    className="w-[80%] border-b border-secondary-100 bg-transparent py-1 font-louis text-[14px] font-light text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
-                  />
-                  <p className="ml-9 mt-6 mr-auto text-start text-sm text-secondary-100">
-                    Deskripsi Toko
-                  </p>
-                  <textarea
-                    {...register("deskripsi")}
-                    className="w-[80%] border-b border-secondary-100 bg-transparent py-1 font-louis text-[14px] font-light text-others-white duration-500 focus:h-[100px] focus:border-b focus:border-others-white focus:outline-none"
-                  />
-                </div>
-              </div>
+              {/* 1) Informasi Toko */}
+              <Info
+                prevFormStep={prevFormStep}
+                formStep={page}
+                nextFormStep={nextFormStep}
+              />
               {/* 2) Alamat Toko */}
-              <div className={`${page == 2 ? "" : "hidden"}`}>
-                <div className="z-10 w-screen">
-                  <p>Alamat toko</p>
-                  <div className="mt-5 h-full w-full">
-                    <Map />
-                    <p className="ml-8 mt-6 mb-1 mr-auto text-start text-sm text-secondary-100">
-                      Alamat Toko <span className="text-failed">*</span>
-                    </p>
-                    <input
-                      {...register("alamat", {
-                        required: "Alamat Toko tidak boleh kosong",
-                      })}
-                      type="text"
-                      className="w-[82%] border-b border-secondary-100 bg-transparent py-1 font-louis text-[14px] font-light text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className={`${page == 3 ? "" : "hidden"}`}>
-                {/* 3) Detail Toko */}
-                <div className="z-10 w-screen">
-                  <div className="flex flex-col justify-between">
-                    <p>Detail Toko</p>
-                    <form action="" className="mx-auto mt-12 w-1/3">
-                      <p className="mb-1 text-[15px] text-others-white">
-                        Jam Buka
-                      </p>
-                      <div className="relative flex gap-x-6">
-                        <input
-                          {...register("jamBuka")}
-                          type="number"
-                          className="w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
-                        />
-                        <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15px] text-others-white">
-                          :
-                        </p>
-                        <input
-                          type="number"
-                          className="w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
-                        />
-                      </div>
-                      <p className="mt-7 mb-1 text-[15px] text-others-white">
-                        Jam Tutup
-                      </p>
-                      <div className="relative flex gap-x-6">
-                        <input
-                          {...register("jamTutup")}
-                          type="number"
-                          className="w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
-                        />
-                        <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15px] text-others-white">
-                          :
-                        </p>
-                        <input
-                          type="number"
-                          className="w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
-                        />
-                      </div>
-                      <p className="mt-7 text-[15px] text-others-white">
-                        Label
-                      </p>
-                      <input
-                        type="text"
-                        className="w-2/3 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
-                      />
-                    </form>
-                  </div>
-                  <div className="ml-5 mt-5 flex flex-wrap gap-2">
-                    {labels.map((label, i) => (
-                      <div
-                        key={i}
-                        className="flex items-center gap-x-3 bg-primary-300 px-2 py-1 font-louis text-base text-secondary-500"
-                      >
-                        <p>{label}</p>
-                        <button>
-                          <svg
-                            width={14}
-                            height={13}
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <rect
-                              width={1.563}
-                              height={16.417}
-                              rx={0.782}
-                              transform="rotate(-44.936 2.007 -.566)"
-                              fill="#1A1A1A"
-                            />
-                            <rect
-                              width={1.563}
-                              height={16.417}
-                              rx={0.782}
-                              transform="rotate(44.936 6.125 15.317)"
-                              fill="#1A1A1A"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className={`${page == 4 ? "" : "hidden"}`}>
-                {/* 4) Dokumen */}
-                <div className="z-10 w-screen">
-                  <p className="mb-5">Verifikasi Dokumen</p>
-                  <div className="mx-8">
-                    <div>
-                      <Image
-                        src="/signup/dokumen.png"
-                        alt=""
-                        width={150}
-                        height={85}
-                        className=" w-full rounded-md border-[5px] border-primary-300"
-                      />
-                    </div>
-                    <div className="">
-                      <p className="mt-10 mb-1 mr-auto text-start text-[15px] font-medium  text-others-white">
-                        Unggah Dokumen <span className="text-failed">*</span>
-                      </p>
-                      <p className="mb-1 mr-auto text-start font-louis text-[12px] font-medium  text-others-white">
-                        Dokumen kepemilikan bisnis/bangunan
-                      </p>
-                      <div className="mt-3 flex h-[200px] w-[300px] flex-col items-center justify-center rounded-md border border-dashed">
-                        <svg
-                          width={41}
-                          height={33}
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M18.613 27.471a5 5 0 01-5 5h-3.325c-2.806 0-5.204-1.05-7.193-3.15-1.99-2.1-2.983-4.666-2.982-7.7 0-2.6.724-4.916 2.174-6.95 1.449-2.033 3.345-3.333 5.688-3.9.771-3.066 2.313-5.55 4.625-7.45 2.313-1.9 4.934-2.85 7.863-2.85 3.607 0 6.668 1.359 9.181 4.076 2.514 2.718 3.77 6.026 3.769 9.924 2.127.267 3.893 1.259 5.296 2.976 1.404 1.718 2.105 3.726 2.104 6.024 0 2.5-.81 4.626-2.43 6.376-1.619 1.751-3.584 2.626-5.895 2.624h-5.175a5 5 0 01-5-5v-9.3l2.96 3.1 2.59-2.8-7.4-8-7.4 8 2.59 2.8 2.96-3.1v9.3z"
-                            fill="#EFEFEF"
-                          />
-                        </svg>
-                        <button className="mt-2 rounded-full bg-primary-300 px-4 py-[6px] font-louis text-[14px] font-bold text-secondary-500">
-                          Telusuri
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </form>
-            <div className={`${page == 5 ? "" : "hidden"}`}>
+              <Alamat
+                prevFormStep={prevFormStep}
+                formStep={page}
+                nextFormStep={nextFormStep}
+              />
+              {/* 3) Detail Toko */}
+              <Detail
+                prevFormStep={prevFormStep}
+                formStep={page}
+                nextFormStep={nextFormStep}
+              />
+              {/* 4) Dokumen */}
+              <Dokumen
+                prevFormStep={prevFormStep}
+                formStep={page}
+                nextFormStep={nextFormStep}
+              />
+            </div>
+            <div className={``}>
               {/* 5) Verifikasi */}
               <div className="z-10 flex w-screen flex-col items-center justify-between">
                 <p className="px-20">Sedang Dalam Proses Verifikasi</p>
-                <div className="relative w-fit">
+                <div className="relative mt-20">
                   <svg
                     width={86}
                     height={110}
@@ -493,69 +372,39 @@ export default function Seller(props: {
               </div>
             </div>
           </div>
-        )}
-        <div
-          className={`z-10 mb-7 flex items-center gap-x-4 ${
-            page == 0 ? "hidden" : ""
-          }`}
-        >
-          {/* Navigation button */}
-          {page != 0 && props.data?.Merchant == null ? (
-            <button onClick={() => setPage(page - 1)} className="">
-              <svg
-                width={28}
-                height={28}
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect
-                  width={28}
-                  height={28}
-                  rx={14}
-                  transform="matrix(-1 0 0 1 28 0)"
-                  fill="#F6C73B"
-                />
-                <path
-                  d="M17.587 6.947a1.328 1.328 0 010 1.88L12.413 14l5.174 5.173a1.33 1.33 0 01-1.88 1.88l-6.12-6.12a1.327 1.327 0 010-1.88l6.12-6.12c.506-.506 1.36-.506 1.88.014z"
-                  fill="#1D1D1D"
-                />
-              </svg>
-            </button>
-          ) : (
-            <>
-              <button className="pointer-events-none">
+          {page != 5 ? (
+            // ini buat navbar yang nempel terus yah bang ihsan
+            <div className="absolute bottom-0 z-40 mb-7 flex items-center">
+              <button onClick={() => prevFormStep()}>
                 <svg
                   width={28}
                   height={28}
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  className="hidden"
                 >
                   <rect
                     width={28}
                     height={28}
                     rx={14}
                     transform="matrix(-1 0 0 1 28 0)"
-                    fill="#1a1a1a"
+                    fill="#F6C73B"
                   />
                   <path
                     d="M17.587 6.947a1.328 1.328 0 010 1.88L12.413 14l5.174 5.173a1.33 1.33 0 01-1.88 1.88l-6.12-6.12a1.327 1.327 0 010-1.88l6.12-6.12c.506-.506 1.36-.506 1.88.014z"
-                    fill="#1a1a1a"
+                    fill="#1D1D1D"
                   />
                 </svg>
               </button>
-            </>
-          )}
-          {page != 5 ? (
-            // Progess Bar
-            <div className="relative flex h-2 w-48 justify-between overflow-hidden bg-secondary-400">
-              <>
+              {/* ini progress barnya */}
+              <div className="relative mx-4 flex h-2 w-48 justify-between overflow-hidden">
                 <div className="h-full w-1 border-2 border-secondary-500 bg-secondary-500" />
                 <div className="z-10 h-full w-1 border-2 border-secondary-500 bg-secondary-500" />
                 <div className="z-10 h-full w-1 border-2 border-secondary-500 bg-secondary-500" />
                 <div className="z-10 h-full w-1 border-2 border-secondary-500 bg-secondary-500" />
                 <div className="h-full w-1 border-2 border-secondary-500 bg-secondary-500" />
                 <div
-                  className={`absolute h-full w-full border border-primary-300 bg-primary-300 duration-500 ${
+                  className={`absolute h-full w-full border border-primary-300 bg-primary-300 duration-1000 ${
                     page == 0
                       ? "-translate-x-48"
                       : page == 1
@@ -567,73 +416,191 @@ export default function Seller(props: {
                       : ""
                   }`}
                 />
-              </>
-            </div>
-          ) : (
-            <>
-              <Link href="/dashboard">
-                <div className="mx-auto">
-                  <span className="rounded-full bg-primary-300 px-4 py-2 font-bold text-secondary-500">
-                    Kembali
-                  </span>
-                </div>
-              </Link>
-            </>
-          )}
-          {page != 5 ? (
-            <button
-              type={page != 4 ? "button" : "submit"}
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              onClick={
-                page != 4 ? () => incrementPage() : handleSubmit(submitHandler)
-              }
-              className="rotate-180"
-            >
-              <svg
-                width={28}
-                height={28}
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect
-                  width={28}
-                  height={28}
-                  rx={14}
-                  transform="matrix(-1 0 0 1 28 0)"
-                  fill="#F6C73B"
-                />
-                <path
-                  d="M17.587 6.947a1.328 1.328 0 010 1.88L12.413 14l5.174 5.173a1.33 1.33 0 01-1.88 1.88l-6.12-6.12a1.327 1.327 0 010-1.88l6.12-6.12c.506-.506 1.36-.506 1.88.014z"
-                  fill="#1D1D1D"
-                />
-              </svg>
-            </button>
-          ) : (
-            <>
-              <button className="pointer-events-none">
+              </div>
+              <button onClick={() => nextFormStep()}>
                 <svg
                   width={28}
                   height={28}
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  className="hidden rotate-180"
                 >
                   <rect
                     width={28}
                     height={28}
                     rx={14}
                     transform="matrix(-1 0 0 1 28 0)"
-                    fill="#1a1a1a"
+                    fill="#F6C73B"
                   />
                   <path
                     d="M17.587 6.947a1.328 1.328 0 010 1.88L12.413 14l5.174 5.173a1.33 1.33 0 01-1.88 1.88l-6.12-6.12a1.327 1.327 0 010-1.88l6.12-6.12c.506-.506 1.36-.506 1.88.014z"
-                    fill="#1a1a1a"
+                    fill="#1D1D1D"
                   />
                 </svg>
               </button>
-            </>
+              {/* dummy doang biar progress barnya di tengah */}
+              <div className="h-[28px]"></div>
+            </div>
+          ) : (
+            <Link href="/dashboard">
+              <div className="mx-auto">
+                <span className="rounded-full bg-primary-300 px-4 py-2 font-bold text-secondary-500">
+                  Kembali
+                </span>
+              </div>
+            </Link>
           )}
         </div>
-      </div>
+      )}
     </>
   );
 }
+
+// const Nav = (props) => {
+//   return (
+//     <>
+//   {/* Navigation */}
+//   <div
+//     className={`z-10 mb-7 flex items-center gap-x-4 delay-500 duration-1000 ${
+//       page == 0 ? "translate-y-[500%]" : ""
+//     }`}
+//   >
+//     {/* Navigation button */}
+//     {props.data?.Merchant == null ? (
+//       // Prev button
+// <button onClick={() => setPage(page - 1)} className="">
+//   <svg
+//     width={28}
+//     height={28}
+//     fill="none"
+//     xmlns="http://www.w3.org/2000/svg"
+//   >
+//     <rect
+//       width={28}
+//       height={28}
+//       rx={14}
+//       transform="matrix(-1 0 0 1 28 0)"
+//       fill="#F6C73B"
+//     />
+//     <path
+//       d="M17.587 6.947a1.328 1.328 0 010 1.88L12.413 14l5.174 5.173a1.33 1.33 0 01-1.88 1.88l-6.12-6.12a1.327 1.327 0 010-1.88l6.12-6.12c.506-.506 1.36-.506 1.88.014z"
+//       fill="#1D1D1D"
+//     />
+//   </svg>
+// </button>
+//     ) : (
+//       <>
+//         <button className="pointer-events-none">
+//           <svg
+//             width={28}
+//             height={28}
+//             fill="none"
+//             xmlns="http://www.w3.org/2000/svg"
+//           >
+//             <rect
+//               width={28}
+//               height={28}
+//               rx={14}
+//               transform="matrix(-1 0 0 1 28 0)"
+//               fill="#1a1a1a"
+//             />
+//             <path
+//               d="M17.587 6.947a1.328 1.328 0 010 1.88L12.413 14l5.174 5.173a1.33 1.33 0 01-1.88 1.88l-6.12-6.12a1.327 1.327 0 010-1.88l6.12-6.12c.506-.506 1.36-.506 1.88.014z"
+//               fill="#1a1a1a"
+//             />
+//           </svg>
+//         </button>
+//       </>
+//     )}
+//     {page != 5 ? (
+//       // Progess Bar
+// <div className="relative flex h-2 w-48 justify-between overflow-hidden bg-secondary-400">
+//   <>
+//     <div className="h-full w-1 border-2 border-secondary-500 bg-secondary-500" />
+//     <div className="z-10 h-full w-1 border-2 border-secondary-500 bg-secondary-500" />
+//     <div className="z-10 h-full w-1 border-2 border-secondary-500 bg-secondary-500" />
+//     <div className="z-10 h-full w-1 border-2 border-secondary-500 bg-secondary-500" />
+//     <div className="h-full w-1 border-2 border-secondary-500 bg-secondary-500" />
+//     <div
+//       className={`absolute h-full w-full border border-primary-300 bg-primary-300 duration-500 ${
+//         page == 0
+//           ? "-translate-x-48"
+//           : page == 1
+//           ? "-translate-x-36"
+//           : page == 2
+//           ? "-translate-x-24"
+//           : page == 3
+//           ? "-translate-x-12"
+//           : ""
+//       }`}
+//     />
+//   </>
+// </div>
+//     ) : (
+//       <>
+//         <Link href="/dashboard">
+//           <div className="mx-auto">
+//             <span className="rounded-full bg-primary-300 px-4 py-2 font-bold text-secondary-500">
+//               Kembali
+//             </span>
+//           </div>
+//         </Link>
+//       </>
+//     )}
+//     {page != 5 ? (
+//       // Next button
+// <button
+//   type={page != 4 ? "button" : "submit"}
+//   // eslint-disable-next-line @typescript-eslint/no-misused-promises
+//   onClick={
+//     page != 4 ? () => incrementPage() : handleSubmit(submitHandler)
+//   }
+//   className="rotate-180"
+// >
+//   <svg
+//     width={28}
+//     height={28}
+//     fill="none"
+//     xmlns="http://www.w3.org/2000/svg"
+//   >
+//     <rect
+//       width={28}
+//       height={28}
+//       rx={14}
+//       transform="matrix(-1 0 0 1 28 0)"
+//       fill="#F6C73B"
+//     />
+//     <path
+//       d="M17.587 6.947a1.328 1.328 0 010 1.88L12.413 14l5.174 5.173a1.33 1.33 0 01-1.88 1.88l-6.12-6.12a1.327 1.327 0 010-1.88l6.12-6.12c.506-.506 1.36-.506 1.88.014z"
+//       fill="#1D1D1D"
+//     />
+//   </svg>
+// </button>
+//     ) : (
+//       <>
+//         <button className="pointer-events-none">
+//           <svg
+//             width={28}
+//             height={28}
+//             fill="none"
+//             xmlns="http://www.w3.org/2000/svg"
+//           >
+//             <rect
+//               width={28}
+//               height={28}
+//               rx={14}
+//               transform="matrix(-1 0 0 1 28 0)"
+//               fill="#1a1a1a"
+//             />
+//             <path
+//               d="M17.587 6.947a1.328 1.328 0 010 1.88L12.413 14l5.174 5.173a1.33 1.33 0 01-1.88 1.88l-6.12-6.12a1.327 1.327 0 010-1.88l6.12-6.12c.506-.506 1.36-.506 1.88.014z"
+//               fill="#1a1a1a"
+//             />
+//           </svg>
+//         </button>
+//       </>
+//     )}
+//   </div>
+// </>
+//   );
+// };
