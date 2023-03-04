@@ -22,7 +22,7 @@ function MapboxMap({
   setLocation,
 }: {
   initialOptions: MapboxMapProps;
-  onMapLoaded: (map: mapboxgl.Map) => void;
+  onMapLoaded?: (map: mapboxgl.Map) => void;
   lat: number;
   lng: number;
   location: string;
