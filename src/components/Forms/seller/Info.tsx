@@ -26,7 +26,11 @@ export default function Info({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="relative h-screen pt-20">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="relative h-screen pt-20"
+      hidden={formStep != 1}
+    >
       <div className="z-10 w-screen">
         <p>Informasi</p>
         <p>Toko</p>
