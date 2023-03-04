@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FormValues, useFormData } from "../../../context/seller";
 import Nav from "./Nav";
@@ -26,10 +26,15 @@ export default function Detail({
     nextFormStep();
   };
 
+  const handleLabelChange = (e: ChangeEvent<HTMLInputElement>) => {
+    let label = "";
+    label += e;
+  };
+
   const [labels, setLabels] = useState(["Chinese"]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="relative h-screen pt-20">
+    <form onSubmit={nextFormStep} className="relative h-screen pt-20">
       <div className="z-10 mx-auto w-screen xs:max-w-[500px]">
         <div className="flex flex-col justify-between">
           <p>Detail Toko</p>
@@ -39,13 +44,15 @@ export default function Detail({
               <input
                 {...register("jamBuka")}
                 type="number"
-                className="w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
+                autoComplete={"off"}
+                className="spin w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
               />
               <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15px] text-others-white">
                 :
               </p>
               <input
                 type="number"
+                autoComplete={"off"}
                 className="w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
               />
             </div>
@@ -54,6 +61,7 @@ export default function Detail({
               <input
                 {...register("jamTutup")}
                 type="number"
+                autoComplete={"off"}
                 className="w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
               />
               <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15px] text-others-white">
@@ -61,12 +69,16 @@ export default function Detail({
               </p>
               <input
                 type="number"
+                autoComplete={"off"}
                 className="w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
               />
             </div>
             <p className="mt-7 text-[15px] text-others-white">Label</p>
             <input
               type="text"
+              autoComplete={"off"}
+              onChange={(e) => handleLabelChange(e)}
+              onKeyDown={(e) => console.log(e)}
               className="w-2/3 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
             />
           </div>
