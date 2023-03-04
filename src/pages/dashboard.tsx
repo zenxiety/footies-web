@@ -9,7 +9,7 @@ import TipeAkun from "../components/dashboard/TipeAkun";
 // export type roles = "pembeli" | "penjual" | "pengemudi";
 
 export default function Dashboard() {
-  const [roles, setRoles] = useState<Role>("USER");
+  const [roles, setRoles] = useState<Role>("MERCHANT");
 
   return (
     <>
@@ -62,8 +62,8 @@ export default function Dashboard() {
                 {roles == "USER" ? (
                   <p>john.doe@gmail.com</p>
                 ) : roles == "MERCHANT" ? (
-                  <div className="mt-1 flex w-40 cursor-pointer items-center justify-between gap-x-4 rounded-md bg-primary-300 px-2 py-1">
-                    <p className="max-w-[7rem] overflow-hidden text-ellipsis whitespace-nowrap text-others-black">
+                  <div className="mt-1 flex w-[45vw] cursor-pointer items-center justify-between gap-x-2 rounded-md bg-primary-300 px-2 py-1">
+                    <p className="max-w-[35vw] overflow-hidden text-ellipsis whitespace-nowrap text-others-black">
                       Jl. Sendiri Mululuululluluululul
                     </p>
                     <svg
