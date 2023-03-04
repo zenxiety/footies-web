@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useForm } from "react-hook-form";
-import { useFormData } from "../../../context/seller";
+import { FormValues, useFormData } from "../../../context/seller";
 import Nav from "./Nav";
 
 export default function Info({
@@ -8,9 +8,9 @@ export default function Info({
   formStep,
   nextFormStep,
 }: {
-  prevFormStep: any;
-  formStep: any;
-  nextFormStep: any;
+  prevFormStep: () => void;
+  formStep: number;
+  nextFormStep: () => void;
 }) {
   const { setFormValues } = useFormData();
 
@@ -18,15 +18,19 @@ export default function Info({
     handleSubmit,
     formState: { errors },
     register,
-  } = useForm({ mode: "all" });
+  } = useForm<FormValues>({ mode: "all" });
 
-  const onSubmit = (values: object) => {
+  const onSubmit = (values: FormValues) => {
     setFormValues(values);
     nextFormStep();
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="relative h-screen pt-20">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="relative h-screen pt-20"
+      hidden={formStep != 1}
+    >
       <div className="z-10 w-screen">
         <p>Informasi</p>
         <p>Toko</p>
@@ -61,7 +65,7 @@ export default function Info({
         />
       </div>
       {/* ini navbar tapi ikut kegeser */}
-      <Nav prevFormStep={prevFormStep} nextFormStep={nextFormStep} />
+      <Nav prevFormStep={prevFormStep} />
     </form>
   );
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useFormData } from "../../../context/seller";
+import { FormValues, useFormData } from "../../../context/seller";
 import Nav from "./Nav";
 
 export default function Detail({
@@ -8,19 +8,20 @@ export default function Detail({
   formStep,
   nextFormStep,
 }: {
-  prevFormStep: any;
-  formStep: any;
-  nextFormStep: any;
+  prevFormStep: () => void;
+  formStep: number;
+  nextFormStep: () => void;
 }) {
-  const { setFormValues } = useFormData();
+  const { data, setFormValues } = useFormData();
 
   const {
     handleSubmit,
     formState: { errors },
     register,
-  } = useForm({ mode: "all" });
+  } = useForm<FormValues>({ mode: "all" });
 
-  const onSubmit = (values: object) => {
+  const onSubmit = (values: FormValues) => {
+    console.log(data);
     setFormValues(values);
     nextFormStep();
   };
@@ -28,7 +29,11 @@ export default function Detail({
   const [labels, setLabels] = useState(["Chinese"]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="relative h-screen pt-20">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="relative h-screen pt-20"
+      hidden={formStep != 3}
+    >
       <div className="z-10 w-screen">
         <div className="flex flex-col justify-between">
           <p>Detail Toko</p>
@@ -104,7 +109,7 @@ export default function Detail({
           ))}
         </div>
       </div>
-      <Nav prevFormStep={prevFormStep} nextFormStep={nextFormStep} />
+      <Nav prevFormStep={prevFormStep} />
     </form>
   );
 }

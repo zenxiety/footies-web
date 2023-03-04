@@ -1,6 +1,8 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { useFormData } from "../../../context/seller";
+import { FormValues, useFormData } from "../../../context/seller";
+import { api } from "../../../utils/api";
 import Nav from "./Nav";
 
 export default function Dokumen({
@@ -8,26 +10,44 @@ export default function Dokumen({
   formStep,
   nextFormStep,
 }: {
-  prevFormStep: any;
-  formStep: any;
-  nextFormStep: any;
+  prevFormStep: () => void;
+  formStep: number;
+  nextFormStep: () => void;
 }) {
-  const { setFormValues } = useFormData();
+  const { data } = useFormData();
   const {
     handleSubmit,
     formState: { errors },
     register,
-  } = useForm({ mode: "all" });
+  } = useForm<FormValues>({ mode: "all" });
 
-  const onSubmit = (values: object) => {
-    setFormValues(values);
-    nextFormStep();
+  const signUp = api.auth.registerMerchant.useMutation();
+  const router = useRouter();
+
+  const onSubmit = async (values: FormValues) => {
+    await signUp
+      .mutateAsync({
+        alamat: data.alamat,
+        deskripsi: data.deskripsi,
+        dokumen: values.dokumen ?? "anggapinisebagailinkdokumen",
+        jamBuka: data.jamBuka,
+        jamTutup: data.jamTutup,
+        labels: data.labels ?? ["BBC"],
+        nama: data.nama,
+      })
+      .then(async (res) => {
+        console.log(res);
+        await router.push("/dashboard");
+        nextFormStep();
+      })
+      .catch((e) => console.log(e));
   };
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className={`relative h-screen pt-20`}
+      hidden={formStep != 4}
     >
       <div className="z-10 w-screen">
         <p className="mb-5">Verifikasi Dokumen</p>
@@ -67,7 +87,7 @@ export default function Dokumen({
           </div>
         </div>
       </div>
-      <Nav prevFormStep={prevFormStep} nextFormStep={nextFormStep} />
+      <Nav prevFormStep={prevFormStep} />
     </form>
   );
 }
