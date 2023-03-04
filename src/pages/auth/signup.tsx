@@ -18,6 +18,7 @@ type FormValues = {
   telepon: string;
   alamat: string;
   confirmPassword: string;
+  remember?: boolean;
   apiError?: string;
 };
 
@@ -27,35 +28,18 @@ const SignUp: NextPage = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({ mode: "onChange" });
+  const passDigital = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/);
+  const passDigital1 = new RegExp("[a-z,A-Z,0-9]+@gmail.com");
   const onSubmit = (data: any) => console.log(data);
   const router = useRouter();
   const signUp = api.auth.signUp.useMutation();
   const [biodata, setBiodata] = useState(false);
   // const [biodata1, setBiodata1] = useState(false)
-  const [isChecked, setIsChecked] = useState(false);
-  const [isChecked1, setIsChecked1] = useState(false);
-  const [isChecked2, setIsChecked2] = useState(false);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {
     setPasswordVisible((prev) => !prev);
   };
-  const handleCheckboxChange = (event: {
-    target: { checked: boolean | ((prevState: boolean) => boolean) };
-  }) => {
-    setIsChecked(event.target.checked);
-  };
-  const handleCheckboxChange1 = (event: {
-    target: { checked: boolean | ((prevState: boolean) => boolean) };
-  }) => {
-    setIsChecked1(event.target.checked);
-  };
-  const handleCheckboxChange2 = (event: {
-    target: { checked: boolean | ((prevState: boolean) => boolean) };
-  }) => {
-    setIsChecked2(event.target.checked);
-  };
-
   const toggleBiodata = () => {
     if (watch("email") && watch("password") && watch("confirmPassword")) {
       setBiodata((prev) => !prev);
@@ -74,8 +58,8 @@ const SignUp: NextPage = () => {
       .then(async () => {
         return await router.push("/auth/signin");
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((onSubmit) => {
+        console.log(onSubmit);
       });
       
   };
@@ -101,7 +85,7 @@ const SignUp: NextPage = () => {
           <div className={biodata ? "" : "hidden"}>
             <div className="relative z-0 mb-2 font-louis">
               <input
-                {...register("firstName", { required: true, maxLength: 30 })}
+                {...register("firstName", { required: true, })}
                 type="text"
                 className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                 placeholder=" "
@@ -109,7 +93,7 @@ const SignUp: NextPage = () => {
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Nama Depan
               </label>
-              {errors.firstName && errors.firstName.type === "required" && (
+              {errors?.firstName?.type === "required" && (
                 <span className="text-[12px] text-[#F51C2F]" role="alert">
                   This is required
                 </span>
@@ -117,7 +101,7 @@ const SignUp: NextPage = () => {
             </div>
             <div className="relative z-0 mb-2 font-louis">
               <input
-                {...register("lastName", { required: true, maxLength: 30 })}
+                {...register("lastName", { required: true, })}
                 type="text"
                 className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                 placeholder=" "
@@ -177,19 +161,19 @@ const SignUp: NextPage = () => {
             </div>
             <div className="flex flex-row items-center gap-x-2 py-4">
               <label>
-                <input
-                  type="checkbox"
-                  checked={isChecked1}
-                  onChange={handleCheckboxChange1}
-                  style={{ display: "none" }} // hide default checkbox
-                />
-                <span // custom checkbox style
-                  className={
-                    isChecked1
-                      ? "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-[#F4B829] pt-0 outline-double outline-[#F4B829]"
-                      : "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-white"
-                  }
-                />
+              <input
+                    type="checkbox"
+                    {...register("remember")}
+                    // checked={isChecked}
+                    // onChange={handleCheckboxChange}
+                    className="peer hidden"
+                    // style={{ display: "none" }} // hide default checkbox
+                  />
+                  <span // custom checkbox style
+                    className={
+                      "flex h-[20px] w-[20px] scale-100 items-center justify-center  rounded-[4px] bg-white peer-checked:scale-[0.8] peer-checked:bg-[#F4B829]  peer-checked:pt-0 peer-checked:outline-double peer-checked:outline-[#F4B829]"
+                    }
+                  />
               </label>
               <span className="font-louis text-[10px] text-white">
                 Gunakan lokasi anda sekarang
@@ -197,23 +181,23 @@ const SignUp: NextPage = () => {
             </div>
             <div className="flex flex-row items-center gap-x-2 pb-4">
               <label>
-                <input
-                  type="checkbox"
-                  checked={isChecked2}
-                  onChange={handleCheckboxChange2}
-                  style={{ display: "none" }} // hide default checkbox
-                />
-                <span // custom checkbox style
-                  className={
-                    isChecked2
-                      ? "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-[#F4B829] pt-0 outline-double outline-[#F4B829]"
-                      : "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-white"
-                  }
-                />
+              <input
+                    type="checkbox"
+                    {...register("remember")}
+                    // checked={isChecked}
+                    // onChange={handleCheckboxChange}
+                    className="peer hidden"
+                    // style={{ display: "none" }} // hide default checkbox
+                  />
+                  <span // custom checkbox style
+                    className={
+                      "flex h-[20px] w-[20px] scale-100 items-center justify-center  rounded-[4px] bg-white peer-checked:scale-[0.8] peer-checked:bg-[#F4B829]  peer-checked:pt-0 peer-checked:outline-double peer-checked:outline-[#F4B829]"
+                    }
+                  />
               </label>
               <span className="font-louis text-[10px] text-white">
-                Setuju dengan <span className="text-[#F4B829]">Terms</span> dan{" "}
-                <span className="text-[#F4B829]">Provacy Policy</span> kami.
+                Setuju dengan <span className="text-[#F4B829] font-italic">Terms</span> dan{" "}
+                <span className="text-[#F4B829] font-italic">Provacy Policy</span> kami.
               </span>
             </div>
             <div className="flex flex-row items-center justify-between">
@@ -232,24 +216,26 @@ const SignUp: NextPage = () => {
           <div className={biodata ? "hidden" : ""}>
             <div className="relative z-0 mb-2 font-louis">
               <input
-                {...register("email", { required: true, maxLength: 30 })}
+                {...register("email", { required: true, pattern: passDigital1 })}
                 type="email"
                 className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                 placeholder=" "
+                
               />
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Email
               </label>
-              {errors.email && errors.email.type === "required" && (
-                <span className="text-[12px] text-[#F51C2F]" role="alert">
+              {errors?.email?.type === "required" && (
+                <span className="text-[12px] text-[#F51C2F]">
                   This is required
                 </span>
               )}
+              {errors?.email?.type == "pattern" && <span className="text-red-500 font-louis text-[12px]">Harus sesuai format!</span> }
             </div>
             <div className="relative z-0 mb-2 font-louis">
               <input
                 type={passwordVisible ? "text" : "password"}
-                {...register("password", { required: true, maxLength: 30 })}
+                {...register("password", { required: true, pattern: passDigital, minLength: 8 })}
                 className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                 placeholder=" "
               />
@@ -261,6 +247,8 @@ const SignUp: NextPage = () => {
                   This is required
                 </span>
               )}
+              {errors?.password?.type == "pattern" && <span className="text-red-500 font-louis text-[12px]">Kata sandi harus memuat 8 karakter, huruf kapital, dan angka.</span> }
+              {errors?.password?.type == "minLength" && <span className="text-red-500 font-louis text-[12px]">Minimal 8 karakter</span> }
             </div>
             <div className="relative z-0 mb-2 font-louis">
               <input
@@ -290,18 +278,18 @@ const SignUp: NextPage = () => {
             <div className="flex flex-row gap-x-2">
               <div className="flex flex-row items-center justify-center gap-x-2">
                 <label>
-                  <input
+                <input
                     type="checkbox"
-                    checked={isChecked}
-                    onChange={handleCheckboxChange}
+                    {...register("remember")}
+                    // checked={isChecked}
+                    // onChange={handleCheckboxChange}
+                    className="peer hidden"
+                    // style={{ display: "none" }} // hide default checkbox
                     onClick={togglePasswordVisibility}
-                    style={{ display: "none" }} // hide default checkbox
                   />
                   <span // custom checkbox style
                     className={
-                      isChecked
-                        ? "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-[#F4B829] pt-0 outline-double outline-[#F4B829]"
-                        : "flex h-[20px] w-[20px] items-center justify-center rounded-[4px] bg-white"
+                      "flex h-[20px] w-[20px] scale-100 items-center justify-center  rounded-[4px] bg-white peer-checked:scale-[0.8] peer-checked:bg-[#F4B829]  peer-checked:pt-0 peer-checked:outline-double peer-checked:outline-[#F4B829]"
                     }
                   />
                 </label>
