@@ -2,13 +2,16 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { api } from "../../utils/api";
 import logo from "../../../public/icon-512x512.png";
 import Image from "next/image";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import "@fortawesome/fontawesome-free/css/all.css";
+import Nav from "../../components/Register/Nav";
+import Biodata from "../../components/Register/Biodata"
+import FormProvider from "../../context/seller";
 
 type FormValues = {
   firstName: string;
@@ -29,14 +32,22 @@ const SignUp: NextPage = () => {
     watch,
     formState: { errors },
   } = useForm<FormValues>({ mode: "onChange" });
-  const passDigital = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/);
-  const passDigital1 = new RegExp("[a-z,A-Z,0-9]+@gmail.com");
+  const passDigital = new RegExp(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/
+  );
+  const passDigital1 = new RegExp(
+    "[a-z,0-9,A-Z]+[@,.]+[a-z,0-9,A-Z]+[.]+[a-z,0-9,A-Z]"
+  );
   const onSubmit = (data: any) => console.log(data);
   const router = useRouter();
   const signUp = api.auth.signUp.useMutation();
   const [biodata, setBiodata] = useState(false);
   // const [biodata1, setBiodata1] = useState(false)
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const [password, setPassword] = useState({
+    firstPassword: '',
+    secondPassword: ''
+  })
   const togglePasswordVisibility = () => {
     setPasswordVisible((prev) => !prev);
   };
@@ -58,10 +69,9 @@ const SignUp: NextPage = () => {
       .then(async () => {
         return await router.push("/auth/signin");
       })
-      .catch((onSubmit) => {
-        console.log(onSubmit);
+      .catch((err) => {
+        console.log(err);
       });
-      
   };
   return (
     <>
@@ -85,7 +95,7 @@ const SignUp: NextPage = () => {
           <div className={biodata ? "" : "hidden"}>
             <div className="relative z-0 mb-2 font-louis">
               <input
-                {...register("firstName", { required: true, })}
+                {...register("firstName", { required: true })}
                 type="text"
                 className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                 placeholder=" "
@@ -101,7 +111,7 @@ const SignUp: NextPage = () => {
             </div>
             <div className="relative z-0 mb-2 font-louis">
               <input
-                {...register("lastName", { required: true, })}
+                {...register("lastName", { required: true })}
                 type="text"
                 className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                 placeholder=" "
@@ -153,27 +163,28 @@ const SignUp: NextPage = () => {
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Alamat
               </label>
-              {errors.alamat && errors.alamat.type === "required" && (
+              
+            </div>
+            {errors.alamat && errors.alamat.type === "required" && (
                 <span className="text-[12px] text-[#F51C2F]" role="alert">
                   This is required
                 </span>
               )}
-            </div>
             <div className="flex flex-row items-center gap-x-2 py-4">
               <label>
-              <input
-                    type="checkbox"
-                    {...register("remember")}
-                    // checked={isChecked}
-                    // onChange={handleCheckboxChange}
-                    className="peer hidden"
-                    // style={{ display: "none" }} // hide default checkbox
-                  />
-                  <span // custom checkbox style
-                    className={
-                      "flex h-[20px] w-[20px] scale-100 items-center justify-center  rounded-[4px] bg-white peer-checked:scale-[0.8] peer-checked:bg-[#F4B829]  peer-checked:pt-0 peer-checked:outline-double peer-checked:outline-[#F4B829]"
-                    }
-                  />
+                <input
+                  type="checkbox"
+                  {...register("remember")}
+                  // checked={isChecked}
+                  // onChange={handleCheckboxChange}
+                  className="peer hidden"
+                  // style={{ display: "none" }} // hide default checkbox
+                />
+                <span // custom checkbox style
+                  className={
+                    "flex h-[20px] w-[20px] scale-100 items-center justify-center  rounded-[4px] bg-white peer-checked:scale-[0.8] peer-checked:bg-[#F4B829]  peer-checked:pt-0 peer-checked:outline-double peer-checked:outline-[#F4B829]"
+                  }
+                />
               </label>
               <span className="font-louis text-[10px] text-white">
                 Gunakan lokasi anda sekarang
@@ -181,23 +192,27 @@ const SignUp: NextPage = () => {
             </div>
             <div className="flex flex-row items-center gap-x-2 pb-4">
               <label>
-              <input
-                    type="checkbox"
-                    {...register("remember")}
-                    // checked={isChecked}
-                    // onChange={handleCheckboxChange}
-                    className="peer hidden"
-                    // style={{ display: "none" }} // hide default checkbox
-                  />
-                  <span // custom checkbox style
-                    className={
-                      "flex h-[20px] w-[20px] scale-100 items-center justify-center  rounded-[4px] bg-white peer-checked:scale-[0.8] peer-checked:bg-[#F4B829]  peer-checked:pt-0 peer-checked:outline-double peer-checked:outline-[#F4B829]"
-                    }
-                  />
+                <input
+                  type="checkbox"
+                  {...register("remember")}
+                  // checked={isChecked}
+                  // onChange={handleCheckboxChange}
+                  className="peer hidden"
+                  // style={{ display: "none" }} // hide default checkbox
+                />
+                <span // custom checkbox style
+                  className={
+                    "flex h-[20px] w-[20px] scale-100 items-center justify-center  rounded-[4px] bg-white peer-checked:scale-[0.8] peer-checked:bg-[#F4B829]  peer-checked:pt-0 peer-checked:outline-double peer-checked:outline-[#F4B829]"
+                  }
+                />
               </label>
               <span className="font-louis text-[10px] text-white">
-                Setuju dengan <span className="text-[#F4B829] font-italic">Terms</span> dan{" "}
-                <span className="text-[#F4B829] font-italic">Provacy Policy</span> kami.
+                Setuju dengan{" "}
+                <span className="font-italic text-[#F4B829]">Terms</span> dan{" "}
+                <span className="font-italic text-[#F4B829]">
+                  Provacy Policy
+                </span>{" "}
+                kami.
               </span>
             </div>
             <div className="flex flex-row items-center justify-between">
@@ -216,11 +231,13 @@ const SignUp: NextPage = () => {
           <div className={biodata ? "hidden" : ""}>
             <div className="relative z-0 mb-2 font-louis">
               <input
-                {...register("email", { required: true, pattern: passDigital1 })}
+                {...register("email", {
+                  required: true,
+                  pattern: passDigital1,
+                })}
                 type="email"
-                className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
+                className={`peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:outline-none focus:ring-0 ${errors.email ? "focus:border-red-500" : "focus:border-primary-300"}`}
                 placeholder=" "
-                
               />
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Email
@@ -230,14 +247,23 @@ const SignUp: NextPage = () => {
                   This is required
                 </span>
               )}
-              {errors?.email?.type == "pattern" && <span className="text-red-500 font-louis text-[12px]">Harus sesuai format!</span> }
+              {errors?.email?.type == "pattern" && (
+                <span className="font-louis text-[12px] text-red-500">
+                  Harus sesuai format!
+                </span>
+              )}
             </div>
             <div className="relative z-0 mb-2 font-louis">
               <input
                 type={passwordVisible ? "text" : "password"}
-                {...register("password", { required: true, pattern: passDigital, minLength: 8 })}
-                className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
+                {...register("password", {
+                  required: true,
+                  pattern: passDigital,
+                  minLength: 8,
+                })}
+                className={`peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:outline-none focus:ring-0 ${errors.password ? "focus:border-red-500" : "focus:border-primary-300"}`}
                 placeholder=" "
+                
               />
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Kata Sandi
@@ -247,8 +273,16 @@ const SignUp: NextPage = () => {
                   This is required
                 </span>
               )}
-              {errors?.password?.type == "pattern" && <span className="text-red-500 font-louis text-[12px]">Kata sandi harus memuat 8 karakter, huruf kapital, dan angka.</span> }
-              {errors?.password?.type == "minLength" && <span className="text-red-500 font-louis text-[12px]">Minimal 8 karakter</span> }
+              {errors?.password?.type == "pattern" && (
+                <span className="font-louis text-[12px] text-red-500">
+                  Kata sandi harus memuat 8 karakter, huruf kapital, dan angka.
+                </span>
+              )}
+              {errors?.password?.type == "minLength" && (
+                <span className="font-louis text-[12px] text-red-500">
+                  Minimal 8 karakter
+                </span>
+              )}
             </div>
             <div className="relative z-0 mb-2 font-louis">
               <input
@@ -262,6 +296,7 @@ const SignUp: NextPage = () => {
                 })}
                 className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                 placeholder=" "
+                
               />
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Konfirmasi Kata Sandi
@@ -276,9 +311,9 @@ const SignUp: NextPage = () => {
               Kata sandi harus memuat 8 karakter, huruf kapital, dan angka.
             </h1>
             <div className="flex flex-row gap-x-2">
-              <div className="flex flex-row items-center justify-center gap-x-2">
+              <div className="my-4 flex flex-row items-center justify-center gap-x-2">
                 <label>
-                <input
+                  <input
                     type="checkbox"
                     {...register("remember")}
                     // checked={isChecked}
@@ -298,7 +333,7 @@ const SignUp: NextPage = () => {
                 </h1>
               </div>
             </div>
-            <div className="flex flex-row items-center justify-between">
+            <div className="my-4 flex flex-row items-center justify-between">
               <Link href="/auth/signin">
                 <h1 className="font-louis text-[#F4B829]">Masuk</h1>
               </Link>
@@ -311,7 +346,7 @@ const SignUp: NextPage = () => {
                 Selanjutnya
               </button>
             </div>
-            <div className="flex flex-row items-center justify-center">
+            <div className="my-4 flex flex-row items-center justify-center">
               <div className="border-t-2 text-white" />
               <h1 className="font-louis text-[12px] text-white">
                 atau masuk dengan

@@ -19,7 +19,7 @@ const SignIn: NextPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({ mode: "onChange" });
-  const passDigital = new RegExp("[a-z,0-9,A-Z]+@gmail.com");
+  const passDigital = new RegExp("[a-z,0-9,A-Z]+[@,.]+[a-z,0-9,A-Z]+[.]+[a-z,0-9,A-Z]");
   const onSubmit = (data: any) => console.log(data);
   const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -61,7 +61,7 @@ const SignIn: NextPage = () => {
               <input
                 {...register("email", { required: true, maxLength: 30, pattern: passDigital })}
                 type="text"
-                className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
+                className={`peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:outline-none focus:ring-0 ${errors.email ? "focus:border-red-500" : "focus:border-primary-300"}`}
                 placeholder=" "
                
                 
@@ -81,7 +81,7 @@ const SignIn: NextPage = () => {
               <input
                 type={passwordVisible ? "text" : "password"}
                 {...register("password", { required: true })}
-                className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
+                className={`peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:outline-none focus:ring-0 ${errors.password ? "focus:border-red-500" : "focus:border-primary-300"}`}
                 placeholder=" "
               />
               <i
@@ -127,11 +127,11 @@ const SignIn: NextPage = () => {
             </div>
             <button
               type="submit"
-              className="h-[6vh] w-full rounded-md bg-[#F4B829] font-louis"
+              className="h-[6vh] w-full rounded-md bg-[#F4B829] font-louis my-4"
             >
               Masuk
             </button>
-            <div className="mx-auto block">
+            <div className="mx-auto block my-2">
               <Link href="/auth/signup">
                 <h1 className="mx-auto block font-louis text-[12px] text-[#999999]">
                   Belum punya akun?{" "}
@@ -142,7 +142,7 @@ const SignIn: NextPage = () => {
               </Link>
             </div>
 
-            <div className="flex flex-row items-center justify-center">
+            <div className="flex flex-row items-center justify-center my-2">
               <div className="absolute border-t-2 border-white" />
               <h1 className="font-louis text-[16px] text-white">
                 atau daftar dengan

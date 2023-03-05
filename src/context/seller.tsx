@@ -9,6 +9,13 @@ export type FormValues = {
   labels: string[];
   dokumen: string;
   apiError?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  telepon: string;
+  confirmPassword: string;
+  remember?: boolean;
 };
 
 type FormContext = {
