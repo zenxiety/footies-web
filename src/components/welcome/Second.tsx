@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Efisiensi from "../../../public/assets/Efisiensi.png";
-import { useForm } from "react-hook-form";
+import {useForm } from "react-hook-form";
 import Link from "next/link";
-import { FormValues, useFormData } from "../../context/seller";
+import {useFormData } from "../../context/FormContext";
 import Nav from "./Nav";
 
 export default function Second({
@@ -20,15 +20,9 @@ export default function Second({
     handleSubmit,
     formState: { errors },
     register,
-  } = useForm<FormValues>({ mode: "all" });
-
-  const onSubmit = (values: FormValues) => {
-    setFormValues(values);
-    nextFormStep();
-  };
-
+  } = useForm({ mode: "all" });
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="">
+    <>
       <div className="z-50 mx-auto px-8 pt-0 relative">
         <div className=" items-start flex w-full justify-center">
           <Image src={Efisiensi} alt="" width={300} className="relative z-50"/>
@@ -47,8 +41,7 @@ export default function Second({
           <p className="font-louis text-primary-300 text-left pt-6 text-lg ">Masuk</p>
         </Link>
       </div>
-      {/* ini navbar tapi ikut kegeser */}
       <Nav prevFormStep={prevFormStep} />
-    </form>
+      </>
   );
 }

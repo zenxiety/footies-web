@@ -79,7 +79,7 @@ export default function Seller(props: {
               <motion.div
                 initial={{ opacity: 0, scale: 1 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1, delay: 6 }}
+                transition={{ duration: 1, delay: 8 }}
               >
                 <Image
                   src={Vector}
@@ -109,7 +109,7 @@ export default function Seller(props: {
       <motion.div
         initial={{ opacity: 0, scale: 1 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1, delay: 7 }}
+        transition={{ duration: 1, delay: 8 }}
       >
         <div className="absolute bottom-8 left-[50%] z-50 flex translate-x-[-50%] flex-row items-center justify-center pb-8">
           <svg
