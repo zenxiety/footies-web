@@ -4,7 +4,8 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { Controller, useForm } from "react-hook-form";
-import { FormValues, useFormData } from "../../../context/seller";
+import { useFormData } from "../../../context/FormContext";
+import { SellerFormValues } from "../../../pages/auth/signup/seller";
 import { api } from "../../../utils/api";
 import { uploadImage } from "../../../utils/cloudinary";
 import Nav from "./Nav";
@@ -18,13 +19,13 @@ export default function Dokumen({
   formStep: number;
   nextFormStep: () => void;
 }) {
-  const { data } = useFormData();
+  const { data, setFormValues } = useFormData<SellerFormValues>();
   const {
     control,
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm<FormValues>({ mode: "all" });
+  } = useForm<SellerFormValues>({ mode: "all" });
   const { getRootProps, getInputProps, isDragActive, open, fileRejections } =
     useDropzone({
       noClick: true,
@@ -49,7 +50,7 @@ export default function Dokumen({
   const signUp = api.auth.registerMerchant.useMutation();
   const router = useRouter();
 
-  const onSubmit = async (values: FormValues) => {
+  const onSubmit = async (values: SellerFormValues) => {
     await signUp
       .mutateAsync({
         alamat: data.alamat,
@@ -61,6 +62,7 @@ export default function Dokumen({
         nama: data.nama,
       })
       .then(async (res) => {
+        setFormValues({});
         await getSession();
         await router.push("/dashboard");
         nextFormStep();

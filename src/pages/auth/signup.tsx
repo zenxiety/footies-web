@@ -10,8 +10,8 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import "@fortawesome/fontawesome-free/css/all.css";
 import Nav from "../../components/Register/Nav";
-import Biodata from "../../components/Register/Biodata"
-import FormProvider from "../../context/seller";
+import Biodata from "../../components/Register/Biodata";
+import FormProvider from "../../context/FormContext";
 
 type FormValues = {
   firstName: string;
@@ -45,9 +45,9 @@ const SignUp: NextPage = () => {
   // const [biodata1, setBiodata1] = useState(false)
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [password, setPassword] = useState({
-    firstPassword: '',
-    secondPassword: ''
-  })
+    firstPassword: "",
+    secondPassword: "",
+  });
   const togglePasswordVisibility = () => {
     setPasswordVisible((prev) => !prev);
   };
@@ -163,13 +163,12 @@ const SignUp: NextPage = () => {
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Alamat
               </label>
-              
             </div>
             {errors.alamat && errors.alamat.type === "required" && (
-                <span className="text-[12px] text-[#F51C2F]" role="alert">
-                  This is required
-                </span>
-              )}
+              <span className="text-[12px] text-[#F51C2F]" role="alert">
+                This is required
+              </span>
+            )}
             <div className="flex flex-row items-center gap-x-2 py-4">
               <label>
                 <input
@@ -236,7 +235,11 @@ const SignUp: NextPage = () => {
                   pattern: passDigital1,
                 })}
                 type="email"
-                className={`peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:outline-none focus:ring-0 ${errors.email ? "focus:border-red-500" : "focus:border-primary-300"}`}
+                className={`peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:outline-none focus:ring-0 ${
+                  errors.email
+                    ? "focus:border-red-500"
+                    : "focus:border-primary-300"
+                }`}
                 placeholder=" "
               />
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
@@ -261,9 +264,12 @@ const SignUp: NextPage = () => {
                   pattern: passDigital,
                   minLength: 8,
                 })}
-                className={`peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:outline-none focus:ring-0 ${errors.password ? "focus:border-red-500" : "focus:border-primary-300"}`}
+                className={`peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:outline-none focus:ring-0 ${
+                  errors.password
+                    ? "focus:border-red-500"
+                    : "focus:border-primary-300"
+                }`}
                 placeholder=" "
-                
               />
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Kata Sandi
@@ -296,7 +302,6 @@ const SignUp: NextPage = () => {
                 })}
                 className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
                 placeholder=" "
-                
               />
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Konfirmasi Kata Sandi

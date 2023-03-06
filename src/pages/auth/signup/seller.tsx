@@ -16,11 +16,11 @@ import Info from "../../../components/Forms/seller/Info";
 import { Alamat } from "../../../components/Forms/seller";
 import Detail from "../../../components/Forms/seller/Detail";
 import Dokumen from "../../../components/Forms/seller/Dokumen";
-import FormProvider from "../../../context/seller";
+import FormProvider from "../../../context/FormContext";
 
 const Map = dynamic(() => import("../../../components/Map"), { ssr: false });
 
-type FormValues = {
+export type SellerFormValues = {
   nama: string;
   alamat: string;
   jamBuka: string;
@@ -55,7 +55,7 @@ export default function Seller(props: {
       })
     | null;
 }) {
-  const { register, handleSubmit, watch } = useForm<FormValues>();
+  const { register, handleSubmit, watch } = useForm<SellerFormValues>();
   const [page, setPage] = useState(props.data?.Merchant ? 5 : 0);
   // console.log(page);
 
@@ -72,7 +72,7 @@ export default function Seller(props: {
   const signUp = api.auth.registerMerchant.useMutation();
   const router = useRouter();
 
-  const submitHandler = async (data: FormValues) => {
+  const submitHandler = async (data: SellerFormValues) => {
     await signUp
       .mutateAsync({
         alamat: data.alamat,
@@ -312,7 +312,7 @@ export default function Seller(props: {
                   </filter>
                 </defs>
               </svg>
-              <FormProvider>
+              <FormProvider<SellerFormValues>>
                 {/* 1) Informasi Toko */}
                 <Info
                   prevFormStep={prevFormStep}

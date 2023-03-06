@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { FormValues, useFormData } from "../../../context/seller";
+import { useFormData } from "../../../context/FormContext";
+import { type SellerFormValues } from "../../../pages/auth/signup/seller";
 import Map from "../../Map";
 import Nav from "./Nav";
 
@@ -19,9 +20,9 @@ export default function Alamat({
     handleSubmit,
     formState: { errors },
     register,
-  } = useForm<FormValues>();
+  } = useForm<SellerFormValues>();
 
-  const onSubmit = (values: FormValues) => {
+  const onSubmit = (values: SellerFormValues) => {
     // console.log(values);
     setFormValues(values);
     nextFormStep();

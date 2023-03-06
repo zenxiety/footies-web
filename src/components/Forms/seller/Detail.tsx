@@ -5,7 +5,8 @@ import {
   useEffect,
 } from "react";
 import { useForm } from "react-hook-form";
-import { type FormValues, useFormData } from "../../../context/seller";
+import { useFormData } from "../../../context/FormContext";
+import { SellerFormValues } from "../../../pages/auth/signup/seller";
 import Nav from "./Nav";
 
 export default function Detail({
@@ -23,9 +24,9 @@ export default function Detail({
     formState: { errors },
     register,
     setValue,
-  } = useForm<FormValues>({ mode: "all" });
+  } = useForm<SellerFormValues>({ mode: "all" });
 
-  const onSubmit = (values: FormValues) => {
+  const onSubmit = (values: SellerFormValues) => {
     setFormValues(values);
     nextFormStep();
   };

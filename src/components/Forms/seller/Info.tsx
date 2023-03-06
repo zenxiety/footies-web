@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { useForm } from "react-hook-form";
-import { FormValues, useFormData } from "../../../context/seller";
+import { useFormData } from "../../../context/FormContext";
+import { SellerFormValues } from "../../../pages/auth/signup/seller";
 import Nav from "./Nav";
 
 export default function Info({
@@ -18,9 +19,9 @@ export default function Info({
     handleSubmit,
     formState: { errors },
     register,
-  } = useForm<FormValues>({ mode: "all" });
+  } = useForm<SellerFormValues>({ mode: "all" });
 
-  const onSubmit = (values: FormValues) => {
+  const onSubmit = (values: SellerFormValues) => {
     setFormValues(values);
     nextFormStep();
   };
