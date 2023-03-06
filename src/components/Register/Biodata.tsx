@@ -29,13 +29,13 @@ export default function Biodata({
       watch,
       formState: { errors },
       register,
-    } = useForm<FormValues>();
+    } = useForm<FormValues>({ mode: "all" });
   
     const onSubmit = (values: FormValues) => {
-      console.log(values);
       setFormValues(values);
       nextFormStep();
     };
+  
     const passDigital = new RegExp(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/
     );
@@ -79,7 +79,7 @@ export default function Biodata({
     };
     {
         return(
-            <form onSubmit={handleSubmit(onSubmit)} hidden={formStep != 2}>
+            <form onSubmit={handleSubmit(onSubmit)} hidden={formStep != 1}>
             <div className="relative z-0 mb-2 font-louis">
               <input
                 {...register("firstName", { required: true })}
@@ -195,9 +195,9 @@ export default function Biodata({
               </label>
               <span className="font-louis text-[10px] text-white">
                 Setuju dengan{" "}
-                <span className="font-italic text-[#F4B829]">Terms</span> dan{" "}
-                <span className="font-italic text-[#F4B829]">
-                  Provacy Policy
+                <span className="font-italic text-[#F4B829] italic">Terms</span> dan{" "}
+                <span className="font-italic text-[#F4B829] italic">
+                  Privacy Policy
                 </span>{" "}
                 kami.
               </span>
