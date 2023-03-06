@@ -1,76 +1,38 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
-import { api } from "../../utils/api";
-import logo from "../../../public/icon-512x512.png";
-import { FormValues, useFormData } from "../../context/FormContext";
-import Image from "next/image";
-import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { api } from "../../../utils/api";
+import { useFormData } from "../../../context/FormContext";
 import "@fortawesome/fontawesome-free/css/all.css";
-import Nav from "./Nav";
-import FormProvider from "../../context/FormContext";
+import type { SignUpFormValues } from "../../../pages/auth/signup";
 
 export default function Biodata({
   prevFormStep,
   formStep,
-  nextFormStep,
 }: {
   prevFormStep: () => void;
   formStep: number;
-  nextFormStep: () => void;
 }) {
-  const { setFormValues } = useFormData();
+  const { data, setFormValues } = useFormData<SignUpFormValues>();
 
   const {
     handleSubmit,
-    watch,
     formState: { errors },
     register,
-  } = useForm<FormValues>();
-
-  const onSubmit = (values: FormValues) => {
-    console.log(values);
-    setFormValues(values);
-    nextFormStep();
-  };
-  const passDigital = new RegExp(
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/
-  );
-  const passDigital1 = new RegExp(
-    "[a-z,0-9,A-Z]+[@,.]+[a-z,0-9,A-Z]+[.]+[a-z,0-9,A-Z]"
-  );
-  const Submit = (data: any) => console.log(data);
+  } = useForm<SignUpFormValues>();
   const router = useRouter();
   const signUp = api.auth.signUp.useMutation();
-  const [biodata, setBiodata] = useState(false);
-  // const [biodata1, setBiodata1] = useState(false)
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [password, setPassword] = useState({
-    firstPassword: "",
-    secondPassword: "",
-  });
-  const togglePasswordVisibility = () => {
-    setPasswordVisible((prev) => !prev);
-  };
-  const toggleBiodata = () => {
-    if (watch("email") && watch("password") && watch("confirmPassword")) {
-      setBiodata((prev) => !prev);
-    }
-  };
-  const signUpHandler = (data: FormValues) => {
+  const signUpHandler = (values: SignUpFormValues) => {
     signUp
       .mutateAsync({
-        firstName: data.firstName,
-        lastName: data.lastName,
+        firstName: values.firstName,
+        lastName: values.lastName,
         email: data.email,
         password: data.password,
-        telepon: data.telepon,
-        alamat: data.alamat,
+        telepon: values.telepon,
+        alamat: values.alamat,
       })
       .then(async () => {
+        setFormValues({});
         return await router.push("/auth/signin");
       })
       .catch((err) => {
@@ -79,7 +41,7 @@ export default function Biodata({
   };
   {
     return (
-      <form onSubmit={handleSubmit(onSubmit)} hidden={formStep != 2}>
+      <form onSubmit={handleSubmit(signUpHandler)} hidden={formStep != 1}>
         <div className="relative z-0 mb-2 font-louis">
           <input
             {...register("firstName", { required: true })}
@@ -200,7 +162,9 @@ export default function Biodata({
           </span>
         </div>
         <div className="flex flex-row items-center justify-between">
-          <Nav prevFormStep={prevFormStep} />
+          <h1 className="font-louis text-[#F4B829]" onClick={prevFormStep}>
+            Kembali
+          </h1>
 
           <button
             type="submit"
