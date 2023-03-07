@@ -13,6 +13,27 @@ import Steps from "../../../components/Forms/Steps";
 import Nav from "../../../components/Forms/Nav";
 import STNK from "../../../components/Forms/driver/STNK";
 import Motor from "../../../components/Forms/driver/Motor";
+import { CreateNextContextOptions } from "@trpc/server/adapters/next";
+import { createProxySSGHelpers } from "@trpc/react-query/ssg";
+import { appRouter } from "../../../server/api/root";
+import superjson from "superjson";
+import { createTRPCContext } from "../../../server/api/trpc";
+
+// eslint-disable-next-line @typescript-eslint/require-await
+export async function getServerSideProps(ctx: CreateNextContextOptions) {
+  // const ssg = await ssgHelpers(ctx);
+  const ssg = createProxySSGHelpers({
+    router: appRouter,
+    ctx: await createTRPCContext(ctx),
+    transformer: superjson,
+  });
+  const data = await ssg.auth.checkRegister.fetch();
+  return {
+    props: {
+      data,
+    }, // will be passed to the page component as props
+  };
+}
 
 export default function Driver(props: {
   data:
