@@ -3,7 +3,11 @@ import { Role } from "@prisma/client";
 export default function SaldoPoin({ roles }: { roles: Role }) {
   return (
     <>
-      <div className="mt-[2.5vh] text-secondary-500">
+      <div
+        className={`${
+          roles == "MITRA" ? "px-8" : ""
+        } mt-[2.5vh] text-secondary-500`}
+      >
         <span className="font-literata text-[15px] font-medium text-primary-300">
           {roles == "USER" ? "Saldo & Poin" : "Saldo"}
         </span>
@@ -64,15 +68,21 @@ export default function SaldoPoin({ roles }: { roles: Role }) {
                       fill="#1D1D1D"
                     />
                   </svg>
-                  <span className="ml-2 mb-[2px] font-literata text-[15px] font-medium">
-                    Domfeet
+                  <span className="ml-2 mb-[2px] font-literata text-[14px] font-medium">
+                    {roles == "MITRA" ? "Driver Feet" : "Domfeet"}
                   </span>
                 </div>
                 <p className="font-bold">Rp169.069</p>
               </div>
-              <button className="mt-4 block w-full rounded-md border border-primary-300 py-3 font-louis text-[12px] text-primary-300">
-                Saldo Analytics &gt;
-              </button>
+              {roles == "MERCHANT" ? (
+                <button className="mt-4 block w-full rounded-md border border-primary-300 py-3 font-louis text-[12px] text-primary-300">
+                  Analisis Toko &gt;
+                </button>
+              ) : (
+                <button className="mt-4 block w-full rounded-md border border-primary-300 py-3 font-louis text-[12px] text-primary-300">
+                  Analisis Pengemudi &gt;
+                </button>
+              )}
             </>
           )}
         </div>

@@ -7,7 +7,7 @@ import {
 import { useForm } from "react-hook-form";
 import { useFormData } from "../../../context/FormContext";
 import { SellerFormValues } from "../../../pages/auth/signup/seller";
-import Nav from "./Nav";
+import Nav from "../Nav";
 
 export default function Detail({
   prevFormStep,
@@ -36,7 +36,7 @@ export default function Detail({
 
   useEffect(() => {
     register("labels", {
-      required: "Lables wajib diisi minimal 1",
+      required: "Wajib mengisi minimal 1 label",
     });
   }, [register]);
 
@@ -78,6 +78,7 @@ export default function Detail({
               <input
                 {...register("jamBuka")}
                 type="number"
+                maxLength={2}
                 autoComplete={"off"}
                 className="spin w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
               />
@@ -86,6 +87,7 @@ export default function Detail({
               </p>
               <input
                 type="number"
+                maxLength={2}
                 autoComplete={"off"}
                 className="w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
               />
@@ -95,6 +97,7 @@ export default function Detail({
               <input
                 {...register("jamTutup")}
                 type="number"
+                maxLength={2}
                 autoComplete={"off"}
                 className="w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
               />
@@ -103,6 +106,7 @@ export default function Detail({
               </p>
               <input
                 type="number"
+                maxLength={2}
                 autoComplete={"off"}
                 className="w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
               />
@@ -117,7 +121,7 @@ export default function Detail({
               className="w-2/3 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
             />
             {errors.labels && (
-              <p className="text-error mt-1 text-[12px]">
+              <p className="text-error mt-[1em] font-louis text-[12px] text-failed">
                 {errors.labels.message}
               </p>
             )}

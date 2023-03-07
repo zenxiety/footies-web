@@ -1,6 +1,7 @@
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useRef, useState } from "react";
+import { setTimeout } from "timers";
 
 interface MapboxMapProps {
   initialOptions?: Omit<mapboxgl.MapboxOptions, "container">;
@@ -20,6 +21,7 @@ function MapboxMap({
   setLat,
   setLng,
   setLocation,
+  setCoord,
 }: {
   initialOptions: MapboxMapProps;
   onMapLoaded?: (map: mapboxgl.Map) => void;
@@ -29,6 +31,7 @@ function MapboxMap({
   setLat: (lat: number) => void;
   setLng: (lng: number) => void;
   setLocation: (location: string) => void;
+  setCoord: (location: string) => void;
 }) {
   const [map, setMap] = useState<mapboxgl.Map>();
 
@@ -39,11 +42,23 @@ function MapboxMap({
 
     if (typeof window === "undefined" || node === null) return;
 
+    let centerLat = -7.7271522633671035;
+    let centerLng = 110.39571281396404;
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        centerLat = pos.coords.latitude;
+        centerLng = pos.coords.longitude;
+        // console.log(centerLat, centerLng);
+      });
+    }
+    console.log(centerLat, centerLng);
+
     const mapboxMap = new mapboxgl.Map({
       container: node,
       accessToken: ACCESS_TOKEN,
       style: "mapbox://styles/mapbox/streets-v11",
-      center: [110.39571281396404, -7.7271522633671035],
+      center: [centerLng, centerLat],
       zoom: 16,
       ...initialOptions,
     });
@@ -61,24 +76,25 @@ function MapboxMap({
   }, []);
 
   useEffect(() => {
-    if (!map) return; // wait for map to initialize
-    map.on("move", () => {
-      setLng(map.getCenter().lng);
-      // console.log(map.getCenter().lng);
-      setLat(map.getCenter().lat);
-      // console.log(map.getCenter().lat);
-      navigator.geolocation.getCurrentPosition((pos) => {
-        // const { lng, lat } = lonlat;
-        fetch(
-          `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&featureTypes=&location=${lng}%2C${lat}`
-        )
-          .then((res) => res.json())
-          .then((data: { address: { Match_addr: string } }) =>
-            setLocation(data.address.Match_addr)
-          )
-          .catch((e) => console.log(e));
-        // console.log(data.address.Match_addr);
+    setTimeout(() => {
+      if (!map) return; // wait for map to initialize
+      map.on("move", () => {
+        setLat(map.getCenter().lat);
+        setLng(map.getCenter().lng);
       });
+    }, 4000);
+    navigator.geolocation.getCurrentPosition((pos) => {
+      // const { lng, lat } = lonlat;
+      fetch(
+        `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&featureTypes=&location=${lng}%2C${lat}`
+      )
+        .then((res) => res.json())
+        .then((data: { address: { Match_addr: string } }) =>
+          setLocation(data.address.Match_addr)
+        )
+        .catch((e) => console.log(e));
+      // console.log(data.address.Match_addr);
+      setCoord(`${lat}, ${lng}`);
     });
   }, [map, lat, lng]);
 

@@ -6,7 +6,7 @@ export default function Nav({ prevFormStep }: { prevFormStep: () => void }) {
       <button
         type="button"
         onClick={() => prevFormStep()}
-        className="opacity-0"
+        className="opacity-50"
       >
         <svg
           width={28}
@@ -28,7 +28,7 @@ export default function Nav({ prevFormStep }: { prevFormStep: () => void }) {
         </svg>
       </button>
       <div className="w-56"></div>
-      <button type="submit" className="opacity-0">
+      <button type="submit" className="opacity-50">
         <svg
           width={28}
           height={28}

@@ -114,11 +114,16 @@ model Alamat {
 }
 
 model Mitra {
-    id     String @id @default(cuid())
-    saldo  Int
-    rating Int
-    userId String @unique
-    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id             String @id @default(cuid())
+    saldo          Int    @default(0)
+    rating         Int?
+    profilePicture String
+    sim            String
+    stnk           String
+    platNomor      String
+    tipeKendaraan  String
+    userId         String @unique
+    user           User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum MetodePembayaran {

@@ -126,19 +126,39 @@ export const authRouter = createTRPCRouter({
       return true;
     }),
 
+  registerMitra: protectedProcedure
+    .input(
+      z.object({
+        profilePicture: z.string().min(2),
+        platNomor: z.string().min(2),
+        sim: z.string().min(2),
+        tipeKendaraan: z.string().min(2),
+        stnk: z.string().min(2),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      await ctx.prisma.user.update({
+        where: {
+          id: ctx.session.user.id,
+        },
+        data: {
+          Mitra: {
+            create: {
+              profilePicture: input.profilePicture,
+              platNomor: input.platNomor,
+              sim: input.sim,
+              tipeKendaraan: input.tipeKendaraan,
+              stnk: input.stnk,
+            },
+          },
+        },
+      });
+    }),
+
   checkRegister: protectedProcedure.query(({ ctx }) => {
-    console.log("ctx");
     return ctx.prisma.user.findUnique({
       where: { id: ctx.session.user.id },
       include: { Merchant: true, Mitra: true },
     });
-  }),
-
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.example.findMany();
-  }),
-
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
   }),
 });

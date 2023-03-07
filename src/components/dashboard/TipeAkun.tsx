@@ -34,7 +34,7 @@ export default function TipeAkun({
   return (
     <>
       {/* Account Type */}
-      <div className="mt-[2.5vh]">
+      <div className={`${roles == "MITRA" ? "px-8" : ""} mt-[2.5vh]`}>
         <span className="font-literata text-[15px] font-medium text-primary-300">
           Tipe Akun
         </span>

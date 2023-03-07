@@ -153,7 +153,7 @@ export default function Seller(props: {
           {/* Page 0 */}
           <div
             className={`absolute inset-0 z-50 flex h-screen w-full flex-col justify-between bg-secondary-500 pt-24 duration-1000 ${
-              page == 0 ? "" : "-translate-y-full"
+              page == 0 ? "" : "-translate-y-[150%]"
             }`}
           >
             <div className="px-8">
@@ -162,7 +162,8 @@ export default function Seller(props: {
                   Let&apos;s Get Started!
                 </span>
                 <p className="text-others-white">
-                  Kamu hanya perlu 5 cara untuk menjadi penjual di aplikasi
+                  Kamu hanya perlu 5 cara untuk menjadi{" "}
+                  <span className="text-primary-300">penjual</span> di aplikasi
                   Footies!
                 </p>
               </div>
