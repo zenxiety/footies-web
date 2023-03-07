@@ -14,7 +14,7 @@ export default function Dashboard() {
     <>
       <section className="min-h-screen bg-secondary-500 pt-[2.5vh] font-louis">
         {/* Back Button / Page Title */}
-        <div className="px-8">
+        <div className={`${roles != "MITRA" ? "px-8" : ""}`}>
           <div className="flex items-center">
             <Link href="/">
               <svg
@@ -57,7 +57,16 @@ export default function Dashboard() {
                 <p className="font-medium text-primary-300">
                   Raden Bagus Putra
                 </p>
-                <p>(+62) 812-3456-7890</p>
+                {roles == "MITRA" ? (
+                  <>
+                    <div className="mt-1 flex flex-col items-center justify-center rounded-sm border bg-secondary-400 px-3 py-1">
+                      <span className="text-[18px]">B 1234 CDE</span>
+                      <p className="text-[0.5rem]">2019</p>
+                    </div>
+                  </>
+                ) : (
+                  <p>(+62) 812-3456-7890</p>
+                )}
                 {roles == "USER" ? (
                   <p>john.doe@gmail.com</p>
                 ) : roles == "MERCHANT" ? (
@@ -78,7 +87,7 @@ export default function Dashboard() {
                     </svg>
                   </div>
                 ) : (
-                  <p>pengemudi</p>
+                  <></>
                 )}
               </div>
             </div>
@@ -104,6 +113,17 @@ export default function Dashboard() {
               </svg>
             </div>
           </div>
+          {roles == "MITRA" ? (
+            <>
+              <div className=" relative mt-4 grid grid-cols-2 gap-x-8 border-y border-primary-300 bg-others-black py-2 text-others-white">
+                <div className="place-self-end">XXXX</div>
+                <div className="">XXXX</div>
+                <div className="absolute top-1/2 left-1/2 h-1/2 w-[1px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-others-white"></div>
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
           <TipeAkun roles={roles} setRoles={setRoles} />
           <SaldoPoin roles={roles} />
         </div>
