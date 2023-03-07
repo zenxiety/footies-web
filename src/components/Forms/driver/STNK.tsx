@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { Controller, useForm } from "react-hook-form";
 import { useFormData } from "../../../context/FormContext";
-import { SellerFormValues } from "../../../pages/auth/signup/seller";
+import { DriverFormValues } from "../../../pages/auth/signup/driver";
 import { uploadImage } from "../../../utils/cloudinary";
 import Nav from "../Nav";
 
@@ -18,7 +18,7 @@ export default function STNK({
 }) {
   const { setFormValues } = useFormData();
 
-  const onSubmit = (values: SellerFormValues) => {
+  const onSubmit = (values: DriverFormValues) => {
     setFormValues(values);
     nextFormStep();
   };
@@ -28,7 +28,7 @@ export default function STNK({
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm<SellerFormValues>({ mode: "all" });
+  } = useForm<DriverFormValues>({ mode: "all" });
 
   const { getRootProps, getInputProps, isDragActive, open, fileRejections } =
     useDropzone({
@@ -42,7 +42,7 @@ export default function STNK({
         (acceptedFiles: File[]) => {
           uploadImage(acceptedFiles[0] as File)
             .then((url) => {
-              setValue("dokumen", url as string, { shouldValidate: true });
+              setValue("stnk", url as string, { shouldValidate: true });
             })
             .catch((e) => console.log(e));
         },
@@ -66,7 +66,7 @@ export default function STNK({
         </p>
         <Controller
           control={control}
-          name="dokumen"
+          name="stnk"
           rules={{
             required: "Dokumen wajib diunggah",
           }}

@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useCallback, useState } from "react";
 import type { Merchant, Mitra, User } from "@prisma/client";
 import FormProvider from "../../../context/FormContext";
-import { SellerFormValues } from "./seller";
 import { Controller, useForm } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
 import { uploadImage } from "../../../utils/cloudinary";
@@ -19,7 +18,16 @@ import { appRouter } from "../../../server/api/root";
 import superjson from "superjson";
 import { createTRPCContext } from "../../../server/api/trpc";
 
-// eslint-disable-next-line @typescript-eslint/require-await
+export type DriverFormValues = {
+  profilePicture: string;
+  sim: string;
+  stnk: string;
+  platNomor: string;
+  merk: string;
+  tipeKendaraan: string;
+  tahunProduksi: number;
+};
+
 export async function getServerSideProps(ctx: CreateNextContextOptions) {
   // const ssg = await ssgHelpers(ctx);
   const ssg = createProxySSGHelpers({
@@ -28,6 +36,7 @@ export async function getServerSideProps(ctx: CreateNextContextOptions) {
     transformer: superjson,
   });
   const data = await ssg.auth.checkRegister.fetch();
+  console.log(data);
   return {
     props: {
       data,
@@ -73,28 +82,7 @@ export default function Driver(props: {
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm<SellerFormValues>({ mode: "all" });
-
-  const { getRootProps, getInputProps, isDragActive, open, fileRejections } =
-    useDropzone({
-      noClick: true,
-      accept: {
-        "image/png": [".png"],
-        "image/jpg": [".jpg"],
-        "image/jpeg": [".jpeg"],
-      },
-      onDrop: useCallback(
-        (acceptedFiles: File[]) => {
-          uploadImage(acceptedFiles[0] as File)
-            .then((url) => {
-              setValue("dokumen", url as string, { shouldValidate: true });
-            })
-            .catch((e) => console.log(e));
-        },
-        [setValue]
-      ),
-      maxFiles: 1,
-    });
+  } = useForm<DriverFormValues>({ mode: "all" });
 
   return (
     <>
@@ -234,7 +222,7 @@ export default function Driver(props: {
                 </filter>
               </defs>
             </svg>
-            <FormProvider<SellerFormValues>>
+            <FormProvider<DriverFormValues>>
               <Foto
                 prevFormStep={prevFormStep}
                 formStep={page}

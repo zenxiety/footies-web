@@ -3,7 +3,8 @@ import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { Controller, useForm } from "react-hook-form";
 import { useFormData } from "../../../context/FormContext";
-import { SellerFormValues } from "../../../pages/auth/signup/seller";
+import { DriverFormValues } from "../../../pages/auth/signup/driver";
+import { api } from "../../../utils/api";
 import { uploadImage } from "../../../utils/cloudinary";
 import Nav from "../Nav";
 
@@ -16,40 +17,23 @@ export default function Motor({
   formStep: number;
   nextFormStep: () => void;
 }) {
-  const { setFormValues } = useFormData();
+  const { setFormValues, data } = useFormData<DriverFormValues>();
+  const signUp = api.auth.registerMitra.useMutation();
 
-  const onSubmit = (values: SellerFormValues) => {
-    setFormValues(values);
+  const onSubmit = async (values: DriverFormValues) => {
+    await signUp.mutateAsync({
+      ...data,
+      ...values,
+    });
     nextFormStep();
   };
 
   const {
-    control,
+    register,
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm<SellerFormValues>({ mode: "all" });
-
-  const { getRootProps, getInputProps, isDragActive, open, fileRejections } =
-    useDropzone({
-      noClick: true,
-      accept: {
-        "image/png": [".png"],
-        "image/jpg": [".jpg"],
-        "image/jpeg": [".jpeg"],
-      },
-      onDrop: useCallback(
-        (acceptedFiles: File[]) => {
-          uploadImage(acceptedFiles[0] as File)
-            .then((url) => {
-              setValue("dokumen", url as string, { shouldValidate: true });
-            })
-            .catch((e) => console.log(e));
-        },
-        [setValue]
-      ),
-      maxFiles: 1,
-    });
+  } = useForm<DriverFormValues>({ mode: "all" });
 
   return (
     <>
@@ -72,6 +56,7 @@ export default function Motor({
         </h4>
         <div className="mx-auto mt-[.25em] flex justify-center gap-x-4 px-14">
           <input
+            {...register("platNomor", { required: true })}
             type="text"
             className="w-[10%] border-b border-others-white bg-transparent text-center font-louis text-base font-normal uppercase text-others-white focus:outline-none"
             maxLength={2}
@@ -97,6 +82,7 @@ export default function Motor({
           Merk <span className="text-failed">*</span>
         </h4>
         <input
+          {...register("merk", { required: true })}
           type="text"
           className="inline-block w-[15%] max-w-[20%] overflow-auto border-b border-secondary-100 bg-transparent text-center font-louis text-base font-normal text-others-white focus:outline-none"
         />
@@ -104,6 +90,7 @@ export default function Motor({
           Tipe <span className="text-failed">*</span>
         </h4>
         <input
+          {...register("tipeKendaraan", { required: true })}
           type="text"
           className="inline-block w-[15%] max-w-[20%] overflow-auto border-b border-secondary-100 bg-transparent text-center font-louis text-base font-normal text-others-white focus:outline-none"
         />
@@ -111,6 +98,7 @@ export default function Motor({
           Tahun Produksi <span className="text-failed">*</span>
         </h4>
         <input
+          {...register("tahunProduksi", { required: true })}
           type="tel"
           // pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}"
           // max={4}

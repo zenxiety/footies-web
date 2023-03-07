@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { Controller, useForm } from "react-hook-form";
 import { useFormData } from "../../../context/FormContext";
-import { SellerFormValues } from "../../../pages/auth/signup/seller";
+import { DriverFormValues } from "../../../pages/auth/signup/driver";
 import { uploadImage } from "../../../utils/cloudinary";
 import Nav from "../Nav";
 
@@ -17,7 +17,7 @@ export default function Foto({
 }) {
   const { setFormValues } = useFormData();
 
-  const onSubmit = (values: SellerFormValues) => {
+  const onSubmit = (values: DriverFormValues) => {
     setFormValues(values);
     nextFormStep();
   };
@@ -27,7 +27,7 @@ export default function Foto({
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm<SellerFormValues>({ mode: "all" });
+  } = useForm<DriverFormValues>({ mode: "all" });
 
   const { getRootProps, getInputProps, isDragActive, open, fileRejections } =
     useDropzone({
@@ -41,7 +41,9 @@ export default function Foto({
         (acceptedFiles: File[]) => {
           uploadImage(acceptedFiles[0] as File)
             .then((url) => {
-              setValue("dokumen", url as string, { shouldValidate: true });
+              setValue("profilePicture", url as string, {
+                shouldValidate: true,
+              });
             })
             .catch((e) => console.log(e));
         },
@@ -80,7 +82,7 @@ export default function Foto({
         </p>
         <Controller
           control={control}
-          name="dokumen"
+          name="profilePicture"
           rules={{
             required: "Dokumen wajib diunggah",
           }}
