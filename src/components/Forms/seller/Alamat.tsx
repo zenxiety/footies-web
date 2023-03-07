@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { KeyboardEvent, MouseEvent, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useFormData } from "../../../context/FormContext";
 import { type SellerFormValues } from "../../../pages/auth/signup/seller";
 import Map from "../../Map";
-import Nav from "./Nav";
+import Nav from "../Nav";
 
 export default function Alamat({
   prevFormStep,
@@ -31,6 +31,32 @@ export default function Alamat({
   const [lng, setLng] = useState(110);
   const [lat, setLat] = useState(-7);
   const [location, setLocation] = useState("");
+  const [coord, setCoord] = useState("");
+
+  const [checked, setChecked] = useState(false);
+
+  const handleCheck = () => {
+    setChecked(!checked);
+  };
+
+  if (checked && navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      console.log("curr: ", lat, lng);
+
+      fetch(
+        `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&featureTypes=&location=${lng}%2C${lat}`
+      )
+        .then((res) => res.json())
+        .then((data: { address: { Match_addr: string } }) =>
+          console.log(data.address.Match_addr)
+        )
+        .catch((e) => console.log(e));
+      // console.log(data.address.Match_addr);
+      setCoord(`${lat}, ${lng}`);
+    });
+  }
 
   {
     return (
@@ -49,6 +75,7 @@ export default function Alamat({
                 setLat={setLat}
                 setLng={setLng}
                 setLocation={setLocation}
+                setCoord={setCoord}
                 initialOptions={{}}
               />
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -65,6 +92,12 @@ export default function Alamat({
                   />
                 </svg>
               </div>
+              <input
+                type="checkbox"
+                id="checkbox"
+                checked={checked}
+                onChange={handleCheck}
+              />
             </div>
             <p className="mt-6 mb-1 mr-auto text-start text-sm text-secondary-100">
               Alamat Toko <span className="text-failed">*</span>

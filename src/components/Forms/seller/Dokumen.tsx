@@ -8,7 +8,7 @@ import { useFormData } from "../../../context/FormContext";
 import { SellerFormValues } from "../../../pages/auth/signup/seller";
 import { api } from "../../../utils/api";
 import { uploadImage } from "../../../utils/cloudinary";
-import Nav from "./Nav";
+import Nav from "../Nav";
 
 export default function Dokumen({
   prevFormStep,
