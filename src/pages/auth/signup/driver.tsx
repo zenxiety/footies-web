@@ -25,7 +25,7 @@ export type DriverFormValues = {
   platNomor: string;
   merk: string;
   tipeKendaraan: string;
-  tahunProduksi: number;
+  tahunProduksi: string;
 };
 
 export async function getServerSideProps(ctx: CreateNextContextOptions) {
