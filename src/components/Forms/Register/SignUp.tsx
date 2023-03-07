@@ -98,13 +98,18 @@ export default function SignUpComponent({
         <input
           type={passwordVisible ? "text" : "password"}
           {...register("confirmPassword", {
+            required: true,
             validate: (val: string) => {
               if (watch("password") != val) {
                 return "Password anda tidak sesuai";
               }
             },
           })}
-          className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
+          className={`peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:outline-none focus:ring-0 ${
+            errors.confirmPassword
+              ? "focus:border-red-500"
+              : "focus:border-primary-300"
+          }`}
           placeholder=" "
         />
         <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
