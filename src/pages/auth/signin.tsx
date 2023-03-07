@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import logo from "../../../assets/logo-orange.png";
+import logo from "../../../public/assets/logo-orange.png";
 import Image from "next/image";
 import Link from "next/link";
 import "@fortawesome/fontawesome-free/css/all.css";
@@ -19,7 +19,9 @@ const SignIn: NextPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({ mode: "onChange" });
-  const passDigital = new RegExp("[a-z,0-9,A-Z]+[@,.]+[a-z,0-9,A-Z]+[.]+[a-z,0-9,A-Z]");
+  const passDigital = new RegExp(
+    "[a-z,0-9,A-Z]+[@,.]+[a-z,0-9,A-Z]+[.]+[a-z,0-9,A-Z]"
+  );
   const onSubmit = (data: any) => console.log(data);
   const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -42,7 +44,6 @@ const SignIn: NextPage = () => {
       <div className="relative flex h-screen w-full flex-col justify-between bg-[#141313] p-12">
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-row items-center justify-center gap-x-4">
-          
             <h1 className="font-louis text-white">Masuk</h1>
           </div>
           <i className="fas fa-question text-white" />
@@ -59,29 +60,43 @@ const SignIn: NextPage = () => {
           >
             <div className="relative z-0 mb-2 font-louis">
               <input
-                {...register("email", { required: true, maxLength: 30, pattern: passDigital })}
+                {...register("email", {
+                  required: true,
+                  maxLength: 30,
+                  pattern: passDigital,
+                })}
                 type="text"
-                className={`peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:outline-none focus:ring-0 ${errors.email ? "focus:border-red-500" : "focus:border-primary-300"}`}
+                className={`peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:outline-none focus:ring-0 ${
+                  errors.email
+                    ? "focus:border-red-500"
+                    : "focus:border-primary-300"
+                }`}
                 placeholder=" "
-               
-                
               />
               <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
                 Email
               </label>
-              
+
               {errors?.email?.type === "required" && (
                 <span className="text-[12px] text-[#F51C2F]">
                   This is required
                 </span>
               )}
-              {errors?.email?.type == "pattern" && <span className="text-red-500 font-louis text-[12px]">Harus sesuai format!</span> }
+              {errors?.email?.type == "pattern" && (
+                <span className="font-louis text-[12px] text-red-500">
+                  Harus sesuai format!
+                </span>
+              )}
             </div>
             <div className="relative z-0 mb-2 font-louis">
               <input
                 type={passwordVisible ? "text" : "password"}
                 {...register("password", { required: true })}
-                className={`peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:outline-none focus:ring-0 ${errors.password ? "focus:border-red-500" : "focus:border-primary-300"}`}
+                className={`peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:outline-none focus:ring-0 ${
+                  errors.password
+                    ? "focus:border-red-500"
+                    : "focus:border-primary-300"
+                }`}
                 placeholder=" "
               />
               <i
@@ -127,11 +142,11 @@ const SignIn: NextPage = () => {
             </div>
             <button
               type="submit"
-              className="h-[6vh] w-full rounded-md bg-[#F4B829] font-louis my-4"
+              className="my-4 h-[6vh] w-full rounded-md bg-[#F4B829] font-louis"
             >
               Masuk
             </button>
-            <div className="mx-auto block my-2">
+            <div className="mx-auto my-2 block">
               <Link href="/auth/signup">
                 <h1 className="mx-auto block font-louis text-[12px] text-[#999999]">
                   Belum punya akun?{" "}
@@ -142,7 +157,7 @@ const SignIn: NextPage = () => {
               </Link>
             </div>
 
-            <div className="flex flex-row items-center justify-center my-2">
+            <div className="my-2 flex flex-row items-center justify-center">
               <div className="absolute border-t-2 border-white" />
               <h1 className="font-louis text-[16px] text-white">
                 atau daftar dengan

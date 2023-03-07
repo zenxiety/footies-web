@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import type { Merchant, Mitra, User } from "@prisma/client";
 import Detail from "../components/welcome/Second";
 import Vector from "../../public/assets/Vector.png";
-import logo from "../../assets/logo-orange.png";
+import logo from "../../public/assets/logo-orange.png";
 import { motion } from "framer-motion";
 
 // eslint-disable-next-line @typescript-eslint/require-await
@@ -36,9 +36,9 @@ export default function Seller(props: {
   return (
     <>
       <motion.div
-        initial={{ scale: 1, filter: 'grayscale(100%)'}}
-        animate={{ scale: 1, filter: 'grayscale(0%)'}}
-        exit={{ filter: 'grayscale(100%)'}}
+        initial={{ scale: 1, filter: "grayscale(100%)" }}
+        animate={{ scale: 1, filter: "grayscale(0%)" }}
+        exit={{ filter: "grayscale(100%)" }}
         transition={{ duration: 6 }}
       >
         <Image
@@ -95,10 +95,10 @@ export default function Seller(props: {
                 alt="vector"
                 className="relative z-50 mx-auto block w-2/3 py-0"
               />
-              <p className="mx-5 pt-24 font-literata text-4xl uppercase text-white relative z-0">
+              <p className="relative z-0 mx-5 pt-24 font-literata text-4xl uppercase text-white">
                 footies
               </p>
-              <p className="text-md mx-5 pt-4 font-louis text-white relative z-0">
+              <p className="text-md relative z-0 mx-5 pt-4 font-louis text-white">
                 Solusi untuk masalah makanan, minuman, dan transaksi yang
                 fleksibel dan efisien melalui tahapan sederhana
               </p>
