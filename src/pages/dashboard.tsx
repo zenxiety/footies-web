@@ -1,5 +1,6 @@
 import { Role } from "@prisma/client";
 import { useSession } from "next-auth/react";
+import Head from "next/head";
 import Link from "next/link";
 import { useState } from "react";
 import General from "../components/dashboard/General";
@@ -12,6 +13,9 @@ export default function Dashboard() {
 
   return (
     <>
+      <Head>
+        <title>Dashboard - Footies</title>
+      </Head>
       <section className="min-h-screen bg-secondary-500 pt-[2.5vh] font-louis">
         {/* Back Button / Page Title */}
         <div className={`${roles != "MITRA" ? "px-8" : ""}`}>

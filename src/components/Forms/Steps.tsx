@@ -14,8 +14,8 @@ export default function Steps({
   return (
     <>
       <div
-        className={`absolute inset-0 z-50 flex h-screen w-full flex-col justify-between bg-secondary-500 pt-24 duration-1000 ${
-          page == 0 ? "" : "-translate-y-[150%]"
+        className={`absolute inset-0 z-[99] flex h-full w-full flex-col overflow-hidden bg-secondary-500 pt-24 shadow-md duration-1000 ${
+          page == 0 ? "" : "-translate-y-[100%]"
         }`}
       >
         <div className="px-8">
@@ -24,8 +24,9 @@ export default function Steps({
               {title[0]}
             </span>
             <p className="text-others-white">
-              {title[1]} <span className="text-primary-300">{title[2]}</span>{" "}
-              {title[3]}
+              Kamu hanya perlu {title[1]} cara untuk menjadi{" "}
+              <span className="text-primary-300">{title[2]}</span> di aplikasi
+              Footies.
             </p>
           </div>
           <div className="mt-8">
@@ -64,7 +65,7 @@ export default function Steps({
         </div>
         <button
           onClick={() => setPage(1)}
-          className="mx-8 mb-10 rounded-md bg-primary-300 py-3 font-louis text-[14px] font-bold duration-500 active:bg-primary-100"
+          className="mx-8 mt-10 rounded-md bg-primary-300 py-3 font-louis text-[14px] font-bold text-secondary-500 duration-500 active:bg-primary-100"
         >
           Daftar Sekarang
         </button>

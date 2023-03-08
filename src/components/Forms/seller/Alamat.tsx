@@ -62,7 +62,7 @@ export default function Alamat({
     return (
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative h-screen pt-20"
+        className="relative flex h-screen flex-col items-center justify-between pt-20"
       >
         <div className="z-10 mx-auto w-screen px-8 xs:max-w-[500px]">
           <p>Alamat toko</p>

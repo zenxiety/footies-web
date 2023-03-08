@@ -39,7 +39,7 @@ export default function Motor({
     <>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="px relative z-10 h-screen w-screen pt-20 xs:max-w-[500px]"
+        className="px relative z-10 w-screen pt-20 xs:max-w-[500px]"
       >
         <h3 className="mb-5 px-20">Informasi Kendaraan</h3>
         <Image
@@ -78,7 +78,7 @@ export default function Motor({
             placeholder="XXX"
           />
         </div>
-        <h4 className="mt-[1em] text-base text-secondary-100">
+        <h4 className="mt-[1em] text-base">
           Merk <span className="text-failed">*</span>
         </h4>
         <input
@@ -94,6 +94,7 @@ export default function Motor({
           type="text"
           className="inline-block w-[15%] max-w-[20%] overflow-auto border-b border-secondary-100 bg-transparent text-center font-louis text-base font-normal text-others-white focus:outline-none"
         />
+
         <h4 className="mt-[1em] text-base">
           Tahun Produksi <span className="text-failed">*</span>
         </h4>
