@@ -2,7 +2,7 @@
 import type { NextPage } from "next";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
-import logo from "../../../assets/logo-orange.png";
+import logo from "../../../public/assets/logo-orange.png";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
 import "@fortawesome/fontawesome-free/css/all.css";

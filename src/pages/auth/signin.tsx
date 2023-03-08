@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import logo from "../../../assets/logo-orange.png";
+import logo from "../../../public/assets/logo-orange.png";
 import Image from "next/image";
 import Link from "next/link";
 import "@fortawesome/fontawesome-free/css/all.css";
@@ -127,11 +127,11 @@ const SignIn: NextPage = () => {
             </div>
             <button
               type="submit"
-              className="h-[6vh] w-full rounded-md bg-[#F4B829] font-louis my-4"
+              className="h-[6vh] w-full rounded-md bg-[#F4B829] font-louis mt-4"
             >
               Masuk
             </button>
-            <div className="mx-auto block my-2">
+            <div className="mx-auto block mb-2">
               <Link href="/auth/signup">
                 <h1 className="mx-auto block font-louis text-[12px] text-[#999999]">
                   Belum punya akun?{" "}
@@ -142,7 +142,7 @@ const SignIn: NextPage = () => {
               </Link>
             </div>
 
-            <div className="flex flex-row items-center justify-center my-2">
+            <div className="flex flex-row items-center justify-center mt-2">
               <div className="absolute border-t-2 border-white" />
               <h1 className="font-louis text-[16px] text-white">
                 atau daftar dengan

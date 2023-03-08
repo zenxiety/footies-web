@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import type { Merchant, Mitra, User } from "@prisma/client";
 import Detail from "../components/welcome/Second";
 import Vector from "../../public/assets/Vector.png";
-import logo from "../../assets/logo-orange.png";
+import logo from "../../public/assets/logo-orange.png";
 import { motion } from "framer-motion";
 
 // eslint-disable-next-line @typescript-eslint/require-await
