@@ -23,7 +23,6 @@ export type SignUpFormValues = {
 };
 
 function SignUp() {
-
   const [domLoaded, setDomLoaded] = useState(false);
 
   useEffect(() => {

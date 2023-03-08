@@ -114,16 +114,25 @@ model Alamat {
 }
 
 model Mitra {
-    id             String @id @default(cuid())
-    saldo          Int    @default(0)
+    id             String     @id @default(cuid())
+    saldo          Int        @default(0)
     rating         Int?
     profilePicture String
     sim            String
     stnk           String
-    platNomor      String
-    tipeKendaraan  String
-    userId         String @unique
-    user           User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId         String     @unique
+    user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+    Kendaraan      Kendaraan?
+}
+
+model Kendaraan {
+    id            String  @id @default(cuid())
+    platNomor     String
+    merk          String
+    tipeKendaraan String
+    tahunProduksi String
+    Mitra         Mitra?  @relation(fields: [mitraId], references: [id])
+    mitraId       String? @unique
 }
 
 enum MetodePembayaran {

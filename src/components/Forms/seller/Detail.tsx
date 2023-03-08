@@ -68,7 +68,10 @@ export default function Detail({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="relative h-screen pt-20">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="relative flex h-screen flex-col items-center justify-between pt-20"
+    >
       <div className="z-10 mx-auto w-screen xs:max-w-[500px]">
         <div className="flex flex-col justify-between">
           <p>Detail Toko</p>

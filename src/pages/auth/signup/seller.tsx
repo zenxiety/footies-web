@@ -17,6 +17,8 @@ import { Alamat } from "../../../components/Forms/seller";
 import Detail from "../../../components/Forms/seller/Detail";
 import Dokumen from "../../../components/Forms/seller/Dokumen";
 import FormProvider from "../../../context/FormContext";
+import Head from "next/head";
+import Steps from "../../../components/Forms/Steps";
 
 const Map = dynamic(() => import("../../../components/Map"), { ssr: false });
 
@@ -59,6 +61,7 @@ export default function Seller(props: {
   const [page, setPage] = useState(props.data?.Merchant ? 5 : 0);
   // console.log(page);
 
+  const title = ["Let's get started!", "5", "penjual"];
   const steps = [
     "Isi informasi tentang tokomu mulai dari nama dan deskripsi tokomu.",
     "Atur alamat lokasi tokomu.",
@@ -120,6 +123,9 @@ export default function Seller(props: {
 
   return (
     <>
+      <Head>
+        <title>Registrasi Merchant - Footies</title>
+      </Head>
       {domLoaded && (
         <div className="relative flex min-h-screen flex-col items-center justify-between overflow-hidden bg-secondary-500 font-louis">
           {/* close button */}
@@ -151,63 +157,7 @@ export default function Seller(props: {
             </Link>
           </div>
           {/* Page 0 */}
-          <div
-            className={`absolute inset-0 z-50 flex h-screen w-full flex-col justify-between bg-secondary-500 pt-24 duration-1000 ${
-              page == 0 ? "" : "-translate-y-[150%]"
-            }`}
-          >
-            <div className="px-8">
-              <div>
-                <span className="font-literata text-2xl font-semibold text-primary-300">
-                  Let&apos;s Get Started!
-                </span>
-                <p className="text-others-white">
-                  Kamu hanya perlu 5 cara untuk menjadi{" "}
-                  <span className="text-primary-300">penjual</span> di aplikasi
-                  Footies!
-                </p>
-              </div>
-              <div className="mt-8">
-                {steps.map((step, i) => (
-                  <div className="mb-5 flex items-center" key={i}>
-                    <div className="relative mr-3 w-11">
-                      <span className="flex h-11 w-11 items-center justify-center rounded-full bg-primary-300 font-literata text-2xl font-semibold text-secondary-500">
-                        {i != 5 ? (
-                          i + 1
-                        ) : (
-                          <svg
-                            width={20}
-                            height={15}
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M7.081 15L0 7.919l2.253-2.254 4.828 4.828L17.576 0l2.26 2.245L7.08 15z"
-                              fill="#1A1A1A"
-                            />
-                          </svg>
-                        )}
-                        <div
-                          className={`absolute top-3/4 h-10 w-1 bg-primary-300 ${
-                            i == 5 ? "hidden" : ""
-                          }`}
-                        />
-                      </span>
-                    </div>
-                    <p className="text-[14px] leading-snug text-others-white">
-                      {step}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <button
-              onClick={() => setPage(1)}
-              className="mx-8 mb-10 rounded-md bg-primary-300 py-3 font-louis text-[14px] font-bold duration-500 active:bg-primary-100"
-            >
-              Daftar Sekarang
-            </button>
-          </div>
+          <Steps page={page} setPage={setPage} title={title} steps={steps} />
           <div
             className={`relative flex justify-start text-center font-literata text-2xl font-semibold leading-tight text-primary-300 duration-500`}
           >

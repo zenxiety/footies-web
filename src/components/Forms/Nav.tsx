@@ -2,11 +2,11 @@ export default function Nav({ prevFormStep }: { prevFormStep: () => void }) {
   return (
     // ini nav yang ngikut tiap step
     // ada ngebug juga walaupun merah tapi masi bisa next
-    <nav className="absolute left-1/2 bottom-7 z-50 flex -translate-x-1/2 justify-between">
+    <nav className="z-50 mt-4 mb-7 flex justify-center hue-rotate-90">
       <button
         type="button"
         onClick={() => prevFormStep()}
-        className="opacity-50"
+        className="opacity-0"
       >
         <svg
           width={28}
@@ -28,7 +28,7 @@ export default function Nav({ prevFormStep }: { prevFormStep: () => void }) {
         </svg>
       </button>
       <div className="w-56"></div>
-      <button type="submit" className="opacity-50">
+      <button type="submit" className="opacity-0">
         <svg
           width={28}
           height={28}

@@ -48,10 +48,15 @@ export default function Biodata({
   const [lng, setLng] = useState(110);
   const [lat, setLat] = useState(-7);
   const [location, setLocation] = useState("");
+  const [coord, setCoord] = useState("");
+
   {
     return (
-      <form onSubmit={handleSubmit(signUpHandler)} hidden={formStep != 1} className="h-full">
-        
+      <form
+        onSubmit={handleSubmit(signUpHandler)}
+        hidden={formStep != 1}
+        className="h-full"
+      >
         <div className="relative z-0 mb-2 font-louis">
           <input
             {...register("firstName", { required: true })}
@@ -118,7 +123,10 @@ export default function Biodata({
             className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 pr-5 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
             placeholder=" "
           />
-          <i className="fas fa-location-dot absolute right-0 top-1/2 -translate-y-1/2 text-white" onClick={toggleMapVisibility}/>
+          <i
+            className="fas fa-location-dot absolute right-0 top-1/2 -translate-y-1/2 text-white"
+            onClick={toggleMapVisibility}
+          />
           <label className="absolute top-3 -z-10 origin-[0] -translate-y-6 scale-75 transform text-secondary-200 duration-300 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:left-0 peer-focus:-translate-y-6 peer-focus:scale-75">
             Alamat
           </label>
@@ -128,8 +136,15 @@ export default function Biodata({
             This is required
           </span>
         )}
-        <div className={click ? "relative h-[60vh] w-full border-4 border-primary-300 mt-5" : "hidden"}>
+        <div
+          className={
+            click
+              ? "relative mt-5 h-[60vh] w-full border-4 border-primary-300"
+              : "hidden"
+          }
+        >
           <Map
+            setCoord={setCoord}
             lat={lat}
             lng={lng}
             location={location}

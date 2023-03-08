@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const authIncludes = ["newuser", "seller"];
+  const authIncludes = ["newuser", "seller", "driver"];
   if (
     pathname.startsWith("/auth") &&
     !authIncludes.some((path) => pathname.includes(path))

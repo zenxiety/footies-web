@@ -133,6 +133,8 @@ export const authRouter = createTRPCRouter({
         platNomor: z.string().min(2),
         sim: z.string().min(2),
         tipeKendaraan: z.string().min(2),
+        merk: z.string().min(2),
+        tahunProduksi: z.string().min(2),
         stnk: z.string().min(2),
       })
     )
@@ -145,10 +147,16 @@ export const authRouter = createTRPCRouter({
           Mitra: {
             create: {
               profilePicture: input.profilePicture,
-              platNomor: input.platNomor,
               sim: input.sim,
-              tipeKendaraan: input.tipeKendaraan,
               stnk: input.stnk,
+              Kendaraan: {
+                create: {
+                  tipeKendaraan: input.tipeKendaraan,
+                  merk: input.merk,
+                  tahunProduksi: input.tahunProduksi,
+                  platNomor: input.platNomor,
+                },
+              },
             },
           },
         },
