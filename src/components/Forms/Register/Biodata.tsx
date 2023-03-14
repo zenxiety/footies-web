@@ -1,11 +1,13 @@
 import { useRouter } from "next/router";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormSetValue } from "react-hook-form";
 import { api } from "../../../utils/api";
 import { useState } from "react";
 import { useFormData } from "../../../context/FormContext";
 import "@fortawesome/fontawesome-free/css/all.css";
 import type { SignUpFormValues } from "../../../pages/auth/signup";
 import Map from "../../Map";
+import MapboxMap from "../../Map";
+import { FieldValues } from "react-hook-form/dist/types";
 
 export default function Biodata({
   prevFormStep,
@@ -20,6 +22,7 @@ export default function Biodata({
     handleSubmit,
     formState: { errors },
     register,
+    setValue,
   } = useForm<SignUpFormValues>();
   const router = useRouter();
   const signUp = api.auth.signUp.useMutation();
@@ -143,8 +146,9 @@ export default function Biodata({
               : "hidden"
           }
         >
-          <Map
+          <MapboxMap
             setCoord={setCoord}
+            coord={coord}
             lat={lat}
             lng={lng}
             location={location}
@@ -152,6 +156,8 @@ export default function Biodata({
             setLng={setLng}
             setLocation={setLocation}
             initialOptions={{}}
+            checked={false} // keknya bakal checkbox use my location
+            setValue={setValue as unknown as UseFormSetValue<FieldValues>}
           />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
             <svg
