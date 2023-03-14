@@ -19,7 +19,9 @@ export default function Dashboard() {
       <section className="min-h-screen bg-secondary-500 pt-[2.5vh] font-louis">
         {/* Back Button / Page Title */}
         <div className={`${roles != "MITRA" ? "px-8" : ""}`}>
-          <div className="flex items-center">
+          <div
+            className={`flex items-center ${roles == "MITRA" ? "px-8" : ""}`}
+          >
             <Link href="/">
               <svg
                 width="24"
@@ -37,7 +39,11 @@ export default function Dashboard() {
             <span className="ml-3 text-others-white">Akun Saya</span>
           </div>
           {/* User Profile */}
-          <div className="mt-[2.5vh] flex items-center justify-between">
+          <div
+            className={`mt-[2.5vh] flex items-center justify-between ${
+              roles == "MITRA" ? "px-8" : ""
+            }`}
+          >
             <div className="flex items-center">
               {/* User Icon */}
               <svg
