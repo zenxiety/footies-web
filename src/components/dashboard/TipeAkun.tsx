@@ -62,8 +62,6 @@ export default function TipeAkun({
                   {roleIndo[i]}
                 </span>
                 {/* Check Icon */}
-                {console.log(dataUser?.user.roles)}
-                {console.log(types[i])}
                 {dataUser?.user.roles.includes(types[i] as Role) ? (
                   <svg
                     width="12"
