@@ -139,7 +139,7 @@ export const authRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      await ctx.prisma.user.update({
+      return await ctx.prisma.user.update({
         where: {
           id: ctx.session.user.id,
         },
@@ -163,10 +163,26 @@ export const authRouter = createTRPCRouter({
       });
     }),
 
-  checkRegister: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.user.findUnique({
+  checkRegister: protectedProcedure.query(async ({ ctx }) => {
+    const data = await ctx.prisma.user.findUnique({
       where: { id: ctx.session.user.id },
-      include: { Merchant: true, Mitra: true },
+      select: {
+        Merchant: {
+          select: {
+            id: true,
+          },
+        },
+        Mitra: {
+          select: {
+            id: true,
+          },
+        },
+      },
     });
+
+    console.log("dari check register");
+    console.log(data);
+
+    return data;
   }),
 });

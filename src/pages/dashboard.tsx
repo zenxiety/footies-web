@@ -2,14 +2,36 @@ import { Role } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import General from "../components/dashboard/General";
 import Menu from "../components/dashboard/Menu";
 import SaldoPoin from "../components/dashboard/SaldoPoin";
 import TipeAkun from "../components/dashboard/TipeAkun";
+import { api } from "../utils/api";
 
 export default function Dashboard() {
   const [roles, setRoles] = useState<Role>("USER");
+  const userData = api.user.getUserProfile.useQuery(undefined);
+  const merchantData = api.user.getMerchantProfile.useQuery(undefined, {
+    enabled: false,
+  });
+  const mitraData = api.user.getMitraProfile.useQuery(undefined, {
+    enabled: false,
+  });
+
+  useEffect(() => {
+    const userRefecth = async () => await userData.refetch();
+    const merchantRefecth = async () => await merchantData.refetch();
+    const mitraRefecth = async () => await mitraData.refetch();
+
+    if (roles == "USER") {
+      userRefecth().catch((err) => console.log(err));
+    } else if (roles == "MERCHANT") {
+      merchantRefecth().catch((err) => console.log(err));
+    } else if (roles == "MITRA") {
+      mitraRefecth().catch((err) => console.log(err));
+    }
+  }, [roles]);
 
   return (
     <>
@@ -65,24 +87,28 @@ export default function Dashboard() {
               {/* User Profile Detail */}
               <div className="ml-2 text-[14px] leading-tight text-others-white">
                 <p className="font-medium text-primary-300">
-                  Raden Bagus Putra
+                  {userData.data?.name}
                 </p>
                 {roles == "MITRA" ? (
                   <>
                     <div className="mt-1 flex flex-col items-center justify-center rounded-sm border bg-secondary-400 px-3 py-1">
-                      <span className="text-[18px]">B 1234 CDE</span>
-                      <p className="text-[0.5rem]">2019</p>
+                      <span className="text-[18px]">
+                        {mitraData.data?.Mitra?.Kendaraan?.platNomor}
+                      </span>
+                      <p className="text-[0.5rem]">
+                        {mitraData.data?.Mitra?.Kendaraan?.tahunProduksi}
+                      </p>
                     </div>
                   </>
                 ) : (
-                  <p>(+62) 812-3456-7890</p>
+                  <p>{userData.data?.telepon}</p>
                 )}
                 {roles == "USER" ? (
-                  <p>john.doe@gmail.com</p>
+                  <p>{userData.data?.email}</p>
                 ) : roles == "MERCHANT" ? (
                   <div className="mt-1 flex w-[48vw] max-w-[240px] cursor-pointer items-center justify-between rounded-md bg-primary-300 px-2 py-1">
                     <p className="w-36 overflow-hidden text-ellipsis whitespace-nowrap text-others-black">
-                      Jl. Sendiri Mululuululluluululul
+                      {userData.data?.Alamat[0]?.alamat}
                     </p>
                     <svg
                       width={12}
@@ -126,8 +152,12 @@ export default function Dashboard() {
           {roles == "MITRA" ? (
             <>
               <div className=" relative mt-4 grid grid-cols-2 gap-x-8 border-y border-primary-300 bg-others-black py-2 text-others-white">
-                <div className="place-self-end">XXXX</div>
-                <div className="">XXXX</div>
+                <div className="place-self-end">
+                  {mitraData.data?.Mitra?.Kendaraan?.merk}
+                </div>
+                <div className="">
+                  {mitraData.data?.Mitra?.Kendaraan?.tipeKendaraan}
+                </div>
                 <div className="absolute top-1/2 left-1/2 h-1/2 w-[1px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-others-white"></div>
               </div>
             </>
@@ -135,7 +165,12 @@ export default function Dashboard() {
             <></>
           )}
           <TipeAkun roles={roles} setRoles={setRoles} />
-          <SaldoPoin roles={roles} />
+          <SaldoPoin
+            roles={roles}
+            userData={userData.data || null}
+            merchantData={merchantData.data || null}
+            mitraData={mitraData.data || null}
+          />
         </div>
         <Menu roles={roles} />
         <General roles={roles} />
