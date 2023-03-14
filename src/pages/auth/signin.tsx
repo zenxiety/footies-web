@@ -165,7 +165,9 @@ const SignIn: NextPage = () => {
               <div className="border-t-2 border-white" />
             </div>
 
-            <button
+            
+          </form>
+          <button
               className="h-[6vh] w-full rounded-md bg-[#F4B829] font-louis"
               onClick={() =>
                 signIn("google", {
@@ -176,7 +178,6 @@ const SignIn: NextPage = () => {
             >
               Google
             </button>
-          </form>
         </div>
       </div>
     </>
