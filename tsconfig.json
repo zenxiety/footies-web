@@ -24,6 +24,6 @@
     "**/*.cjs",
     "**/*.mjs",
     "next.config.mjs"
-  ],
+, "src/pages/navbar.tsxx"  ],
   "exclude": ["node_modules"]
 }

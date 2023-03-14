@@ -18,6 +18,7 @@ export type SignUpFormValues = {
   telepon: string;
   alamat: string;
   confirmPassword: string;
+  checkbox?: boolean;
   remember?: boolean;
   apiError?: string;
 };

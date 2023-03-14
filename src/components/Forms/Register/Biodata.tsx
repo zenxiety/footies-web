@@ -5,10 +5,13 @@ import { useState } from "react";
 import { useFormData } from "../../../context/FormContext";
 import "@fortawesome/fontawesome-free/css/all.css";
 import type { SignUpFormValues } from "../../../pages/auth/signup";
+import "/node_modules/flag-icons/css/flag-icons.min.css";
 import Map from "../../Map";
 import MapboxMap from "../../Map";
 import { FieldValues } from "react-hook-form/dist/types";
 
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function Biodata({
   prevFormStep,
   formStep,
@@ -93,7 +96,7 @@ export default function Biodata({
           )}
         </div>
         <div className="flex flex-row items-center justify-between gap-x-6">
-          <select
+        <select
             id="myDropdown"
             name="myDropdown"
             className="w-[8vh] bg-transparent p-2 text-sm text-others-white"
@@ -104,7 +107,7 @@ export default function Biodata({
           </select>
           <div className="relative z-0 flex-grow font-louis">
             <input
-              {...register("telepon", { required: true, maxLength: 30 })}
+              {...register("telepon", { required: true, minLength: 10 })}
               type="number"
               className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
               placeholder=" "
@@ -117,11 +120,16 @@ export default function Biodata({
                 This is required
               </span>
             )}
+            {errors.telepon && errors.telepon.type === "minLength" && (
+              <span className="text-[12px] text-[#F51C2F]" role="alert">
+                Minimal 10 digit
+              </span>
+            )}
           </div>
         </div>
         <div className="relative z-0 flex font-louis">
           <input
-            {...register("alamat", { required: true, maxLength: 30 })}
+            {...register("alamat", { required: true, minLength: 10 })}
             type="text"
             className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 pr-5 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
             placeholder=" "
@@ -137,6 +145,11 @@ export default function Biodata({
         {errors.alamat && errors.alamat.type === "required" && (
           <span className="text-[12px] text-[#F51C2F]" role="alert">
             This is required
+          </span>
+        )}
+        {errors.alamat && errors.alamat.type === "minLength" && (
+          <span className="text-[12px] text-[#F51C2F]" role="alert">
+            Minimal 10 karakter
           </span>
         )}
         <div
@@ -198,7 +211,7 @@ export default function Biodata({
           <label>
             <input
               type="checkbox"
-              {...register("remember")}
+              {...register("remember", {required: true})}
               // checked={isChecked}
               // onChange={handleCheckboxChange}
               className="peer hidden"
@@ -218,11 +231,18 @@ export default function Biodata({
             </span>{" "}
             kami.
           </span>
+          <span className="text-failed">*</span>
+          
         </div>
+        {errors.remember && errors.remember.type === "required" && (
+          <span className="text-[12px] text-[#F51C2F]" role="alert">
+            This is required
+          </span>
+        )}
         <div className="flex flex-row items-center justify-between">
-          <h1 className="font-louis text-[#F4B829]" onClick={prevFormStep}>
+          <button className="font-louis text-[#F4B829]" onClick={prevFormStep}>
             Kembali
-          </h1>
+          </button>
 
           <button
             type="submit"
