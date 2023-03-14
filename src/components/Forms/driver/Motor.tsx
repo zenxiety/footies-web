@@ -104,7 +104,7 @@ export default function Motor({
           // pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}"
           // max={4}
           maxLength={4}
-          className="inline-block w-[15%] max-w-[20%] overflow-auto border-b border-secondary-100 bg-transparent text-center font-louis text-base font-normal text-others-white focus:outline-none"
+          className="mb-12 inline-block w-[15%] max-w-[20%] overflow-auto border-b border-secondary-100 bg-transparent text-center font-louis text-base font-normal text-others-white focus:outline-none"
         />
         <Nav prevFormStep={prevFormStep} />
       </form>

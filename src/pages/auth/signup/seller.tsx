@@ -19,6 +19,7 @@ import Dokumen from "../../../components/Forms/seller/Dokumen";
 import FormProvider from "../../../context/FormContext";
 import Head from "next/head";
 import Steps from "../../../components/Forms/Steps";
+import Verifikasi from "../../../components/Forms/Verifikasi";
 
 const Map = dynamic(() => import("../../../components/Map"), { ssr: false });
 
@@ -290,45 +291,7 @@ export default function Seller(props: {
                 />
               </FormProvider>
             </div>
-            {/* 5) Verifikasi */}
-            <div
-              className={`z-10 flex w-screen flex-col items-center justify-between pt-20 ${
-                page == 5 ? "" : "-translate-y-full"
-              }`}
-            >
-              <p className="px-20">Sedang Dalam Proses Verifikasi</p>
-              <div className="relative mt-[25vh]">
-                <svg
-                  width={86}
-                  height={110}
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-                >
-                  <path
-                    d="M81.593 46.842v47.242a11.645 11.645 0 01-11.644 11.644H15.61A11.646 11.646 0 013.967 94.084V16.458A11.644 11.644 0 0115.61 4.814h23.955c2.058 0 4.031.818 5.487 2.273L79.32 41.354a7.763 7.763 0 012.273 5.488z"
-                    stroke="#F6C73B"
-                    strokeWidth={7.763}
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M42.78 6.755v29.11a7.763 7.763 0 007.762 7.762h29.11M23.373 63.034h38.813M23.373 82.44h38.813"
-                    stroke="#F6C73B"
-                    strokeWidth={7.763}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <Image
-                  src="/signup/load.png"
-                  alt=""
-                  width={200}
-                  height={200}
-                  className="animate-spin-fast"
-                />
-              </div>
-              <div />
-            </div>
+            <Verifikasi page={page} />
           </div>
           <div
             className={`absolute bottom-0 mb-7 flex items-center delay-300 duration-1000 ${
@@ -395,13 +358,6 @@ export default function Seller(props: {
               />
             </svg>
           </div>
-          <Link href="/dashboard" className="hidden">
-            <div className="mx-auto">
-              <span className="rounded-full bg-primary-300 px-4 py-2 font-bold text-secondary-500">
-                Kembali
-              </span>
-            </div>
-          </Link>
         </div>
       )}
     </>

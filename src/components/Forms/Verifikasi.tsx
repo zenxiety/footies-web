@@ -5,12 +5,15 @@ export default function Verifikasi({ page }: { page: number }) {
     <>
       {/* 5) Verifikasi */}
       <div
-        className={`z-10 flex w-screen flex-col items-center justify-between pt-20 ${
+        className={`z-10 flex h-full min-h-screen w-screen flex-col items-center justify-between pt-20 ${
           page == 5 ? "" : "-translate-y-[200%]"
         }`}
       >
-        <p className="px-20">Sedang Dalam Proses Verifikasi</p>
-        <div className="relative mt-[25vh]">
+        <div>
+          <p className="px-20">Sedang Dalam</p>
+          <p className="px-20">Proses Verifikasi</p>
+        </div>
+        <div className="relative select-none">
           <svg
             width={86}
             height={110}

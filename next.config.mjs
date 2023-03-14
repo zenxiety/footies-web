@@ -16,7 +16,7 @@ const withPWA_ = withPWA({
   skipWaiting: true,
   runtimeCaching,
   buildExcludes: [/middleware-manifest.json$/],
-  disable: process.env.NODE_ENV === 'development',
+  disable: process.env.NODE_ENV === "development",
 });
 
 const nextConfig = withPWA_({
@@ -24,6 +24,9 @@ const nextConfig = withPWA_({
   i18n: {
     locales: ["en"],
     defaultLocale: "en",
+  },
+  images: {
+    domains: ["res.cloudinary.com"],
   },
 });
 
