@@ -10,7 +10,6 @@ import Map from "../../Map";
 import MapboxMap from "../../Map";
 import { FieldValues } from "react-hook-form/dist/types";
 
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function Biodata({
   prevFormStep,
@@ -20,6 +19,7 @@ export default function Biodata({
   formStep: number;
 }) {
   const { data, setFormValues } = useFormData<SignUpFormValues>();
+  const [error, setError] = useState("");
 
   const {
     handleSubmit,
@@ -45,6 +45,11 @@ export default function Biodata({
       })
       .catch((err) => {
         console.log(err);
+        const reset = setTimeout(() => {
+          signUp.reset();
+        }, 3000);
+
+        return () => clearTimeout(reset);
       });
   };
   const [click, setClick] = useState(false);
@@ -96,7 +101,7 @@ export default function Biodata({
           )}
         </div>
         <div className="flex flex-row items-center justify-between gap-x-6">
-        <select
+          <select
             id="myDropdown"
             name="myDropdown"
             className="w-[8vh] bg-transparent p-2 text-sm text-others-white"
@@ -211,7 +216,7 @@ export default function Biodata({
           <label>
             <input
               type="checkbox"
-              {...register("remember", {required: true})}
+              {...register("remember", { required: true })}
               // checked={isChecked}
               // onChange={handleCheckboxChange}
               className="peer hidden"
@@ -232,11 +237,15 @@ export default function Biodata({
             kami.
           </span>
           <span className="text-failed">*</span>
-          
         </div>
         {errors.remember && errors.remember.type === "required" && (
           <span className="text-[12px] text-[#F51C2F]" role="alert">
             This is required
+          </span>
+        )}
+        {signUp.error && (
+          <span className="mx-auto text-[12px] text-[#F51C2F]">
+            {signUp.error.message}
           </span>
         )}
         <div className="flex flex-row items-center justify-between">

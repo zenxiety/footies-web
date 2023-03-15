@@ -1,4 +1,4 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { Prisma } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { ErrorCode, hashPassword } from "../../../utils/auth";
@@ -39,18 +39,17 @@ export const authRouter = createTRPCRouter({
           },
         })
         .catch((err) => {
-          if (err instanceof PrismaClientKnownRequestError) {
+          if (err instanceof Prisma.PrismaClientKnownRequestError) {
             if (err.code === "P2002")
               throw new TRPCError({
                 code: "BAD_REQUEST",
                 message: ErrorCode.EmailAlreadyExists,
               });
-
-            throw new TRPCError({
-              code: "INTERNAL_SERVER_ERROR",
-              message: ErrorCode.InternalServerError,
-            });
           }
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: ErrorCode.InternalServerError,
+          });
         });
 
       return user;
@@ -115,12 +114,16 @@ export const authRouter = createTRPCRouter({
           },
         })
         .catch((err) => {
-          if (err instanceof PrismaClientKnownRequestError) {
+          if (err instanceof Prisma.PrismaClientKnownRequestError) {
             throw new TRPCError({
               code: "INTERNAL_SERVER_ERROR",
               message: ErrorCode.InternalServerError,
             });
           }
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: ErrorCode.InternalServerError,
+          });
         });
 
       return true;
