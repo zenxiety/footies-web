@@ -9,6 +9,7 @@ import "/node_modules/flag-icons/css/flag-icons.min.css";
 import Map from "../../Map";
 import MapboxMap from "../../Map";
 import { FieldValues } from "react-hook-form/dist/types";
+import Link from "next/link";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function Biodata({
@@ -80,7 +81,7 @@ export default function Biodata({
           </label>
           {errors?.firstName?.type === "required" && (
             <span className="text-[12px] text-[#F51C2F]" role="alert">
-              This is required
+              Wajib diisi
             </span>
           )}
         </div>
@@ -96,7 +97,7 @@ export default function Biodata({
           </label>
           {errors.lastName && errors.lastName.type === "required" && (
             <span className="text-[12px] text-[#F51C2F]" role="alert">
-              This is required
+              Wajib diisi
             </span>
           )}
         </div>
@@ -122,7 +123,7 @@ export default function Biodata({
             </label>
             {errors.telepon && errors.telepon.type === "required" && (
               <span className="text-[12px] text-[#F51C2F]" role="alert">
-                This is required
+                Wajib diisi
               </span>
             )}
             {errors.telepon && errors.telepon.type === "minLength" && (
@@ -240,7 +241,7 @@ export default function Biodata({
         </div>
         {errors.remember && errors.remember.type === "required" && (
           <span className="text-[12px] text-[#F51C2F]" role="alert">
-            This is required
+            Wajib diisi
           </span>
         )}
         {signUp.error && (
@@ -252,13 +253,15 @@ export default function Biodata({
           <button className="font-louis text-[#F4B829]" onClick={prevFormStep}>
             Kembali
           </button>
-
-          <button
-            type="submit"
-            className="h-[6vh] w-1/2 rounded-md bg-[#F4B829] font-louis"
-          >
-            Daftar
-          </button>
+          <Link href={signUp.error ? "/auth/signin" : "/"}>
+            {" "}
+            <button
+              type="submit"
+              className="h-[6vh] w-1/2 rounded-md bg-[#F4B829] font-louis"
+            >
+              Daftar
+            </button>
+          </Link>
         </div>
       </form>
     );

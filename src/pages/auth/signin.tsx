@@ -84,7 +84,7 @@ const SignIn: NextPage = () => {
 
               {errors?.email?.type === "required" && (
                 <span className="text-[12px] text-[#F51C2F]">
-                  This is required
+                  Wajib diisi
                 </span>
               )}
               {errors?.email?.type == "pattern" && (
@@ -117,7 +117,7 @@ const SignIn: NextPage = () => {
               </label>
               {errors?.password?.type === "required" && (
                 <span className="text-[12px] text-[#F51C2F]">
-                  This is required
+                  Wajib diisi
                 </span>
               )}
             </div>
@@ -147,7 +147,7 @@ const SignIn: NextPage = () => {
             </div>
             {error && (
               <span className="mx-auto text-[12px] text-[#F51C2F]">
-                {error}
+                Pengguna tidak ditemukan
               </span>
             )}
             <button
