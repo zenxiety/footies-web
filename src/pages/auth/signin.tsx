@@ -42,7 +42,6 @@ const SignIn: NextPage = () => {
       setError("");
     }, 3000);
   };
-  
 
   return (
     <>
@@ -83,9 +82,7 @@ const SignIn: NextPage = () => {
               </label>
 
               {errors?.email?.type === "required" && (
-                <span className="text-[12px] text-[#F51C2F]">
-                  This is required
-                </span>
+                <span className="text-[12px] text-[#F51C2F]">Wajib diisi</span>
               )}
               {errors?.email?.type == "pattern" && (
                 <span className="font-louis text-[12px] text-red-500">
@@ -116,9 +113,7 @@ const SignIn: NextPage = () => {
                 Kata Sandi
               </label>
               {errors?.password?.type === "required" && (
-                <span className="text-[12px] text-[#F51C2F]">
-                  This is required
-                </span>
+                <span className="text-[12px] text-[#F51C2F]">Wajib diisi</span>
               )}
             </div>
 
@@ -147,7 +142,7 @@ const SignIn: NextPage = () => {
             </div>
             {error && (
               <span className="mx-auto text-[12px] text-[#F51C2F]">
-                {error}
+                Pengguna tidak ditemukan
               </span>
             )}
             <button
