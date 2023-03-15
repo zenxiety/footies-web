@@ -1,8 +1,8 @@
-import { KeyboardEvent, MouseEvent, useState } from "react";
-import { useForm } from "react-hook-form";
+import { KeyboardEvent, MouseEvent, useEffect, useState } from "react";
+import { FieldValues, useForm, UseFormSetValue } from "react-hook-form";
 import { useFormData } from "../../../context/FormContext";
 import { type SellerFormValues } from "../../../pages/auth/signup/seller";
-import Map from "../../Map";
+import MapboxMap from "../../Map";
 import Nav from "../Nav";
 
 export default function Alamat({
@@ -20,16 +20,20 @@ export default function Alamat({
     handleSubmit,
     formState: { errors },
     register,
+    setValue,
+    getValues,
   } = useForm<SellerFormValues>();
 
   const onSubmit = (values: SellerFormValues) => {
-    // console.log(values);
+    values.alamat = coord;
+    console.log(coord);
+    console.log(values);
     setFormValues(values);
     nextFormStep();
   };
 
-  const [lng, setLng] = useState(110);
-  const [lat, setLat] = useState(-7);
+  const [lat, setLat] = useState(-7.767540235066699);
+  const [lng, setLng] = useState(110.37644938524392);
   const [location, setLocation] = useState("");
   const [coord, setCoord] = useState("");
 
@@ -39,46 +43,30 @@ export default function Alamat({
     setChecked(!checked);
   };
 
-  if (checked && navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((pos) => {
-      const lat = pos.coords.latitude;
-      const lng = pos.coords.longitude;
-      console.log("curr: ", lat, lng);
-
-      fetch(
-        `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&featureTypes=&location=${lng}%2C${lat}`
-      )
-        .then((res) => res.json())
-        .then((data: { address: { Match_addr: string } }) =>
-          console.log(data.address.Match_addr)
-        )
-        .catch((e) => console.log(e));
-      // console.log(data.address.Match_addr);
-      setCoord(`${lat}, ${lng}`);
-    });
-  }
-
   {
     return (
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative flex h-screen flex-col items-center justify-between pt-20"
+        className="relative flex flex-col items-center justify-between pt-20"
       >
         <div className="z-10 mx-auto w-screen px-8 xs:max-w-[500px]">
           <p>Alamat toko</p>
           <div className="mt-5 h-full w-full">
             <div className="relative h-[60vh] w-full border-4 border-primary-300">
-              <Map
+              <MapboxMap
                 lat={lat}
                 lng={lng}
+                coord={coord}
                 location={location}
                 setLat={setLat}
                 setLng={setLng}
                 setLocation={setLocation}
                 setCoord={setCoord}
+                checked={checked}
                 initialOptions={{}}
+                setValue={setValue as unknown as UseFormSetValue<FieldValues>}
               />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+              <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full">
                 <svg
                   width={31}
                   height={39}
@@ -92,12 +80,43 @@ export default function Alamat({
                   />
                 </svg>
               </div>
-              <input
-                type="checkbox"
-                id="checkbox"
-                checked={checked}
-                onChange={handleCheck}
-              />
+              {/* <label className="relative bg-red-300">
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  // onChange={handleCheck}
+                  className="before:content[''] group mt-4 h-5 w-5 appearance-none bg-white before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2"
+                />
+                <span className="absolute top-1/2 left-1/2 h-5 w-5 -translate-y-1/2 -translate-x-1/2 bg-primary-300 opacity-0 group-checked:opacity-100" />
+              </label>
+              <label
+                className="relative flex cursor-pointer items-center justify-center rounded-full p-3"
+                htmlFor="checkbox"
+                data-ripple-dark="true"
+              >
+                <input
+                  type="checkbox"
+                  className="before:content[''] border-blue-gray-200 before:bg-blue-gray-500 peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:opacity-0 before:transition-opacity checked:border-pink-500 checked:bg-pink-500 checked:before:bg-pink-500 hover:before:opacity-10"
+                  id="checkbox"
+                  checked
+                />
+                <div className="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-white opacity-0 transition-opacity peer-checked:opacity-100">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-3.5 w-3.5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    stroke="currentColor"
+                    stroke-width="1"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+              </label> */}
             </div>
             <p className="mt-6 mb-1 mr-auto text-start text-sm text-secondary-100">
               Alamat Toko <span className="text-failed">*</span>
@@ -106,7 +125,7 @@ export default function Alamat({
               {...register("alamat", {
                 required: "Alamat Toko tidak boleh kosong",
               })}
-              value={location}
+              value={getValues("alamat")}
               autoComplete={"off"}
               type="text"
               className={`w-full text-ellipsis border-b bg-transparent py-1 font-louis text-[18px] font-light text-primary-300 duration-500 focus:border-b focus:border-others-white focus:outline-none ${

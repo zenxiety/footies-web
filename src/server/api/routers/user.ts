@@ -13,22 +13,31 @@ import {
 
 export const userRouter = createTRPCRouter({
   getUserProfile: protectedProcedure.query(async ({ ctx }) => {
-    await ctx.prisma.user.findUnique({
+    return await ctx.prisma.user.findUnique({
       where: { id: ctx.session.user.id },
+      include: {
+        Alamat: true,
+      },
     });
   }),
 
   getMerchantProfile: protectedProcedureMerchant.query(async ({ ctx }) => {
-    await ctx.prisma.user.findUnique({
+    return await ctx.prisma.user.findUnique({
       where: { id: ctx.session.user.id },
       select: { Merchant: true },
     });
   }),
 
   getMitraProfile: protectedProcedureMitra.query(async ({ ctx }) => {
-    await ctx.prisma.user.findUnique({
+    return await ctx.prisma.user.findUnique({
       where: { id: ctx.session.user.id },
-      select: { Mitra: true },
+      select: {
+        Mitra: {
+          include: {
+            Kendaraan: true,
+          },
+        },
+      },
     });
   }),
 });

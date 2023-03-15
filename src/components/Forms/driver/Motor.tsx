@@ -20,12 +20,18 @@ export default function Motor({
   const { setFormValues, data } = useFormData<DriverFormValues>();
   const signUp = api.auth.registerMitra.useMutation();
 
-  const onSubmit = async (values: DriverFormValues) => {
-    await signUp.mutateAsync({
-      ...data,
-      ...values,
-    });
-    nextFormStep();
+  const onSubmit = (values: DriverFormValues) => {
+    signUp
+      .mutateAsync({
+        ...data,
+        ...values,
+      })
+      .then((res) => {
+        nextFormStep();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const {
@@ -104,8 +110,13 @@ export default function Motor({
           // pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}"
           // max={4}
           maxLength={4}
-          className="inline-block w-[15%] max-w-[20%] overflow-auto border-b border-secondary-100 bg-transparent text-center font-louis text-base font-normal text-others-white focus:outline-none"
+          className="mb-12 inline-block w-[15%] max-w-[20%] overflow-auto border-b border-secondary-100 bg-transparent text-center font-louis text-base font-normal text-others-white focus:outline-none"
         />
+        {signUp.isError && (
+          <p className="mt-2 text-[12px] text-failed">
+            {signUp.error?.message}
+          </p>
+        )}
         <Nav prevFormStep={prevFormStep} />
       </form>
     </>

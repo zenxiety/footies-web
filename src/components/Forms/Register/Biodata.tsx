@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useForm } from "react-hook-form";
+import { useForm, UseFormSetValue } from "react-hook-form";
 import { api } from "../../../utils/api";
 import { useState } from "react";
 import { useFormData } from "../../../context/FormContext";
@@ -7,7 +7,8 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import type { SignUpFormValues } from "../../../pages/auth/signup";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import Map from "../../Map";
-
+import MapboxMap from "../../Map";
+import { FieldValues } from "react-hook-form/dist/types";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function Biodata({
@@ -18,11 +19,13 @@ export default function Biodata({
   formStep: number;
 }) {
   const { data, setFormValues } = useFormData<SignUpFormValues>();
+  const [error, setError] = useState("");
 
   const {
     handleSubmit,
     formState: { errors },
     register,
+    setValue,
   } = useForm<SignUpFormValues>();
   const router = useRouter();
   const signUp = api.auth.signUp.useMutation();
@@ -42,6 +45,11 @@ export default function Biodata({
       })
       .catch((err) => {
         console.log(err);
+        const reset = setTimeout(() => {
+          signUp.reset();
+        }, 3000);
+
+        return () => clearTimeout(reset);
       });
   };
   const [click, setClick] = useState(false);
@@ -93,7 +101,7 @@ export default function Biodata({
           )}
         </div>
         <div className="flex flex-row items-center justify-between gap-x-6">
-        <select
+          <select
             id="myDropdown"
             name="myDropdown"
             className="w-[8vh] bg-transparent p-2 text-sm text-others-white"
@@ -156,8 +164,9 @@ export default function Biodata({
               : "hidden"
           }
         >
-          <Map
+          <MapboxMap
             setCoord={setCoord}
+            coord={coord}
             lat={lat}
             lng={lng}
             location={location}
@@ -165,6 +174,8 @@ export default function Biodata({
             setLng={setLng}
             setLocation={setLocation}
             initialOptions={{}}
+            checked={false} // keknya bakal checkbox use my location
+            setValue={setValue as unknown as UseFormSetValue<FieldValues>}
           />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
             <svg
@@ -205,7 +216,7 @@ export default function Biodata({
           <label>
             <input
               type="checkbox"
-              {...register("remember", {required: true})}
+              {...register("remember", { required: true })}
               // checked={isChecked}
               // onChange={handleCheckboxChange}
               className="peer hidden"
@@ -226,11 +237,15 @@ export default function Biodata({
             kami.
           </span>
           <span className="text-failed">*</span>
-          
         </div>
         {errors.remember && errors.remember.type === "required" && (
           <span className="text-[12px] text-[#F51C2F]" role="alert">
             This is required
+          </span>
+        )}
+        {signUp.error && (
+          <span className="mx-auto text-[12px] text-[#F51C2F]">
+            {signUp.error.message}
           </span>
         )}
         <div className="flex flex-row items-center justify-between">

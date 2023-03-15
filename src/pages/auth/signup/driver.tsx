@@ -86,7 +86,7 @@ export default function Driver(props: {
       <Head>
         <title>Registrasi Mitra - Footies</title>
       </Head>
-      <div className="relative flex min-h-screen flex-col items-center justify-between overflow-x-hidden bg-secondary-500 font-louis">
+      <div className="relative flex min-h-screen flex-col items-center justify-between overflow-hidden bg-secondary-500 font-louis">
         {/* close button */}
         <div className="absolute top-6 left-6 z-[100]">
           <Link href="/dashboard">
@@ -248,7 +248,7 @@ export default function Driver(props: {
         </div>
         <div
           className={`pointer-events-none absolute bottom-7 flex items-center delay-300 duration-1000 ${
-            page != 0 && page != 5 ? "" : "translate-y-[100%]"
+            page != 0 && page != 5 ? "" : "translate-y-[250%]"
           }`}
         >
           <svg

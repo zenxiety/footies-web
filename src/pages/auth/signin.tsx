@@ -19,6 +19,7 @@ const SignIn: NextPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>({ mode: "onChange" });
+  const [error, setError] = useState("");
   const passDigital = new RegExp(
     "[a-z,0-9,A-Z]+[@,.]+[a-z,0-9,A-Z]+[.]+[a-z,0-9,A-Z]"
   );
@@ -35,8 +36,11 @@ const SignIn: NextPage = () => {
       redirect: false,
     });
 
-    console.log(res);
     if (res && !res?.error) return await router.push("/");
+    setError(res?.error as string);
+    return setTimeout(() => {
+      setError("");
+    }, 3000);
   };
   
 
@@ -141,14 +145,18 @@ const SignIn: NextPage = () => {
                 Lupa kata sandi?
               </p>
             </div>
-            
+            {error && (
+              <span className="mx-auto text-[12px] text-[#F51C2F]">
+                {error}
+              </span>
+            )}
             <button
               type="submit"
-              className="h-[6vh] w-full rounded-md bg-[#F4B829] font-louis mt-4"
+              className="mt-4 h-[6vh] w-full rounded-md bg-[#F4B829] font-louis"
             >
               Masuk
             </button>
-            <div className="mx-auto block mb-2">
+            <div className="mx-auto mb-2 block">
               <Link href="/auth/signup">
                 <h1 className="mx-auto block font-louis text-[12px] text-[#999999]">
                   Belum punya akun?{" "}
@@ -159,27 +167,25 @@ const SignIn: NextPage = () => {
               </Link>
             </div>
 
-            <div className="flex flex-row items-center justify-center mt-2">
+            <div className="mt-2 flex flex-row items-center justify-center">
               <div className="absolute border-t-2 border-white" />
               <h1 className="font-louis text-[16px] text-white">
                 atau daftar dengan
               </h1>
               <div className="border-t-2 border-white" />
             </div>
-
-            
           </form>
           <button
-              className="h-[6vh] w-full rounded-md bg-[#F4B829] font-louis"
-              onClick={() =>
-                signIn("google", {
-                  callbackUrl: "/",
-                  redirect: false,
-                })
-              }
-            >
-              Google
-            </button>
+            className="h-[6vh] w-full rounded-md bg-[#F4B829] font-louis"
+            onClick={() =>
+              signIn("google", {
+                callbackUrl: "/",
+                redirect: false,
+              })
+            }
+          >
+            Google
+          </button>
         </div>
       </div>
     </>

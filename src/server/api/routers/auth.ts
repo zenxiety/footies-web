@@ -1,4 +1,4 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { Prisma } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { ErrorCode, hashPassword } from "../../../utils/auth";
@@ -39,18 +39,17 @@ export const authRouter = createTRPCRouter({
           },
         })
         .catch((err) => {
-          if (err instanceof PrismaClientKnownRequestError) {
+          if (err instanceof Prisma.PrismaClientKnownRequestError) {
             if (err.code === "P2002")
               throw new TRPCError({
                 code: "BAD_REQUEST",
                 message: ErrorCode.EmailAlreadyExists,
               });
-
-            throw new TRPCError({
-              code: "INTERNAL_SERVER_ERROR",
-              message: ErrorCode.InternalServerError,
-            });
           }
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: ErrorCode.InternalServerError,
+          });
         });
 
       return user;
@@ -115,12 +114,16 @@ export const authRouter = createTRPCRouter({
           },
         })
         .catch((err) => {
-          if (err instanceof PrismaClientKnownRequestError) {
+          if (err instanceof Prisma.PrismaClientKnownRequestError) {
             throw new TRPCError({
               code: "INTERNAL_SERVER_ERROR",
               message: ErrorCode.InternalServerError,
             });
           }
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: ErrorCode.InternalServerError,
+          });
         });
 
       return true;
@@ -139,34 +142,63 @@ export const authRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      await ctx.prisma.user.update({
-        where: {
-          id: ctx.session.user.id,
-        },
-        data: {
-          Mitra: {
-            create: {
-              profilePicture: input.profilePicture,
-              sim: input.sim,
-              stnk: input.stnk,
-              Kendaraan: {
-                create: {
-                  tipeKendaraan: input.tipeKendaraan,
-                  merk: input.merk,
-                  tahunProduksi: input.tahunProduksi,
-                  platNomor: input.platNomor,
+      return await ctx.prisma.user
+        .update({
+          where: {
+            id: ctx.session.user.id,
+          },
+          data: {
+            Mitra: {
+              create: {
+                profilePicture: input.profilePicture,
+                sim: input.sim,
+                stnk: input.stnk,
+                Kendaraan: {
+                  create: {
+                    tipeKendaraan: input.tipeKendaraan,
+                    merk: input.merk,
+                    tahunProduksi: input.tahunProduksi,
+                    platNomor: input.platNomor,
+                  },
                 },
               },
             },
           },
-        },
-      });
+        })
+        .catch((err) => {
+          if (err instanceof Prisma.PrismaClientKnownRequestError) {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: ErrorCode.InternalServerError,
+            });
+          }
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: ErrorCode.InternalServerError,
+          });
+        });
     }),
 
-  checkRegister: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.user.findUnique({
+  checkRegister: protectedProcedure.query(async ({ ctx }) => {
+    const data = await ctx.prisma.user.findUnique({
       where: { id: ctx.session.user.id },
-      include: { Merchant: true, Mitra: true },
+      select: {
+        Merchant: {
+          select: {
+            id: true,
+          },
+        },
+        Mitra: {
+          select: {
+            id: true,
+          },
+        },
+      },
     });
+
+    console.log("dari check register");
+    console.log(data);
+
+    return data;
   }),
 });

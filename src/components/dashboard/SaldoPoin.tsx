@@ -1,6 +1,22 @@
 import { Role } from "@prisma/client";
+import { inferRouterOutputs } from "@trpc/server";
+import { useEffect } from "react";
+import { AppRouter } from "../../server/api/root";
+import { api } from "../../utils/api";
 
-export default function SaldoPoin({ roles }: { roles: Role }) {
+type RouterOutput = inferRouterOutputs<AppRouter>;
+
+export default function SaldoPoin({
+  roles,
+  userData,
+  merchantData,
+  mitraData,
+}: {
+  roles: Role;
+  userData: RouterOutput["user"]["getUserProfile"];
+  merchantData: RouterOutput["user"]["getMerchantProfile"];
+  mitraData: RouterOutput["user"]["getMitraProfile"];
+}) {
   return (
     <>
       <div
@@ -30,7 +46,9 @@ export default function SaldoPoin({ roles }: { roles: Role }) {
                 <div className="mt-1 font-literata text-[10px] font-light leading-none">
                   Domfeet
                 </div>
-                <span className="text-[14px] font-bold">Rp169.069</span>
+                <span className="text-[14px] font-bold">
+                  Rp{userData?.saldo}
+                </span>
               </div>
               <div className="absolute top-1/2 left-1/2 h-3/4 w-px -translate-x-1/2 -translate-y-1/2 rounded-full bg-secondary-500"></div>
               <div className="ml-3 flex flex-col items-start">
@@ -72,7 +90,12 @@ export default function SaldoPoin({ roles }: { roles: Role }) {
                     {roles == "MITRA" ? "Driver Feet" : "Domfeet"}
                   </span>
                 </div>
-                <p className="font-bold">Rp169.069</p>
+                <p className="font-bold">
+                  Rp
+                  {roles == "MERCHANT"
+                    ? merchantData?.Merchant?.saldo
+                    : mitraData?.Mitra?.saldo}
+                </p>
               </div>
               {roles == "MERCHANT" ? (
                 <button className="mt-4 block w-full rounded-md border border-primary-300 py-3 font-louis text-[12px] text-primary-300">

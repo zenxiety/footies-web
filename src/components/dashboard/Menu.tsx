@@ -1,27 +1,31 @@
 import { Role } from "@prisma/client";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import ComingSoon from "./ComingSoon";
 
 export default function Menu({ roles }: { roles: Role }) {
   const menuBuyer = ["pesanan", "langganan", "promo", "pesan", "keluar"];
   const menuSeller = ["daganganku", ...menuBuyer];
 
+  const [popup, setPopup] = useState(false);
   const menus = roles == "USER" ? menuBuyer : menuSeller;
 
   return (
     <>
       <div className="mt-[4vh] w-full">
-        {menus.map((menu, i) => MenuBar(menu, i))}
+        {menus.map((menu, i) => MenuBar(menu, i, popup, setPopup))}
       </div>
     </>
   );
 }
 
-function MenuBar(menu: string, i: number) {
-  const [popup, setPopup] = useState(false);
-
+function MenuBar(
+  menu: string,
+  i: number,
+  popup: boolean,
+  setPopup: Dispatch<SetStateAction<boolean>>
+) {
   const children = (
     <div
       className={`flex items-center justify-between border-others-white bg-others-black px-5 py-3 duration-500 active:bg-secondary-400 ${
