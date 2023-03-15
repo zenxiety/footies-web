@@ -142,28 +142,41 @@ export const authRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      return await ctx.prisma.user.update({
-        where: {
-          id: ctx.session.user.id,
-        },
-        data: {
-          Mitra: {
-            create: {
-              profilePicture: input.profilePicture,
-              sim: input.sim,
-              stnk: input.stnk,
-              Kendaraan: {
-                create: {
-                  tipeKendaraan: input.tipeKendaraan,
-                  merk: input.merk,
-                  tahunProduksi: input.tahunProduksi,
-                  platNomor: input.platNomor,
+      return await ctx.prisma.user
+        .update({
+          where: {
+            id: ctx.session.user.id,
+          },
+          data: {
+            Mitra: {
+              create: {
+                profilePicture: input.profilePicture,
+                sim: input.sim,
+                stnk: input.stnk,
+                Kendaraan: {
+                  create: {
+                    tipeKendaraan: input.tipeKendaraan,
+                    merk: input.merk,
+                    tahunProduksi: input.tahunProduksi,
+                    platNomor: input.platNomor,
+                  },
                 },
               },
             },
           },
-        },
-      });
+        })
+        .catch((err) => {
+          if (err instanceof Prisma.PrismaClientKnownRequestError) {
+            throw new TRPCError({
+              code: "INTERNAL_SERVER_ERROR",
+              message: ErrorCode.InternalServerError,
+            });
+          }
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: ErrorCode.InternalServerError,
+          });
+        });
     }),
 
   checkRegister: protectedProcedure.query(async ({ ctx }) => {

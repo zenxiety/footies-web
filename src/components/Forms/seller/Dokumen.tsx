@@ -62,7 +62,7 @@ export default function Dokumen({
         labels: data.labels ?? ["BBC"],
         nama: data.nama,
       })
-      .then(async (res) => {
+      .then(async () => {
         setFormValues({});
         await getSession();
         await router.push("/dashboard");
@@ -170,6 +170,11 @@ export default function Dokumen({
                 </>
               )}
             />
+            {signUp.isError && (
+              <p className="mt-2 text-[12px] text-failed">
+                {signUp.error?.message}
+              </p>
+            )}
           </div>
         </div>
       </div>
