@@ -111,7 +111,13 @@ const MapboxMap = ({
       .catch((e) => console.log(e));
   }, [map, lat, lng, coord]);
 
-  return <div ref={mapNode} style={{ width: "100%", height: "100%" }} />;
+  return (
+    <div
+      ref={mapNode}
+      className="h-full w-full"
+      style={{ width: "100%", height: "100%" }}
+    />
+  );
 };
 
 export default MapboxMap;

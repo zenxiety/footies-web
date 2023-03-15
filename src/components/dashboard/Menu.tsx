@@ -31,6 +31,7 @@ function MenuBar(
       className={`flex items-center justify-between border-others-white bg-others-black px-5 py-3 duration-500 active:bg-secondary-400 ${
         i == 0 ? "border-y" : "border-b"
       }`}
+      key={i}
     >
       <div className="flex items-center justify-center gap-x-3 text-others-white">
         <div className="flex w-7 items-center justify-center">
