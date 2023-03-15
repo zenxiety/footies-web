@@ -11,12 +11,31 @@ import "swiper/css/effect-coverflow";
 
 const data = [
   {
+    title: "Makanan Berat",
     image: "/assets/burger.png",
   },
   {
+    title: "Makanan Cepat Saji",
     image: "/assets/burger.png",
   },
   {
+    title: "Minuman",
+    image: "/assets/burger.png",
+  },
+  {
+    title: "Seafood",
+    image: "/assets/burger.png",
+  },
+  {
+    title: "Makanan Berat",
+    image: "/assets/burger.png",
+  },
+  {
+    title: "Makanan Berat",
+    image: "/assets/burger.png",
+  },
+  {
+    title: "Makanan Berat",
     image: "/assets/burger.png",
   },
 ];
@@ -27,20 +46,21 @@ const Promo = () => {
   const [swiperIndex, setSwiperIndex] = useState(0);
   return (
     <>
-      <div className="h-full w-full overflow-hidden rounded-xl bg-secondary-500">
+      <div className="h-full w-full overflow-hidden rounded-xl bg-secondary-300 mt-12 pt-5">
+        <h1 className="font-literata text-2xl text-white pl-5">Kategori</h1>
         <Swiper
-          scrollbar={{ draggable: false }}
+          scrollbar={{ draggable: true }}
           onSwiper={(swiper) => console.log(swiper)}
-          className="bullets my-12 h-full w-screen rounded-3xl"
+          className="bullets my-12 h-full w-screen rounded-3xl bg-secondary-300"
           onSlideChange={(swiper) => setSwiperIndex(swiper.realIndex)}
           modules={[Navigation, Pagination, EffectCoverflow, Autoplay]}
-          slidesPerView={1}
+          slidesPerView={5}
           spaceBetween={10}
           effect="coverflow"
           coverflowEffect={{
             scale: 1,
             rotate: 0,
-            stretch: 0,
+            stretch: 1,
             depth: 0,
             slideShadows: true,
           }}
@@ -63,11 +83,11 @@ const Promo = () => {
         >
           {data.map(({ image }, i) => {
             return (
-              <SwiperSlide key={i} className="w-screen">
+              <SwiperSlide key={i} className="w-screen bg-secondary-300">
                 <Image
                   src={image}
                   alt=""
-                  className="border-2 border-primary-300 rounded-3xl"
+                  className="border-2 border-primary-300 rounded-3xl bg-secondary-300"
                   width={500}
                   height={500}
                 />

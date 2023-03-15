@@ -38,6 +38,7 @@ const SignIn: NextPage = () => {
     console.log(res);
     if (res && !res?.error) return await router.push("/");
   };
+  
 
   return (
     <>
@@ -140,6 +141,7 @@ const SignIn: NextPage = () => {
                 Lupa kata sandi?
               </p>
             </div>
+            
             <button
               type="submit"
               className="h-[6vh] w-full rounded-md bg-[#F4B829] font-louis mt-4"
