@@ -252,16 +252,13 @@ export default function Biodata({
         <div className="flex flex-row items-center justify-between">
           <button className="font-louis text-[#F4B829]" onClick={prevFormStep}>
             Kembali
+          </button>{" "}
+          <button
+            type="submit"
+            className="h-[6vh] w-1/2 rounded-md bg-[#F4B829] font-louis"
+          >
+            Daftar
           </button>
-          <Link href={signUp.error ? "/auth/signin" : "/"}>
-            {" "}
-            <button
-              type="submit"
-              className="h-[6vh] w-1/2 rounded-md bg-[#F4B829] font-louis"
-            >
-              Daftar
-            </button>
-          </Link>
         </div>
       </form>
     );
