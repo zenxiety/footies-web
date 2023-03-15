@@ -20,7 +20,7 @@ export default function Motor({
   const { setFormValues, data } = useFormData<DriverFormValues>();
   const signUp = api.auth.registerMitra.useMutation();
 
-  const onSubmit = async (values: DriverFormValues) => {
+  const onSubmit = (values: DriverFormValues) => {
     signUp
       .mutateAsync({
         ...data,
