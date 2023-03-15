@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import "@fortawesome/fontawesome-free/css/all.css";
 import { useState } from "react";
+import Head from "next/head";
 type FormValues = {
   email: string;
   password: string;
@@ -45,6 +46,9 @@ const SignIn: NextPage = () => {
 
   return (
     <>
+      <Head>
+        <title>Masuk - Footies</title>
+      </Head>
       <div className="relative flex h-screen w-full flex-col justify-between bg-[#141313] p-12">
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-row items-center justify-center gap-x-4">

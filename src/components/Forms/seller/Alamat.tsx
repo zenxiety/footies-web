@@ -32,8 +32,9 @@ export default function Alamat({
     nextFormStep();
   };
 
-  const [lat, setLat] = useState(-7.767540235066699);
-  const [lng, setLng] = useState(110.37644938524392);
+  // -7.770797393657097, 110.37767682106005;
+  const [lat, setLat] = useState(-7.770797393657097);
+  const [lng, setLng] = useState(110.37767682106005);
   const [location, setLocation] = useState("");
   const [coord, setCoord] = useState("");
 

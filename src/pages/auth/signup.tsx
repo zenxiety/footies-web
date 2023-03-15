@@ -9,6 +9,7 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import Biodata from "../../components/Forms/Register/Biodata";
 import FormProvider from "../../context/FormContext";
 import SignUpComponent from "../../components/Forms/Register/SignUp";
+import Head from "next/head";
 
 export type SignUpFormValues = {
   firstName: string;
@@ -48,6 +49,9 @@ function SignUp() {
 
   return (
     <>
+      <Head>
+        <title>Daftar - Footies</title>
+      </Head>
       <div
         className={
           "relative min-h-screen w-full overflow-hidden bg-secondary-500 p-12"
