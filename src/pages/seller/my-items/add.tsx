@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { ChangeEvent, useCallback, useState } from "react";
+import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Controller, useForm } from "react-hook-form";
 import { uploadImage } from "../../../utils/cloudinary";
@@ -37,13 +37,58 @@ export default function Add() {
       maxFiles: 1,
     });
 
+  const [price, setPrice] = useState(0);
+
+  const handlePrice = (e: ChangeEvent<HTMLInputElement>) => {
+    const price = parseInt(e.target.value);
+    setPrice(price);
+  };
+
   const [descLength, setDescLength] = useState(0);
 
   const countWord = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    console.log(e.target.value.length);
     const len = e.target.value.length;
     setDescLength(() => len);
-    console.log(descLength);
+  };
+
+  const [discValue, setDiscValue] = useState(0);
+
+  const maxDiscLength = (e: FormEvent<HTMLInputElement>) => {
+    const input = e.currentTarget.value;
+    const priceLen = String(price).length;
+
+    if (discType == "%") {
+      if (input.length > 3) e.currentTarget.value = input.slice(0, 3);
+    } else {
+      if (input.length > priceLen)
+        e.currentTarget.value = input.slice(0, priceLen);
+    }
+  };
+
+  const handleDiscValue = (e: ChangeEvent<HTMLInputElement>) => {
+    const discValue = e.target.value;
+
+    if (discType == "%") {
+      if (discValue.length > 3) {
+        discValue.slice(0, 2);
+      }
+    } else {
+      if (discValue.length > String(price).length) {
+        discValue.slice(0, String(price).length - 1);
+      }
+    }
+
+    setDiscValue(Number(discValue));
+  };
+
+  const [discType, setDiscType] = useState("%");
+
+  const handleDisc = (price: number, type: string, amount: number) => {
+    let discounted = 0.0;
+    if (type == "%") discounted = price - (price * amount) / 100;
+    else discounted = price - amount;
+    if (discounted <= 0) return 0;
+    return discounted;
   };
 
   return (
@@ -185,18 +230,24 @@ export default function Add() {
           <p className="mt-5 mr-auto text-start font-literata font-medium text-secondary-100">
             Harga <span className="text-failed">*</span>
           </p>
-          <input
-            // {...register("alamat", {
-            //   required: "Alamat Toko tidak boleh kosong",
-            // })}
-            // value={getValues("alamat")}
-            autoComplete={"off"}
-            type="text"
-            className={`w-full text-ellipsis border-b bg-transparent py-2 font-louis text-[18px] font-light text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none ${
-              "border-others-white"
-              // errors.alamat ? "border-failed" : "border-secondary-100"
-            }`}
-          />
+          <div className="relative">
+            <input
+              // {...register("alamat", {
+              //   required: "Alamat Toko tidak boleh kosong",
+              // })}
+              // value={getValues("alamat")}
+              onChange={(e) => handlePrice(e)}
+              autoComplete={"off"}
+              type="number"
+              className={`w-full text-ellipsis border-b bg-transparent py-2 font-louis text-[18px] font-light text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none ${
+                "border-others-white pl-[1.25em]"
+                // errors.alamat ? "border-failed" : "border-secondary-100"
+              }`}
+            />
+            <span className="absolute top-1/2 left-0 -translate-y-[50%] text-secondary-100">
+              Rp
+            </span>
+          </div>
           {/* {errors.alamat && (
             <span className="mt-[1em] block text-start font-louis text-[12px] text-failed">
             Alamat toko tidak boleh kosong
@@ -236,34 +287,63 @@ export default function Add() {
           )} */}
         </div>
         {/* Diskon & Harga Akhir */}
-        <div className="flex">
+        <div className="flex gap-x-8">
           <div className="">
             <p className="mt-5 mr-auto text-start font-literata font-medium text-secondary-100">
               Diskon
             </p>
-            <input
-              // {...register("alamat", {
-              //   required: "Alamat Toko tidak boleh kosong",
-              // })}
-              // value={getValues("alamat")}
-              autoComplete={"off"}
-              type="text"
-              maxLength={3}
-              className={`relative w-1/2 text-ellipsis border-b bg-transparent py-1 font-louis text-[18px] font-light text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none ${
-                "border-others-white"
-                // errors.alamat ? "border-failed" : "border-secondary-100"
-              }`}
-            />
-            {/* {errors.alamat && (
+            <div className="relative">
+              <input
+                // {...register("alamat", {
+                //   required: "Alamat Toko tidak boleh kosong",
+                // })}
+                // value={getValues("alamat")}
+                onChange={(e) => handleDiscValue(e)}
+                autoComplete={"off"}
+                type="number"
+                onInput={(e) => maxDiscLength(e)}
+                maxLength={discType == "%" ? 3 : 5}
+                className={`relative w-full text-ellipsis border-b bg-transparent py-1 font-louis text-[18px] font-light text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none ${
+                  "border-others-white"
+                  // errors.alamat ? "border-failed" : "border-secondary-100"
+                }`}
+              />
+              {/* {errors.alamat && (
             <span className="mt-[1em] block text-start font-louis text-[12px] text-failed">
             Alamat toko tidak boleh kosong
             </span>
           )} */}
+              <div className="absolute top-1/2 right-0 flex -translate-y-1/2 gap-x-1">
+                <button
+                  type="button"
+                  onClick={() => setDiscType("%")}
+                  className={`duration-500 ${
+                    discType == "%" ? "text-primary-300" : "text-secondary-100"
+                  }`}
+                >
+                  %
+                </button>
+                <span className={`pointer-events-none select-none`}>/</span>
+                <button
+                  type="button"
+                  onClick={() => setDiscType("rp")}
+                  className={`-translate-y-[2px] font-literata duration-500 ${
+                    discType == "rp" ? "text-primary-300" : "text-secondary-100"
+                  }`}
+                >
+                  Rp
+                </button>
+              </div>
+            </div>
           </div>
           {/* Harga Akhir */}
-          <div className="mt-5 text-secondary-100">
+          <div
+            className={`mt-5 text-secondary-100 duration-500 ${
+              discValue > 0 && price > 0 ? "" : "pointer-events-none opacity-0"
+            }`}
+          >
             <p>Harga Akhir</p>
-            <span>Rp45000</span>
+            <span>Rp{handleDisc(price, discType, discValue)}</span>
           </div>
         </div>
         {/* Opsi Menu */}
