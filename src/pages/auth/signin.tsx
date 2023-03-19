@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import "@fortawesome/fontawesome-free/css/all.css";
 import { useState } from "react";
+import Head from "next/head";
 type FormValues = {
   email: string;
   password: string;
@@ -42,10 +43,12 @@ const SignIn: NextPage = () => {
       setError("");
     }, 3000);
   };
-  
 
   return (
     <>
+      <Head>
+        <title>Masuk - Footies</title>
+      </Head>
       <div className="relative flex h-screen w-full flex-col justify-between bg-[#141313] p-12">
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-row items-center justify-center gap-x-4">
@@ -83,9 +86,7 @@ const SignIn: NextPage = () => {
               </label>
 
               {errors?.email?.type === "required" && (
-                <span className="text-[12px] text-[#F51C2F]">
-                  Wajib diisi
-                </span>
+                <span className="text-[12px] text-[#F51C2F]">Wajib diisi</span>
               )}
               {errors?.email?.type == "pattern" && (
                 <span className="font-louis text-[12px] text-red-500">
@@ -116,9 +117,7 @@ const SignIn: NextPage = () => {
                 Kata Sandi
               </label>
               {errors?.password?.type === "required" && (
-                <span className="text-[12px] text-[#F51C2F]">
-                  Wajib diisi
-                </span>
+                <span className="text-[12px] text-[#F51C2F]">Wajib diisi</span>
               )}
             </div>
 

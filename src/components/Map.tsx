@@ -1,6 +1,6 @@
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { UseFormSetValue } from "react-hook-form";
 import { FieldValues } from "react-hook-form/dist/types";
 import { setInterval, setTimeout } from "timers";
@@ -19,8 +19,8 @@ type props = {
   lng: number;
   coord: string;
   location: string;
-  setLat: (lat: number) => void;
-  setLng: (lng: number) => void;
+  setLat: Dispatch<SetStateAction<number>>;
+  setLng: Dispatch<SetStateAction<number>>;
   setLocation: (location: string) => void;
   setCoord: (location: string) => void;
   checked: boolean;
@@ -61,13 +61,6 @@ const MapboxMap = ({
 
     if (typeof window === "undefined" || node === null) return;
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((pos) => {
-        setLat(pos.coords.latitude);
-        setLng(pos.coords.longitude);
-      });
-    }
-
     const mapboxMap = new mapboxgl.Map({
       container: node,
       accessToken: ACCESS_TOKEN,
@@ -76,10 +69,21 @@ const MapboxMap = ({
       zoom: 16,
       ...initialOptions,
     });
-
     setMap(mapboxMap);
-
     if (onMapLoaded) mapboxMap.once("load", onMapLoaded);
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        console.log(pos.coords);
+        const lat1 = pos.coords.latitude;
+        const lng1 = pos.coords.longitude;
+        console.log(lat, lng);
+        console.log(lat1, lng1);
+        mapboxMap.flyTo({ center: [lng1, lat1] });
+        setLat(() => pos.coords.latitude);
+        setLng(() => pos.coords.longitude);
+      });
+    }
 
     return () => {
       mapboxMap.remove();
@@ -111,7 +115,13 @@ const MapboxMap = ({
       .catch((e) => console.log(e));
   }, [map, lat, lng, coord]);
 
-  return <div ref={mapNode} style={{ width: "100%", height: "100%" }} />;
+  return (
+    <div
+      ref={mapNode}
+      className="h-full w-full"
+      style={{ width: "100%", height: "100%" }}
+    />
+  );
 };
 
 export default MapboxMap;

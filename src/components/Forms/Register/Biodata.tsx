@@ -26,6 +26,7 @@ export default function Biodata({
     formState: { errors },
     register,
     setValue,
+    getValues,
   } = useForm<SignUpFormValues>();
   const router = useRouter();
   const signUp = api.auth.signUp.useMutation();
@@ -56,8 +57,10 @@ export default function Biodata({
   const toggleMapVisibility = () => {
     setClick((prev) => !prev);
   };
-  const [lng, setLng] = useState(110);
-  const [lat, setLat] = useState(-7);
+
+  // -7.770797393657097, 110.37767682106005
+  const [lng, setLng] = useState(110.37767682106005);
+  const [lat, setLat] = useState(-7.770797393657097);
   const [location, setLocation] = useState("");
   const [coord, setCoord] = useState("");
 
@@ -136,8 +139,8 @@ export default function Biodata({
           <input
             {...register("alamat", { required: true, minLength: 10 })}
             type="text"
+            value={getValues("alamat")}
             className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 pr-5 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
-            placeholder=" "
           />
           <i
             className="fas fa-location-dot absolute right-0 top-1/2 -translate-y-1/2 text-white"
@@ -177,7 +180,7 @@ export default function Biodata({
             checked={false} // keknya bakal checkbox use my location
             setValue={setValue as unknown as UseFormSetValue<FieldValues>}
           />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full">
             <svg
               width={31}
               height={39}
