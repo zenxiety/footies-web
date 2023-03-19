@@ -9,7 +9,6 @@ import "/node_modules/flag-icons/css/flag-icons.min.css";
 import Map from "../../Map";
 import MapboxMap from "../../Map";
 import { FieldValues } from "react-hook-form/dist/types";
-import Link from "next/link";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function Biodata({
@@ -150,7 +149,7 @@ export default function Biodata({
         </div>
         {errors.alamat && errors.alamat.type === "required" && (
           <span className="text-[12px] text-[#F51C2F]" role="alert">
-            This is required
+            Wajib diisi
           </span>
         )}
         {errors.alamat && errors.alamat.type === "minLength" && (
@@ -233,7 +232,7 @@ export default function Biodata({
             Setuju dengan{" "}
             <span className="font-italic italic text-[#F4B829]">Terms</span> dan{" "}
             <span className="font-italic italic text-[#F4B829]">
-              Provacy Policy
+              Privacy Policy
             </span>{" "}
             kami.
           </span>
@@ -256,6 +255,7 @@ export default function Biodata({
           <button
             type="submit"
             className="h-[6vh] w-1/2 rounded-md bg-[#F4B829] font-louis"
+            onClick={() => router.push("/auth/signin")}
           >
             Daftar
           </button>

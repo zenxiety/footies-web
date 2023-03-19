@@ -11,13 +11,25 @@ import "swiper/css/effect-coverflow";
 
 const data = [
   {
-    image: "/assets/burger.png",
+    image: "/assets/promo.png",
   },
   {
-    image: "/assets/burger.png",
+    image: "/assets/promo.png",
   },
   {
-    image: "/assets/burger.png",
+    image: "/assets/promo.png",
+  },
+  {
+    image: "/assets/promo.png",
+  },
+  {
+    image: "/assets/promo.png",
+  },
+  {
+    image: "/assets/promo.png",
+  },
+  {
+    image: "/assets/promo.png",
   },
 ];
 
@@ -25,35 +37,42 @@ const Promo = () => {
   const swiper = useSwiper();
   const swiperRef = useRef();
   const [swiperIndex, setSwiperIndex] = useState(0);
+  const [active, setActive] = useState(false);
+  const togglePromo = () => {
+    setActive((prev) => !prev);
+  };
   return (
     <>
       <div className="h-full w-full overflow-hidden rounded-xl bg-secondary-500">
         <Swiper
-          scrollbar={{ draggable: false }}
+          // scrollbar={{ draggable: false }}
           onSwiper={(swiper) => console.log(swiper)}
-          className="bullets my-12 h-full w-screen rounded-3xl"
+          className="my-6 h-[150%]"
           onSlideChange={(swiper) => setSwiperIndex(swiper.realIndex)}
           modules={[Navigation, Pagination, EffectCoverflow, Autoplay]}
-          slidesPerView={1}
-          spaceBetween={10}
+          slidesPerView={2}
+          spaceBetween={30}
           effect="coverflow"
           coverflowEffect={{
             scale: 1,
             rotate: 0,
             stretch: 0,
             depth: 0,
-            slideShadows: true,
+            slideShadows: false,
           }}
           autoplay={{
             delay: 2500,
           }}
           direction="horizontal"
-          // centeredSlides={true}
+          centeredSlides={true}
           pagination={{
             el: ".swiper-pagination",
             clickable: true,
             type: "bullets",
             bulletActiveClass: "swiper-pagination-bullet",
+            renderBullet: (i, classname) => {
+              return `<div class="${classname} w-4 h-8 sm:w-6 sm:h-10 bg-pagination bg-no-repeat bg-contain bg-center"></div>`;
+            },
           }}
           navigation={{
             disabledClass: "opacity-100",
@@ -63,19 +82,19 @@ const Promo = () => {
         >
           {data.map(({ image }, i) => {
             return (
-              <SwiperSlide key={i} className="w-screen">
+              <SwiperSlide key={i} className="w-full">
                 <Image
                   src={image}
                   alt=""
-                  className="border-2 border-primary-300 rounded-3xl"
+                  className="rounded-3xl border-2 border-primary-300"
                   width={500}
-                  height={500}
+                  height={700}
                 />
               </SwiperSlide>
             );
           })}
         </Swiper>
-        <div className="flex flex-row justify-between rounded-xl border-2 border-primary-300 p-5 items-center">
+        <div className="mx-5 flex flex-row items-center justify-between rounded-xl border-2 border-primary-300 p-5">
           <div className="flex flex-row gap-x-5">
             <i className="fas fa-ticket -rotate-45 text-2xl text-white" />
             <h1 className=" font-literata text-xl text-white">
@@ -88,7 +107,8 @@ const Promo = () => {
             height={28}
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            className="rotate-180"
+            className={`${active ? "-rotate-90" : "rotate-180"} duration-300`}
+            onClick={togglePromo}
           >
             <rect
               width={28}
@@ -103,6 +123,7 @@ const Promo = () => {
             />
           </svg>
         </div>
+        <Image src="/assets/promo.png" alt="" width={500} height={700} className={`${active ? 'block' : 'hidden'} py-5 duration-300`}/>
       </div>
     </>
   );

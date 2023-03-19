@@ -1,0 +1,81 @@
+[
+  {
+    "title": "Nasi Faris",
+    "image": "/assets/burger.png",
+    "jarak": "0.2 km",
+    "rating": "4.9"
+  },
+  {
+    "title": "mie",
+    "image": "/assets/burger.png",
+    "jarak": "0.2 km",
+    "rating": "4.9"
+  },
+  {
+    "title": "indomie",
+    "image": "/assets/burger.png",
+    "jarak": "0.2 km",
+    "rating": "4.9"
+  },
+  {
+    "title": "sagu",
+    "image": "/assets/burger.png",
+    "jarak": "0.2 km",
+    "rating": "4.9"
+  },
+  {
+    "title": "babi",
+    "image": "/assets/burger.png",
+    "jarak": "0.2 km",
+    "rating": "4.9"
+  },
+  {
+    "title": "daging",
+    "image": "/assets/burger.png",
+    "jarak": "0.2 km",
+    "rating": "4.9"
+  },
+  {
+    "title": "jagung",
+    "image": "/assets/burger.png",
+    "jarak": "0.2 km",
+    "rating": "4.9"
+  },
+  {
+    "title": "pizza, Tegalrejo",
+    "image": "/assets/burger.png",
+    "jarak": "0.2 km",
+    "rating": "4.9"
+  },
+  {
+    "title": "Burger Klenger, Tegalrejo",
+    "image": "/assets/burger.png",
+    "jarak": "0.2 km",
+    "rating": "4.9"
+  },
+  {
+    "title": "Burger Klenger, Tegalrejo",
+    "image": "/assets/burger.png",
+    "jarak": "0.2 km",
+    "rating": "4.9"
+  },
+  {
+    "title": "Burger Klenger, Tegalrejo",
+    "image": "/assets/burger.png",
+    "jarak": "0.2 km",
+    "rating": "4.9"
+  },
+  {
+    "title": "Burger Klenger, Tegalrejo",
+    "image": "/assets/burger.png",
+    "jarak": "0.2 km",
+    "rating": "4.9"
+  },
+
+  {
+    "title": "Burger Klenger, Tegalrejo",
+    "image": "/assets/burger.png",
+    "jarak": "0.2 km",
+    "rating": "4.9"
+  }
+]

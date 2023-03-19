@@ -1,63 +1,66 @@
-import React, { useState, useRef } from "react";
-import "@fortawesome/fontawesome-free/css/all.css";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { Navigation, Pagination, EffectCoverflow, Autoplay } from "swiper";
 import "@fortawesome/fontawesome-free/css/all.css";
 import Image from "next/image";
+import React, { useRef, useState } from "react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "swiper/css/effect-coverflow";
 
-import data from "../components/homepage/data.json";
-// import Search from "../components/homepage/Search";
-import Promo from "../components/homepage/Promo";
-import Kategori from "../components/homepage/Kategori";
-// import Terdekat from "../components/homepage/Terdekat";
-import Rekomendasi from "../components/homepage/Rekomendasi";
 
-const Homepage = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+const data = [
+  {
+    title: "Burger Klenger, Tegalrejo",
+    image: "/assets/burger.png",
+    jarak: "0.2 km",
+    rating: "4.9",
+  },
+  {
+    title: "Burger Klenger, Tegalrejo",
+    image: "/assets/burger.png",
+    jarak: "0.2 km",
+    rating: "4.9",
+  },
+  {
+    title: "Burger Klenger, Tegalrejo",
+    image: "/assets/burger.png",
+    jarak: "0.2 km",
+    rating: "4.9",
+  },
+  {
+    title: "Burger Klenger, Tegalrejo",
+    image: "/assets/burger.png",
+    jarak: "0.2 km",
+    rating: "4.9",
+  },
+  {
+    title: "Burger Klenger, Tegalrejo",
+    image: "/assets/burger.png",
+    jarak: "0.2 km",
+    rating: "4.9",
+  },
+  {
+    title: "Burger Klenger, Tegalrejo",
+    image: "/assets/burger.png",
+    jarak: "0.2 km",
+    rating: "4.9",
+  },
+];
 
-  // Filter the data based on the search query
-  const filteredData = data.filter((item) =>
-    item.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+const Rekomendasi = () => {
   return (
     <>
-      <div className="h-full w-full rounded-b-xl bg-secondary-400">
-        <div className="flex flex-col justify-center p-5">
-          <div className="flex flex-row justify-center gap-x-6">
-            <i className="fas fa-location-dot text-4xl text-primary-300" />
-            <div className="flex flex-col">
-              <h1 className="font-louis font-extralight text-secondary-100">
-                Kirim ke
-              </h1>
-              <h1 className="font-louis text-white">
-                Jl. Jalan sama kamu tapi apa mungkin No. 12
-              </h1>
-            </div>
-          </div>
-          <input
-            className="m-5 rounded-full bg-white p-3"
-            placeholder="Mau makan apa hari ini?"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-      </div>
-      <Promo />
-      <Kategori />
       <div className="mt-12 h-full w-full overflow-hidden rounded-xl bg-secondary-300 pt-5">
-        <h1 className="px-5 font-literata text-2xl text-white">
+        <h1 className="font-literata text-2xl text-white px-5">
           Restoran Rekomendasi
         </h1>
         <Swiper
           // scrollbar={{ draggable: true }}
           onSwiper={(swiper) => console.log(swiper)}
           className="bullets my-12 flex h-full w-full flex-col justify-start bg-secondary-300 px-5"
-          // onSlideChange={(swiper) => setSwiperIndex(swiper.realIndex)}
+          //   onSlideChange={(swiper) => setSwiperIndex(swiper.realIndex)}
           modules={[Navigation, Pagination, EffectCoverflow, Autoplay]}
           slidesPerView={2}
           spaceBetween={10}
@@ -86,26 +89,25 @@ const Homepage = () => {
             prevEl: ".swiper-button-prev",
           }}
         >
-          {filteredData.map(({ image, title, jarak, rating }, i) => {
-            return title ? (
-           
-           <SwiperSlide
+          {data.map(({ image, title, jarak, rating }, i) => {
+            return (
+              <SwiperSlide
                 key={i}
-                className="flex max-h-full flex-col justify-start rounded-3xl bg-white"
+                className="flex flex-col justify-start rounded-3xl bg-[#A06235]"
               >
                 <>
                   <Image
                     src={image}
                     alt=""
-                    className="mx-auto block rounded-3xl border-2"
+                    className="mx-auto block rounded-3xl border-2 border-[#A06235]"
                     width={250}
                     height={250}
                   />
-                  <div className="flex flex-col items-start py-5 pl-5">
+                  <div className="flex flex-col items-start py-5 pl-5 text-white">
                     <p className="text-start font-louis text-xl font-light">
                       {jarak}
                     </p>
-                    <p className="text-start font-louis text-xl font-light">
+                    <p className=" block font-literata text-xl font-light">
                       {title}
                     </p>
                     <div className="flex flex-row items-center justify-start gap-x-2">
@@ -113,19 +115,17 @@ const Homepage = () => {
                       <p className=" mx-auto block font-louis text-xl font-light">
                         {rating}
                       </p>
+                      
                     </div>
                   </div>
                 </>
               </SwiperSlide>
-            ) : (
-                <h1>Data not found</h1>
             );
           })}
         </Swiper>
       </div>
-      <Rekomendasi />
     </>
   );
 };
 
-export default Homepage;
+export default Rekomendasi;
