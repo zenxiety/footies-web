@@ -190,14 +190,33 @@ model Menu {
     id         String    @id @default(cuid())
     nama       String
     harga      Int
-    deskripsi  String
+    deskripsi  String?
     gambar     String
-    kategori   String
+    kategori   String[]
+    promo      String?
+    options    String[]
     Cart       Cart[]
     Order      Order[]
     Merchant   Merchant? @relation(fields: [merchantId], references: [id])
     merchantId String?
+    // Kategori   KategoriOnMenu[]
+    // kategoriId String?
 }
+
+// model KategoriOnMenu {
+//     kategori   Kategori @relation(fields: [kategoriId], references: [id])
+//     kategoriId String
+//     menu       Menu     @relation(fields: [menuId], references: [id])
+//     menuId     String
+
+//     @@id([kategoriId, menuId])
+// }
+
+// model Kategori {
+//     id   String           @id @default(cuid())
+//     nama String
+//     menu KategoriOnMenu[]
+// }
 
 model VerificationToken {
     identifier String
