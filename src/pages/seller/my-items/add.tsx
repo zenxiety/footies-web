@@ -14,7 +14,17 @@ export default function Add() {
     formState: { errors },
     setValue,
     getValues,
+    register,
   } = useForm<DriverFormValues>({ mode: "all" });
+
+  const onSubmit = (values: DriverFormValues) => {
+    console.log("Foto menu:", values.sim);
+    console.log("Nama menu:", name);
+    console.log("Harga awal menu sebelum diskon:", price);
+    console.log("Deskripsi menu:", desc);
+    console.log("Diskon:", discValue);
+    console.log("Harga akhir menu setelah diskon:", discounted);
+  };
 
   const { getRootProps, getInputProps, isDragActive, open, fileRejections } =
     useDropzone({
@@ -37,18 +47,36 @@ export default function Add() {
       maxFiles: 1,
     });
 
+  const [name, setName] = useState("");
+  const [desc, setDesc] = useState("");
   const [price, setPrice] = useState(0);
 
   const handlePrice = (e: ChangeEvent<HTMLInputElement>) => {
-    const price = parseInt(e.target.value);
+    const price = Number(e.target.value);
+    let discounted = 0;
     setPrice(price);
+
+    if (discType == "%") {
+      if (String(discValue).length > 3) {
+        String(discValue).slice(0, 2);
+      }
+      discounted = price - (price * Number(String(discValue))) / 100;
+    } else {
+      if (String(discValue).length > String(price).length) {
+        String(discValue).slice(0, String(price).length - 1);
+      }
+      discounted = price - Number(String(discValue));
+    }
+
+    discounted < 0 ? setDiscounted(0) : setDiscounted(discounted);
   };
 
   const [descLength, setDescLength] = useState(0);
 
-  const countWord = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    const len = e.target.value.length;
-    setDescLength(() => len);
+  const handleDesc = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const val = e.target.value;
+    setDescLength(val.length);
+    setDesc(val);
   };
 
   const [discValue, setDiscValue] = useState(0);
@@ -66,37 +94,41 @@ export default function Add() {
   };
 
   const handleDiscValue = (e: ChangeEvent<HTMLInputElement>) => {
-    const discValue = e.target.value;
+    let discAmount = e.target.value;
+    setDiscValue(Number(discAmount));
+    let discounted = 0;
 
     if (discType == "%") {
-      if (discValue.length > 3) {
-        discValue.slice(0, 2);
+      if (discAmount.length > 3) {
+        discAmount.slice(0, 2);
       }
+      discounted = price - (price * Number(discAmount)) / 100;
     } else {
-      if (discValue.length > String(price).length) {
-        discValue.slice(0, String(price).length - 1);
+      if (discAmount.length > String(price).length) {
+        discAmount.slice(0, String(price).length - 1);
       }
+      discounted = price - Number(discAmount);
     }
 
-    setDiscValue(Number(discValue));
+    discounted < 0 ? setDiscounted(0) : setDiscounted(discounted);
   };
 
   const [discType, setDiscType] = useState("%");
+  const [discounted, setDiscounted] = useState(0);
 
-  const handleDisc = (price: number, type: string, amount: number) => {
-    let discounted = 0.0;
-    if (type == "%") discounted = price - (price * amount) / 100;
-    else discounted = price - amount;
-    if (discounted <= 0) return 0;
-    return discounted;
-  };
+  // useEffect(() => {
+
+  // }, [price, discValue, discounted]);
 
   return (
     <>
       <Head>
         <title>Add Item - Footies</title>
       </Head>
-      <section className="min-h-screen bg-secondary-500 px-8 py-[2.5vh] font-louis text-others-white">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="min-h-screen bg-secondary-500 px-8 py-[2.5vh] font-louis text-others-white"
+      >
         {/* Back Button & Page Title */}
         <div className={`flex items-center`}>
           <Link href="./">
@@ -130,7 +162,9 @@ export default function Add() {
               <>
                 <div
                   {...getRootProps()}
-                  className="relative mt-3 flex h-[180px] w-full flex-col items-center justify-center overflow-hidden rounded-md border border-dashed p-1"
+                  className={`relative m-auto mt-3 flex h-[180px] flex-col items-center justify-center overflow-hidden rounded-md border border-dashed p-1 ${
+                    getValues("sim") ? "w-[180px]" : "w-full"
+                  }`}
                 >
                   <input type="file" {...getInputProps({ onChange })} />
                   {getValues("sim") != null ? (
@@ -141,7 +175,7 @@ export default function Add() {
                           alt=""
                           width={300}
                           height={200}
-                          className="h-full w-auto"
+                          className="h-auto w-full"
                         />
                       </div>
                       <div className="absolute bottom-0 h-[50px] w-full bg-gradient-to-b from-transparent to-black"></div>
@@ -208,10 +242,8 @@ export default function Add() {
             Nama Menu <span className="text-failed">*</span>
           </p>
           <input
-            // {...register("alamat", {
-            //   required: "Alamat Toko tidak boleh kosong",
-            // })}
-            // value={getValues("alamat")}
+            onChange={(e) => setName(e.target.value)}
+            minLength={5}
             autoComplete={"off"}
             type="text"
             className={`w-full text-ellipsis border-b bg-transparent py-2 font-louis text-[18px] font-light text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none ${
@@ -265,7 +297,7 @@ export default function Add() {
               //   required: "Alamat Toko tidak boleh kosong",
               // })}
               // value={getValues("alamat")}
-              onChange={(e) => countWord(e)}
+              onChange={(e) => handleDesc(e)}
               autoComplete={"off"}
               maxLength={150}
               className={`mt-2 h-[120px] w-full rounded-md border bg-transparent p-2 text-justify font-louis text-[18px] font-light text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none ${
@@ -339,11 +371,19 @@ export default function Add() {
           {/* Harga Akhir */}
           <div
             className={`mt-5 text-secondary-100 duration-500 ${
-              discValue > 0 && price > 0 ? "" : "pointer-events-none opacity-0"
+              typeof discounted != null && typeof price != null
+                ? ""
+                : "pointer-events-none opacity-0"
             }`}
           >
             <p>Harga Akhir</p>
-            <span>Rp{handleDisc(price, discType, discValue)}</span>
+            <span
+              className={`duration-500 ${
+                discounted <= 0 ? "text-failed opacity-90" : ""
+              }`}
+            >
+              <>Rp{discounted}</>
+            </span>
           </div>
         </div>
         {/* Opsi Menu */}
@@ -375,7 +415,7 @@ export default function Add() {
             Simpan
           </button>
         </div>
-      </section>
+      </form>
     </>
   );
 }
