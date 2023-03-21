@@ -88,8 +88,7 @@ const Homepage = () => {
         >
           {filteredData.map(({ image, title, jarak, rating }, i) => {
             return title ? (
-           
-           <SwiperSlide
+              <SwiperSlide
                 key={i}
                 className="flex max-h-full flex-col justify-start rounded-3xl bg-white"
               >
@@ -118,7 +117,7 @@ const Homepage = () => {
                 </>
               </SwiperSlide>
             ) : (
-                <h1>Data not found</h1>
+              <h1>Data not found</h1>
             );
           })}
         </Swiper>

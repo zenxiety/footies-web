@@ -17,7 +17,7 @@ export const merchantRouter = createTRPCRouter({
       z.object({
         productName: z.string(),
         price: z.number(),
-        labels: z.array(z.string()),
+        labels: z.array(z.string()).optional(),
         description: z.string().optional(),
         options: z.string().optional(),
         picture: z.string(),
@@ -44,4 +44,16 @@ export const merchantRouter = createTRPCRouter({
       console.log(data);
       return data;
     }),
+
+  getMenu: protectedProcedureMerchant.query(async ({ ctx }) => {
+    const data = await ctx.prisma.menu.findMany({
+      where: {
+        Merchant: {
+          userId: ctx.session.user.id,
+        },
+      },
+    });
+    console.log(data);
+    return data;
+  }),
 });

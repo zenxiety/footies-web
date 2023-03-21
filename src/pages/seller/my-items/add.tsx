@@ -1,9 +1,11 @@
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Controller, useForm } from "react-hook-form";
+import { api } from "../../../utils/api";
 import { uploadImage } from "../../../utils/cloudinary";
 import { DriverFormValues } from "../../auth/signup/driver";
 
@@ -16,6 +18,8 @@ export default function Add() {
     getValues,
     register,
   } = useForm<DriverFormValues>({ mode: "all" });
+  const merchant = api.merchant.listProduct.useMutation();
+  const router = useRouter();
 
   const onSubmit = (values: DriverFormValues) => {
     console.log("Foto menu:", values.sim);
@@ -24,6 +28,21 @@ export default function Add() {
     console.log("Deskripsi menu:", desc);
     console.log("Diskon:", discValue);
     console.log("Harga akhir menu setelah diskon:", discounted);
+
+    merchant
+      .mutateAsync({
+        picture: values.sim,
+        productName: name,
+        price: price,
+        description: desc,
+        promo: discValue.toString(),
+      })
+      .then(async (res) => {
+        await router.push("/seller/my-items");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const { getRootProps, getInputProps, isDragActive, open, fileRejections } =

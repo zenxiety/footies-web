@@ -1,19 +1,17 @@
+import { inferRouterOutputs } from "@trpc/server";
 import React, { ReactNode, useState } from "react";
+import { AppRouter } from "../../server/api/root";
 import Item from "./Item";
+
+type RouterOutput = inferRouterOutputs<AppRouter>;
 
 export default function Category({
   menus,
 }: {
-  menus: {
-    name: string;
-    price: number;
-    isAvailable: boolean;
-    category: string[];
-    id: number;
-  }[];
+  menus: RouterOutput["merchant"]["getMenu"] | undefined;
 }) {
   const [itemPopup, setItemPopup] = useState(0);
-
+  console.log("menus: ", menus);
   return (
     <>
       {/* Popup Overlay Layer */}
@@ -27,14 +25,15 @@ export default function Category({
         <h2 className="font-literata text-xl font-semibold">Promo</h2>
         <hr className="my-4 border border-dashed border-others-black" />
         {/* Item */}
-        {menus.map((menu, i: number) => {
-          console.log("category: ", menu.id, itemPopup);
+        {menus?.map(({ id }, i: number) => {
+          console.log("category: ", id, itemPopup);
           return (
             <Item
-              key={i}
-              index={menu.id}
+              key={id}
+              index={i + 1}
               itemPopup={itemPopup}
               setItemPopup={setItemPopup}
+              menu={menus[i]}
             />
           );
         })}

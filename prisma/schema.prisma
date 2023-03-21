@@ -187,18 +187,19 @@ model Voucher {
 }
 
 model Menu {
-    id         String    @id @default(cuid())
-    nama       String
-    harga      Int
-    deskripsi  String?
-    gambar     String
-    kategori   String[]
-    promo      String?
-    options    String[]
-    Cart       Cart[]
-    Order      Order[]
-    Merchant   Merchant? @relation(fields: [merchantId], references: [id])
-    merchantId String?
+    id          String    @id @default(cuid())
+    nama        String
+    isAvailable Boolean   @default(true)
+    harga       Int
+    deskripsi   String?
+    gambar      String
+    kategori    String[]
+    promo       String?
+    options     String[]
+    Cart        Cart[]
+    Order       Order[]
+    Merchant    Merchant? @relation(fields: [merchantId], references: [id])
+    merchantId  String?
     // Kategori   KategoriOnMenu[]
     // kategoriId String?
 }

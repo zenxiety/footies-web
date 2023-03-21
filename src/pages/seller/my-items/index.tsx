@@ -2,31 +2,34 @@ import Head from "next/head";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Category from "../../../components/seller/Category";
+import { api } from "../../../utils/api";
 
 export default function MyItems() {
-  const menus = [
-    {
-      name: "Menu1",
-      price: 1000,
-      isAvailable: false,
-      category: ["promo"],
-      id: 1,
-    },
-    {
-      name: "Menu2",
-      price: 2000,
-      isAvailable: false,
-      category: ["promo"],
-      id: 2,
-    },
-    {
-      name: "Menu3",
-      price: 2000,
-      isAvailable: false,
-      category: ["promo"],
-      id: 3,
-    },
-  ];
+  // const menus = [
+  //   {
+  //     name: "Menu1",
+  //     price: 1000,
+  //     isAvailable: false,
+  //     category: ["promo"],
+  //     id: 1,
+  //   },
+  //   {
+  //     name: "Menu2",
+  //     price: 2000,
+  //     isAvailable: false,
+  //     category: ["promo"],
+  //     id: 2,
+  //   },
+  //   {
+  //     name: "Menu3",
+  //     price: 2000,
+  //     isAvailable: false,
+  //     category: ["promo"],
+  //     id: 3,
+  //   },
+  // ];
+
+  const menus = api.merchant.getMenu.useQuery();
 
   const [category, setCategory] = useState(0);
   const [isAvailable, setIsAvailable] = useState(true);
@@ -94,9 +97,9 @@ export default function MyItems() {
           </button>
         </div>
         {/* Promo */}
-        <Category menus={menus} />
+        <Category menus={menus.data} />
         {/* Promo */}
-        <Category menus={menus} />
+        <Category menus={menus.data} />
       </section>
       {/* Tambah Menu */}
       <Link href="./my-items/add">

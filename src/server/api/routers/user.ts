@@ -40,4 +40,20 @@ export const userRouter = createTRPCRouter({
       },
     });
   }),
+
+  getRecommendedRestaurant: protectedProcedure.query(async ({ ctx }) => {
+    const data = await ctx.prisma.merchant.findMany({
+      take: 10,
+      include: {
+        Menu: {
+          take: 1,
+          select: {
+            gambar: true,
+          },
+        },
+      },
+    });
+
+    return data;
+  }),
 });

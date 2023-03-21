@@ -8,7 +8,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "swiper/css/effect-coverflow";
-
+import { api } from "../../utils/api";
 
 const data = [
   {
@@ -50,10 +50,12 @@ const data = [
 ];
 
 const Rekomendasi = () => {
+  const data = api.user.getRecommendedRestaurant.useQuery();
+
   return (
     <>
       <div className="mt-12 h-full w-full overflow-hidden rounded-xl bg-secondary-300 pt-5">
-        <h1 className="font-literata text-2xl text-white px-5">
+        <h1 className="px-5 font-literata text-2xl text-white">
           Restoran Rekomendasi
         </h1>
         <Swiper
@@ -89,15 +91,15 @@ const Rekomendasi = () => {
             prevEl: ".swiper-button-prev",
           }}
         >
-          {data.map(({ image, title, jarak, rating }, i) => {
+          {data?.data?.map(({ nama, rating, id, Menu }) => {
             return (
               <SwiperSlide
-                key={i}
+                key={id}
                 className="flex flex-col justify-start rounded-3xl bg-[#A06235]"
               >
                 <>
                   <Image
-                    src={image}
+                    src={Menu[0]?.gambar || "/assets/burger.png"}
                     alt=""
                     className="mx-auto block rounded-3xl border-2 border-[#A06235]"
                     width={250}
@@ -105,17 +107,16 @@ const Rekomendasi = () => {
                   />
                   <div className="flex flex-col items-start py-5 pl-5 text-white">
                     <p className="text-start font-louis text-xl font-light">
-                      {jarak}
+                      {/* {jarak} */}
                     </p>
                     <p className=" block font-literata text-xl font-light">
-                      {title}
+                      {nama}
                     </p>
                     <div className="flex flex-row items-center justify-start gap-x-2">
                       <i className="fas fa-star text-primary-300" />
                       <p className=" mx-auto block font-louis text-xl font-light">
                         {rating}
                       </p>
-                      
                     </div>
                   </div>
                 </>

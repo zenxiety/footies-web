@@ -1,14 +1,20 @@
+import { inferRouterOutputs } from "@trpc/server";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { AppRouter } from "../../server/api/root";
+
+type RouterOutput = inferRouterOutputs<AppRouter>;
 
 export default function Item({
   index,
   itemPopup,
   setItemPopup,
+  menu,
 }: {
   index: number;
   itemPopup: number;
   setItemPopup: React.Dispatch<React.SetStateAction<number>>;
+  menu: RouterOutput["merchant"]["getMenu"][number] | undefined;
 }) {
   const [isAvailable, setIsAvailable] = useState(true);
 
@@ -28,7 +34,7 @@ export default function Item({
         <div className="min-h-40 flex items-center justify-between">
           <div>
             <Image
-              src="/seller/borgir.png"
+              src={menu?.gambar || "/seller/borgir.png"}
               alt=""
               width={80}
               height={80}
@@ -37,12 +43,12 @@ export default function Item({
           </div>
           <div className="grow-[2] px-5">
             <span className="font-literata text-[1.1rem] font-medium">
-              Borgir
+              {menu?.nama}
             </span>
             <p className="font-literata font-medium">
-              40.000
+              {menu?.harga}
               <span className="relative ml-2 text-secondary-200">
-                50.000
+                {menu?.harga}
                 <span className="absolute top-[55%] left-0 right-0 h-[2px] w-full bg-secondary-200" />
               </span>
             </p>
