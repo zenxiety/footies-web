@@ -31,6 +31,7 @@ export default function Category({
           console.log("category: ", menu.id, itemPopup);
           return (
             <Item
+              key={i}
               index={menu.id}
               itemPopup={itemPopup}
               setItemPopup={setItemPopup}

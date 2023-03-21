@@ -94,7 +94,7 @@ export default function Add() {
   };
 
   const handleDiscValue = (e: ChangeEvent<HTMLInputElement>) => {
-    let discAmount = e.target.value;
+    const discAmount = e.target.value;
     setDiscValue(Number(discAmount));
     let discounted = 0;
 
@@ -115,10 +115,6 @@ export default function Add() {
 
   const [discType, setDiscType] = useState("%");
   const [discounted, setDiscounted] = useState(0);
-
-  // useEffect(() => {
-
-  // }, [price, discValue, discounted]);
 
   return (
     <>
