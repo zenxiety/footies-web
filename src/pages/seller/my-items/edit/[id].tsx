@@ -8,16 +8,16 @@ import { api } from "../../../../utils/api";
 export default function Edit() {
   const router = useRouter();
   const { id } = router.query;
-  const menus = api.merchant.getMenu.useQuery();
-  const menu = menus.data?.find((data) => data.id == id);
+  const menu = api.merchant.getSpecificMenu.useQuery(id as string, {
+    keepPreviousData: false,
+  });
 
   return (
     <>
       <Head>
         <title>Edit Item - Footies</title>
       </Head>
-      <span>{id}</span>
-      <EditForm page="edit" menu={menu} />
+      <EditForm page="edit" menu={menu.data || undefined} />
     </>
   );
 }

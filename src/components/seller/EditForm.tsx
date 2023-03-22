@@ -32,7 +32,7 @@ export default function EditForm({
   menu,
 }: {
   page: string;
-  menu: RouterOutput["merchant"]["getMenu"][number] | undefined;
+  menu: RouterOutput["merchant"]["getSpecificMenu"] | undefined;
 }) {
   const {
     control,
@@ -42,7 +42,7 @@ export default function EditForm({
     getValues,
     register,
   } = useForm<AddItemValues>({ mode: "all" });
-  const merchant = api.merchant.listProduct.useMutation();
+  const updateProduct = api.merchant.updateProduct.useMutation();
   const router = useRouter();
 
   const onSubmit = (values: AddItemValues) => {
@@ -53,13 +53,14 @@ export default function EditForm({
     console.log("Diskon:", values.diskon);
     console.log("Harga akhir menu setelah diskon:", values.hargaAkhir);
 
-    merchant
+    updateProduct
       .mutateAsync({
+        id: router.query.id as string,
         picture: values.foto,
-        productName: name,
-        price: price,
-        description: desc,
-        promo: discValue.toString(),
+        productName: values.nama,
+        price: parseInt(values.hargaAwal.toString()),
+        description: values.deskripsi,
+        promo: values.diskon.toString(),
       })
       .then(async (res) => {
         await router.push("/seller/my-items");
@@ -97,7 +98,8 @@ export default function EditForm({
   const handlePrice = (e: ChangeEvent<HTMLInputElement>) => {
     const price = Number(e.target.value);
     let discounted = 0;
-    setPrice(price);
+    const discValue = getValues("diskon");
+    // setPrice(price);
 
     if (discType == "%") {
       if (String(discValue).length > 3) {
@@ -141,6 +143,7 @@ export default function EditForm({
     const discAmount = e.target.value;
     setDiscValue(Number(discAmount));
     let discounted = 0;
+    const price = getValues("hargaAwal");
 
     if (discType == "%") {
       if (discAmount.length > 3) {
@@ -153,7 +156,6 @@ export default function EditForm({
       }
       discounted = price - Number(discAmount);
     }
-
     discounted < 0 ? setDiscounted(0) : setDiscounted(discounted);
     setValue("hargaAkhir", discounted);
   };
@@ -163,15 +165,17 @@ export default function EditForm({
 
   useEffect(() => {
     if (menu) {
-      console.log(menu.gambar);
       setValue("foto", menu.gambar);
-      setName(menu.nama);
-      setPrice(menu.harga);
-      // setDesc(menu.deskripsi);
-      // setDiscValue(menu.promo);
-      setDiscounted(menu.harga);
+      setValue("nama", menu.nama);
+      setValue("hargaAwal", menu.harga);
+      setValue("deskripsi", menu.deskripsi ?? "");
+      setValue("diskon", parseInt(menu.promo ?? "0"));
+      const discounted =
+        menu.harga - (menu.harga * parseInt(menu.promo ?? "0")) / 100;
+      setDiscounted(discounted);
+      setValue("hargaAkhir", discounted);
     }
-  }, []);
+  }, [menu]);
 
   return (
     <>

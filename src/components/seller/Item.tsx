@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { AppRouter } from "../../server/api/root";
+import { api } from "../../utils/api";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 
@@ -20,6 +21,9 @@ export default function Item({
   menu: RouterOutput["merchant"]["getMenu"][number] | undefined;
 }) {
   const [isAvailable, setIsAvailable] = useState(true);
+  const deleteProduct = api.merchant.deleteProduct.useMutation();
+  const duplicateProduct = api.merchant.duplicateProduct.useMutation();
+  const getMenu = api.merchant.getMenu.useQuery(undefined, { enabled: false });
 
   const handleStock = () => {
     setIsAvailable(!isAvailable);
@@ -28,6 +32,37 @@ export default function Item({
   const handlePopup = (index: number) => {
     if (itemPopup == 0) setItemPopup(index);
     else setItemPopup(0);
+  };
+
+  const handleRemove = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    deleteProduct
+      .mutateAsync(id)
+      .then(async (res) => {
+        setItemPopup(0);
+        await getMenu.refetch();
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleDuplicate = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+
+    duplicateProduct
+      .mutateAsync(id)
+      .then(async (res) => {
+        setItemPopup(0);
+        await getMenu.refetch();
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -118,6 +153,7 @@ export default function Item({
             <hr className="my-4" />
             <button
               type="button"
+              onClick={(e) => handleDuplicate(e)}
               className="flex w-[160px] items-center justify-between"
             >
               <span>Duplicate</span>
@@ -139,6 +175,7 @@ export default function Item({
             <button
               type="button"
               className="flex w-[160px] items-center justify-between"
+              onClick={(e) => handleRemove(e)}
             >
               <span className="text-failed">Remove</span>
               <svg
