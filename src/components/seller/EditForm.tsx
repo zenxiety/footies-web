@@ -44,6 +44,8 @@ export default function EditForm({
     register,
   } = useForm<AddItemValues>({ mode: "all" });
   const updateProduct = api.merchant.updateProduct.useMutation();
+  const addProduct = api.merchant.listProduct.useMutation();
+
   const router = useRouter();
 
   const onSubmit = (values: AddItemValues) => {
@@ -54,21 +56,38 @@ export default function EditForm({
     console.log("Diskon:", values.diskon);
     console.log("Harga akhir menu setelah diskon:", values.hargaAkhir);
 
-    updateProduct
-      .mutateAsync({
-        id: router.query.id as string,
-        picture: values.foto,
-        productName: values.nama,
-        price: parseInt(values.hargaAwal.toString()),
-        description: values.deskripsi,
-        promo: values.diskon.toString(),
-      })
-      .then(async (res) => {
-        await router.push("/seller/my-items");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (page === "add") {
+      addProduct
+        .mutateAsync({
+          picture: values.foto,
+          productName: values.nama,
+          price: parseInt(values.hargaAwal.toString()),
+          description: values.deskripsi,
+          promo: values.diskon.toString(),
+        })
+        .then(async (res) => {
+          await router.push("/seller/my-items");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      updateProduct
+        .mutateAsync({
+          id: router.query.id as string,
+          picture: values.foto,
+          productName: values.nama,
+          price: parseInt(values.hargaAwal.toString()),
+          description: values.deskripsi,
+          promo: values.diskon.toString(),
+        })
+        .then(async (res) => {
+          await router.push("/seller/my-items");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   const { getRootProps, getInputProps, isDragActive, open, fileRejections } =
