@@ -25,6 +25,7 @@ export type AddItemValues = {
   deskripsi: string;
   diskon: number;
   hargaAkhir: number;
+  kategori: string;
 };
 
 export default function EditForm({
@@ -231,7 +232,7 @@ export default function EditForm({
                           alt=""
                           width={300}
                           height={200}
-                          className="h-auto w-full"
+                          className="absolute top-1/2 left-0 h-auto w-full -translate-y-1/2"
                         />
                       </div>
                       <div className="absolute bottom-0 h-[50px] w-full bg-gradient-to-b from-transparent to-black"></div>
@@ -292,7 +293,11 @@ export default function EditForm({
         </div>
         {/* Nama Menu */}
         <div>
-          <p className="mt-3 mr-auto text-start font-literata font-medium text-secondary-100">
+          <p
+            className={`mt-3 mr-auto text-start font-literata font-medium duration-500 ${
+              getValues("nama") ? "text-primary-300" : "text-secondary-100"
+            }`}
+          >
             Nama Menu <span className="text-failed">*</span>
           </p>
           <input
@@ -319,7 +324,11 @@ export default function EditForm({
         </div>
         {/* Harga */}
         <div>
-          <p className="mt-5 mr-auto text-start font-literata font-medium text-secondary-100">
+          <p
+            className={`mt-5 mr-auto text-start font-literata font-medium duration-500 ${
+              getValues("hargaAwal") ? "text-primary-300" : "text-secondary-100"
+            }`}
+          >
             Harga <span className="text-failed">*</span>
           </p>
           <div className="relative">
@@ -347,7 +356,11 @@ export default function EditForm({
         </div>
         {/* Deskripsi */}
         <div>
-          <p className="mt-5 mr-auto text-start font-literata font-medium text-secondary-100">
+          <p
+            className={`mt-5 mr-auto text-start font-literata font-medium duration-500 ${
+              getValues("deskripsi") ? "text-primary-300" : "text-secondary-100"
+            }`}
+          >
             Deskripsi
           </p>
           <div className="relative">
@@ -367,10 +380,41 @@ export default function EditForm({
             </span>
           </div>
         </div>
+        {/* Kategori */}
+        <div>
+          <p
+            className={`mt-3 mr-auto text-start font-literata font-medium duration-500 ${
+              getValues("kategori") ? "text-primary-300" : "text-secondary-100"
+            }`}
+          >
+            Kategori
+          </p>
+          <input
+            {...register("kategori", {
+              required: "Kategori menu wajib diisi",
+            })}
+            onChange={(e) => setValue("kategori", e.target.value)}
+            defaultValue={menu?.kategori}
+            autoComplete={"off"}
+            type="text"
+            className={`w-full text-ellipsis border-b bg-transparent py-2 font-louis text-[18px] font-light text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none ${
+              errors.kategori ? "border-failed" : "border-secondary-100"
+            }`}
+          />
+          {errors.kategori && (
+            <span className="mt-[.25em] block text-start font-louis text-sm text-failed">
+              {errors.kategori.message}
+            </span>
+          )}
+        </div>
         {/* Diskon & Harga Akhir */}
         <div className="flex gap-x-8">
           <div className="">
-            <p className="mt-5 mr-auto text-start font-literata font-medium text-secondary-100">
+            <p
+              className={`mt-5 mr-auto text-start font-literata font-medium duration-500 ${
+                getValues("diskon") ? "text-primary-300" : "text-secondary-100"
+              }`}
+            >
               Diskon
             </p>
             <div className="relative">
