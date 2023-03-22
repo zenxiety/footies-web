@@ -1,16 +1,19 @@
 import { inferRouterOutputs } from "@trpc/server";
 import Image from "next/image";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { AppRouter } from "../../server/api/root";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 
 export default function Item({
+  id,
   index,
   itemPopup,
   setItemPopup,
   menu,
 }: {
+  id: string;
   index: number;
   itemPopup: number;
   setItemPopup: React.Dispatch<React.SetStateAction<number>>;
@@ -93,23 +96,25 @@ export default function Item({
             }`}
           >
             {/* <div className="top-0 left-0 z-10 h-screen w-screen bg-black/50 backdrop-blur-sm"></div> */}
-            <button
-              type="button"
-              className="flex w-[160px] items-center justify-between"
-            >
-              <span>Edit Item</span>
-              <svg
-                width={15}
-                height={15}
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+            <Link href={`/seller/my-items/edit/${id}`}>
+              <button
+                type="button"
+                className="flex w-[160px] items-center justify-between"
               >
-                <path
-                  d="M12.67 5.574L9.415 2.356l1.072-1.072c.294-.294.655-.44 1.082-.44.428 0 .788.146 1.082.44l1.073 1.072c.293.294.447.648.46 1.063.012.415-.128.77-.422 1.063L12.67 5.574zm-1.11 1.13l-8.12 8.12H.184v-3.256l8.12-8.12 3.256 3.255z"
-                  fill="#EFEFEF"
-                />
-              </svg>
-            </button>
+                <span>Edit Item</span>
+                <svg
+                  width={15}
+                  height={15}
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12.67 5.574L9.415 2.356l1.072-1.072c.294-.294.655-.44 1.082-.44.428 0 .788.146 1.082.44l1.073 1.072c.293.294.447.648.46 1.063.012.415-.128.77-.422 1.063L12.67 5.574zm-1.11 1.13l-8.12 8.12H.184v-3.256l8.12-8.12 3.256 3.255z"
+                    fill="#EFEFEF"
+                  />
+                </svg>
+              </button>
+            </Link>
             <hr className="my-4" />
             <button
               type="button"

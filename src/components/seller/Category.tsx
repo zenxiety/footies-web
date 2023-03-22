@@ -11,7 +11,6 @@ export default function Category({
   menus: RouterOutput["merchant"]["getMenu"] | undefined;
 }) {
   const [itemPopup, setItemPopup] = useState(0);
-  console.log("menus: ", menus);
   return (
     <>
       {/* Popup Overlay Layer */}
@@ -26,10 +25,10 @@ export default function Category({
         <hr className="my-4 border border-dashed border-others-black" />
         {/* Item */}
         {menus?.map(({ id }, i: number) => {
-          console.log("category: ", id, itemPopup);
           return (
             <Item
               key={id}
+              id={id}
               index={i + 1}
               itemPopup={itemPopup}
               setItemPopup={setItemPopup}
