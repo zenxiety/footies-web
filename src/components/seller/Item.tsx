@@ -70,13 +70,13 @@ export default function Item({
       {/* Item */}
       <div>
         <div className="min-h-40 flex items-center justify-between">
-          <div>
+          <div className="relative h-[5rem] w-[5rem] overflow-hidden">
             <Image
               src={menu?.gambar || "/seller/borgir.png"}
               alt=""
               width={80}
               height={80}
-              className="h-full w-full"
+              className="absolute top-1/2 h-auto w-full -translate-y-1/2"
             />
           </div>
           <div className="grow-[2] px-5">
@@ -84,7 +84,8 @@ export default function Item({
               {menu?.nama}
             </span>
             <p className="font-literata font-medium">
-              {menu?.harga}
+              {(menu?.harga ?? 0) -
+                ((menu?.harga ?? 0) * parseInt(menu?.promo ?? "0")) / 100}
               <span className="relative ml-2 text-secondary-200">
                 {menu?.harga}
                 <span className="absolute top-[55%] left-0 right-0 h-[2px] w-full bg-secondary-200" />
