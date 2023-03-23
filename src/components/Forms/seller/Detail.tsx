@@ -44,6 +44,20 @@ export default function Detail({
     if (e.currentTarget.value.length > 2) {
       e.currentTarget.value = e.currentTarget.value.slice(0, 2);
     }
+
+    if (parseInt(e.target.value) < 0) {
+      e.currentTarget.value = "0";
+    }
+
+    if (e.target.classList.contains("hour")) {
+      if (parseInt(e.target.value) > 24) {
+        e.currentTarget.value = "24";
+      }
+    } else {
+      if (parseInt(e.target.value) > 60) {
+        e.currentTarget.value = "00";
+      }
+    }
   };
 
   const handleLabelChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -88,7 +102,7 @@ export default function Detail({
                 type="number"
                 onChange={(e) => handleTimeLength(e)}
                 autoComplete={"off"}
-                className="w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
+                className="hour w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
               />
               <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15px] text-others-white">
                 :
@@ -107,7 +121,7 @@ export default function Detail({
                 type="number"
                 onChange={(e) => handleTimeLength(e)}
                 autoComplete={"off"}
-                className="w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
+                className="hour w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
               />
               <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15px] text-others-white">
                 :
