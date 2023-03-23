@@ -40,6 +40,12 @@ export default function Detail({
     });
   }, [register]);
 
+  const handleTimeLength = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.currentTarget.value.length > 2) {
+      e.currentTarget.value = e.currentTarget.value.slice(0, 2);
+    }
+  };
+
   const handleLabelChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setTempLabel(() => e.target.value);
@@ -64,7 +70,6 @@ export default function Detail({
       labels.filter((l) => l !== label),
       { shouldValidate: true }
     );
-    // forceupdate(); // biar kerender ulang, pas hapus salah satu label ga telat hehe
   };
 
   return (
@@ -81,16 +86,16 @@ export default function Detail({
               <input
                 {...register("jamBuka")}
                 type="number"
-                maxLength={2}
+                onChange={(e) => handleTimeLength(e)}
                 autoComplete={"off"}
-                className="spin w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
+                className="w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
               />
               <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15px] text-others-white">
                 :
               </p>
               <input
                 type="number"
-                maxLength={2}
+                onChange={(e) => handleTimeLength(e)}
                 autoComplete={"off"}
                 className="w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
               />
@@ -100,7 +105,7 @@ export default function Detail({
               <input
                 {...register("jamTutup")}
                 type="number"
-                maxLength={2}
+                onChange={(e) => handleTimeLength(e)}
                 autoComplete={"off"}
                 className="w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
               />
@@ -109,7 +114,7 @@ export default function Detail({
               </p>
               <input
                 type="number"
-                maxLength={2}
+                onChange={(e) => handleTimeLength(e)}
                 autoComplete={"off"}
                 className="w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
               />
