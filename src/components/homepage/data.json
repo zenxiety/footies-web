@@ -1,15 +1,65 @@
 [
   {
-    "title": "Nasi Faris",
+    "id": 1,
+    "title": "Nasi Goreng Cak Rizz, Kotabaru",
+    "partner": true,
+    "category": "Fast food, Sweets, Drinks, etc",
+    "halal": false,
     "image": "/assets/burger.png",
     "jarak": "0.2 km",
-    "rating": "4.9"
+    "waktu": "32 min",
+    "rating": "4.9",
+    "voucher": [
+      {
+        "persen": 20,
+        "sampai": 10
+      },
+      {
+        "persen": 20,
+        "sampai": 10
+      }
+    ],
+
+    "produk": [
+      {
+        "nama": "SD (Susu Dingin)",
+        "image": "/assets/susu.png",
+        "deskripsi": "Susu Murni dengan es batu",
+        "promo": true,
+        "harga": 10000
+      }
+    ]
   },
   {
-    "title": "mie",
+    "id": 2,
+    "title": "Nasi Goreng Cak Rizz, Kotabaru",
+    "partner": false,
+    "category": "Fast food, Sweets, Drinks, etc",
+    "halal": true,
     "image": "/assets/burger.png",
-    "jarak": "0.2 km",
-    "rating": "4.9"
+    "jarak": "1.5 km",
+    "waktu": "40 min",
+    "rating": "4.8",
+    "voucher": [
+      {
+        "persen": 20,
+        "sampai": 10
+      },
+      {
+        "persen": 20,
+        "sampai": 10
+      }
+    ],
+
+    "produk": [
+      {
+        "nama": "SD (Susu Dingin)",
+        "image": "/assets/susu.png",
+        "deskripsi": "Susu Murni dengan es batu",
+        "promo": true,
+        "harga": 10000
+      }
+    ]
   },
   {
     "title": "indomie",
@@ -79,3 +129,4 @@
     "rating": "4.9"
   }
 ]
+

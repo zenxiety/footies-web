@@ -5,12 +5,8 @@ import { useState } from "react";
 import { useFormData } from "../../../context/FormContext";
 import "@fortawesome/fontawesome-free/css/all.css";
 import type { SignUpFormValues } from "../../../pages/auth/signup";
-import "/node_modules/flag-icons/css/flag-icons.min.css";
-import Map from "../../Map";
 import MapboxMap from "../../Map";
 import { FieldValues } from "react-hook-form/dist/types";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function Biodata({
   prevFormStep,
   formStep,

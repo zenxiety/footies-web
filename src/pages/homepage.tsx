@@ -2,7 +2,6 @@ import React, { useState, useRef } from "react";
 import "@fortawesome/fontawesome-free/css/all.css";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { Navigation, Pagination, EffectCoverflow, Autoplay } from "swiper";
-import "@fortawesome/fontawesome-free/css/all.css";
 import Image from "next/image";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -87,7 +86,7 @@ const Homepage = () => {
           }}
         >
           {filteredData.map(({ image, title, jarak, rating }, i) => {
-            return title ? (
+            return (title != null) ? (
            
            <SwiperSlide
                 key={i}
