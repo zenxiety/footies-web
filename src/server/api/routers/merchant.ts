@@ -17,7 +17,7 @@ export const merchantRouter = createTRPCRouter({
       z.object({
         productName: z.string(),
         price: z.number(),
-        labels: z.array(z.string()).optional(),
+        label: z.string().optional(),
         description: z.string().optional(),
         options: z.string().optional(),
         picture: z.string(),
@@ -25,6 +25,8 @@ export const merchantRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // console.log(input.label);
+
       const data = await ctx.prisma.menu.create({
         data: {
           nama: input.productName,
@@ -33,7 +35,7 @@ export const merchantRouter = createTRPCRouter({
           options: input.options,
           gambar: input.picture,
           promo: input.promo,
-          kategori: input.labels,
+          kategori: input.label,
           Merchant: {
             connect: {
               userId: ctx.session.user.id,
@@ -75,7 +77,7 @@ export const merchantRouter = createTRPCRouter({
         id: z.string(),
         productName: z.string(),
         price: z.number(),
-        labels: z.array(z.string()).optional(),
+        label: z.string().optional(),
         description: z.string().optional(),
         options: z.string().optional(),
         picture: z.string(),
@@ -94,7 +96,7 @@ export const merchantRouter = createTRPCRouter({
           options: input.options,
           gambar: input.picture,
           promo: input.promo,
-          kategori: input.labels,
+          kategori: input.label,
         },
       });
       console.log(data);

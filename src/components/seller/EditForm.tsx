@@ -21,7 +21,7 @@ type RouterOutput = inferRouterOutputs<AppRouter>;
 export type AddItemValues = {
   foto: string;
   nama: string;
-  hargaAwal: number;
+  hargaAwal: string;
   deskripsi: string;
   diskon: number;
   hargaAkhir: number;
@@ -56,14 +56,17 @@ export default function EditForm({
     console.log("Diskon:", values.diskon);
     console.log("Harga akhir menu setelah diskon:", values.hargaAkhir);
 
+    console.log("Kategori menu:", values.kategori);
+
     if (page === "add") {
       addProduct
         .mutateAsync({
           picture: values.foto,
           productName: values.nama,
-          price: parseInt(values.hargaAwal.toString()),
+          price: Number(values.hargaAwal),
           description: values.deskripsi,
           promo: values.diskon.toString(),
+          label: values.kategori,
         })
         .then(async (res) => {
           await router.push("/seller/my-items");
@@ -77,9 +80,10 @@ export default function EditForm({
           id: router.query.id as string,
           picture: values.foto,
           productName: values.nama,
-          price: parseInt(values.hargaAwal.toString()),
+          price: Number(values.hargaAwal),
           description: values.deskripsi,
           promo: values.diskon.toString(),
+          label: values.kategori,
         })
         .then(async (res) => {
           await router.push("/seller/my-items");
@@ -169,12 +173,12 @@ export default function EditForm({
       if (discAmount.length > 3) {
         discAmount.slice(0, 2);
       }
-      discounted = price - (price * Number(discAmount)) / 100;
+      discounted = Number(price) - (Number(price) * Number(discAmount)) / 100;
     } else {
       if (discAmount.length > String(price).length) {
         discAmount.slice(0, String(price).length - 1);
       }
-      discounted = price - Number(discAmount);
+      discounted = Number(price) - Number(discAmount);
     }
     discounted < 0 ? setDiscounted(0) : setDiscounted(discounted);
     setValue("hargaAkhir", discounted);
@@ -187,9 +191,10 @@ export default function EditForm({
     if (menu) {
       setValue("foto", menu.gambar);
       setValue("nama", menu.nama);
-      setValue("hargaAwal", menu.harga);
+      setValue("hargaAwal", menu.harga.toString());
       setValue("deskripsi", menu.deskripsi ?? "");
       setValue("diskon", parseInt(menu.promo ?? "0"));
+      setValue("kategori", menu.kategori ?? "");
       const discounted =
         menu.harga - (menu.harga * parseInt(menu.promo ?? "0")) / 100;
       setDiscounted(discounted);
@@ -413,7 +418,7 @@ export default function EditForm({
               required: "Kategori menu wajib diisi",
             })}
             onChange={(e) => setValue("kategori", e.target.value)}
-            defaultValue={menu?.kategori}
+            defaultValue={menu?.kategori ?? ""}
             autoComplete={"off"}
             type="text"
             className={`w-full text-ellipsis border-b bg-transparent py-2 font-louis text-[18px] font-light text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none ${

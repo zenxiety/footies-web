@@ -193,15 +193,13 @@ model Menu {
     harga       Int
     deskripsi   String?
     gambar      String
-    kategori    String[]
+    kategori    String?
     promo       String?
     options     String[]
     Cart        Cart[]
     Order       Order[]
     Merchant    Merchant? @relation(fields: [merchantId], references: [id])
     merchantId  String?
-    // Kategori   KategoriOnMenu[]
-    // kategoriId String?
 }
 
 // model KategoriOnMenu {
