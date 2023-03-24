@@ -7,8 +7,10 @@ type RouterOutput = inferRouterOutputs<AppRouter>;
 
 export default function Category({
   menus,
+  title,
 }: {
   menus: RouterOutput["merchant"]["getMenu"] | undefined;
+  title: string;
 }) {
   const [itemPopup, setItemPopup] = useState(0);
   return (
@@ -21,7 +23,7 @@ export default function Category({
         }`}
       ></div>
       <div className="my-4 bg-secondary-400 px-5 py-2">
-        <h2 className="font-literata text-xl font-semibold">Promo</h2>
+        <h2 className="font-literata text-xl font-semibold">{title}</h2>
         <hr className="my-4 border border-dashed border-others-black" />
         {/* Item */}
         {menus?.map(({ id }, i: number) => {

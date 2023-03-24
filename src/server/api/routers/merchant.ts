@@ -34,8 +34,8 @@ export const merchantRouter = createTRPCRouter({
           deskripsi: input.description,
           options: input.options,
           gambar: input.picture,
-          promo: input.promo,
-          kategori: input.label,
+          promo: input.promo || "0",
+          kategori: input.label?.toLowerCase().trimEnd(),
           Merchant: {
             connect: {
               userId: ctx.session.user.id,
@@ -57,6 +57,28 @@ export const merchantRouter = createTRPCRouter({
     });
     console.log(data);
     return data;
+  }),
+
+  getMenuGroupByCategory: protectedProcedureMerchant.query(async ({ ctx }) => {
+    const data = await ctx.prisma.menu.findMany({
+      where: {
+        Merchant: {
+          userId: ctx.session.user.id,
+        },
+      },
+    });
+
+    const kategori = data
+      ?.map((item) => item.kategori)
+      .filter((v, i, a) => a.indexOf(v) === i);
+
+    const dataByCategory = kategori?.map((item) => {
+      return {
+        category: item,
+        data: data?.filter((dataItem) => dataItem.kategori === item),
+      };
+    });
+    return dataByCategory;
   }),
 
   getSpecificMenu: protectedProcedureMerchant
@@ -95,8 +117,8 @@ export const merchantRouter = createTRPCRouter({
           deskripsi: input.description,
           options: input.options,
           gambar: input.picture,
-          promo: input.promo,
-          kategori: input.label,
+          promo: input.promo || "0",
+          kategori: input.label?.toLowerCase().trimEnd(),
         },
       });
       console.log(data);
