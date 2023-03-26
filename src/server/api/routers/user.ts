@@ -56,4 +56,59 @@ export const userRouter = createTRPCRouter({
 
     return data;
   }),
+
+  searchProductandMerchant: protectedProcedure
+    .input(
+      z.object({
+        search: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.prisma.merchant.findMany({
+        include: {
+          Menu: true,
+        },
+        where: {
+          OR: [
+            {
+              nama: {
+                contains: input.search,
+                mode: "insensitive",
+              },
+            },
+            {
+              Menu: {
+                some: {
+                  nama: {
+                    contains: input.search,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+          ],
+        },
+      });
+
+      return data;
+    }),
+
+  getSpecificMerchant: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.prisma.merchant.findUnique({
+        include: {
+          Menu: true,
+        },
+        where: {
+          id: input.id,
+        },
+      });
+
+      return data;
+    }),
 });

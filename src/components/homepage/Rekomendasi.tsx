@@ -9,6 +9,7 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "swiper/css/effect-coverflow";
 import { api } from "../../utils/api";
+import { useRouter } from "next/router";
 
 const data = [
   {
@@ -51,6 +52,7 @@ const data = [
 
 const Rekomendasi = () => {
   const data = api.user.getRecommendedRestaurant.useQuery();
+  const router = useRouter();
 
   return (
     <>
@@ -95,7 +97,10 @@ const Rekomendasi = () => {
             return (
               <SwiperSlide
                 key={id}
-                className="flex flex-col justify-start rounded-3xl bg-[#A06235]"
+                onClick={async () => {
+                  await router.push(`/storepage/${id}`);
+                }}
+                className="flex cursor-pointer flex-col justify-start rounded-3xl bg-[#A06235]"
               >
                 <>
                   <Image

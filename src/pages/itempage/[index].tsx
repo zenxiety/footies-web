@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -13,6 +12,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "swiper/css/effect-coverflow";
+import { api } from "../../utils/api";
 
 export default function Produk() {
   const router = useRouter();
@@ -26,39 +26,32 @@ export default function Produk() {
     setLike((prev) => !prev);
   };
 
+  const item = data[0]!;
+
+  const { data: menuData } = api.merchant.getSpecificMenu.useQuery(
+    index as string
+  );
+
   return (
     <>
       <div className="relative h-full w-full overflow-hidden bg-secondary-500 px-5 pt-12">
-        
-        {data.map((item) => {
-          if (item.id == index) {
-            return (
-              <>
-                {item.produk.map((item) => {
-                  if (item.id == index) {
-                    return (
-                      <>
-                        <div className="flex flex-row items-center justify-between">
-                          <button
-                            className="fas fa-arrow-left text-3xl text-white "
-                            onClick={() => router.push(`/storepage/${item.id}`)}
-                          />
-                          <h1 className="truncate text-4xl text-white">{item.nama}</h1>
-                          <button className="fa-solid fa-star text-white text-2xl" />
-                          <button className="fa-solid fa-share-nodes text-white text-2xl" />
-                        </div>
-                        <Image className="w-full" alt="" src={item.image} width={100} height={100} />
-                        <div className="bg-secondary-300 border-2 border-primary-300 rounded-xl relative">
-                            
-                        </div>
-                      </>
-                    );
-                  }
-                })}
-              </>
-            );
-          }
-        })}
+        <div className="flex flex-row items-center justify-between">
+          <button
+            className="fas fa-arrow-left text-3xl text-white "
+            onClick={() => router.push(`/storepage/${menuData?.id as string}`)}
+          />
+          <h1 className="truncate text-4xl text-white">{menuData?.nama}</h1>
+          <button className="fa-solid fa-star text-2xl text-white" />
+          <button className="fa-solid fa-share-nodes text-2xl text-white" />
+        </div>
+        <Image
+          className="w-full"
+          alt=""
+          src={menuData?.gambar as string}
+          width={100}
+          height={100}
+        />
+        <div className="relative rounded-xl border-2 border-primary-300 bg-secondary-300"></div>
       </div>
     </>
   );

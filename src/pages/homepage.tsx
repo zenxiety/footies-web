@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "@fortawesome/fontawesome-free/css/all.css";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { Navigation, Pagination, EffectCoverflow, Autoplay } from "swiper";
@@ -16,14 +16,28 @@ import Promo from "../components/homepage/Promo";
 import Kategori from "../components/homepage/Kategori";
 // import Terdekat from "../components/homepage/Terdekat";
 import Rekomendasi from "../components/homepage/Rekomendasi";
+import { api } from "../utils/api";
+import useDebounce from "../hooks/useDebounce";
 
 const Homepage = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearch = useDebounce(searchQuery, 1000);
   const router = useRouter();
   // Filter the data based on the search query
-  const filteredData = data.filter((item) =>
-    item.title.toLowerCase().includes(searchQuery.toLowerCase())
+  // const filteredData = data.filter((item) =>
+  //   item.title.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
+
+  const searchMenu = api.user.searchProductandMerchant.useQuery(
+    { search: debouncedSearch },
+    {
+      enabled: debouncedSearch.length > 0,
+    }
   );
+
+  useEffect(() => {
+    console.log(searchMenu.data);
+  }, [searchMenu.data]);
   return (
     <>
       <div className="h-full w-full rounded-b-xl bg-secondary-400">
@@ -86,7 +100,7 @@ const Homepage = () => {
             prevEl: ".swiper-button-prev",
           }}
         >
-          {filteredData.map(({ image, title, jarak, rating, id }, i) => {
+          {/* {filteredData.map(({ image, title, jarak, rating, id }, i) => {
             return title ? (
               <SwiperSlide
                 key={i}
@@ -120,7 +134,7 @@ const Homepage = () => {
             ) : (
               <h1>Data not found</h1>
             );
-          })}
+          })} */}
         </Swiper>
       </div>
       <Rekomendasi />
