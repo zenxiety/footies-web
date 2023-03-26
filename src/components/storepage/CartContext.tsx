@@ -22,9 +22,9 @@ type CartContextType = {
 
 const CartContext = createContext<CartContextType>({
   cartItems: [],
-  addToCart: () => {},
-  removeFromCart: () => {},
-  clearCart: () => {},
+  addToCart: () => void {},
+  removeFromCart: () => void {},
+  clearCart: () => void {},
   totalItems: 0,
   totalPrice: 0,
 });
@@ -43,7 +43,7 @@ export const CartProvider = ({ children }: Props) => {
 
     if (existingCartItemIndex !== -1) {
       const newCartItems = [...cartItems];
-      newCartItems[existingCartItemIndex].quantity++;
+      newCartItems[existingCartItemIndex]!.quantity++;
       setCartItems(newCartItems);
     } else {
       setCartItems([...cartItems, { product, quantity: 1 }]);
