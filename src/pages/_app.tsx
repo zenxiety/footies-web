@@ -6,8 +6,8 @@ import { api } from "../utils/api";
 
 import "../styles/globals.css";
 
-import { Literata } from "@next/font/google";
-import localFont from "@next/font/local";
+import { Literata } from "next/font/google";
+import localFont from "next/font/local";
 
 const literata = Literata({
   // weight: ["200", "300", "500", "700", "400", "600", "800", "900"],
