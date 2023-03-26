@@ -3,6 +3,7 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { Navigation, Pagination, EffectCoverflow, Autoplay } from "swiper";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -18,7 +19,7 @@ import Rekomendasi from "../components/homepage/Rekomendasi";
 
 const Homepage = () => {
   const [searchQuery, setSearchQuery] = useState("");
-
+  const router = useRouter();
   // Filter the data based on the search query
   const filteredData = data.filter((item) =>
     item.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -85,12 +86,12 @@ const Homepage = () => {
             prevEl: ".swiper-button-prev",
           }}
         >
-          {filteredData.map(({ image, title, jarak, rating }, i) => {
-            return (title != null) ? (
-           
-           <SwiperSlide
+          {filteredData.map(({ image, title, jarak, rating, id }, i) => {
+            return title ? (
+              <SwiperSlide
                 key={i}
-                className="flex max-h-full flex-col justify-start rounded-3xl bg-white"
+                className="flex max-h-full flex-col justify-start rounded-3xl bg-white hover:cursor-pointer"
+                onClick={() => router.push(`/storepage/${id}`)}
               >
                 <>
                   <Image
@@ -117,7 +118,7 @@ const Homepage = () => {
                 </>
               </SwiperSlide>
             ) : (
-                <h1>Data not found</h1>
+              <h1>Data not found</h1>
             );
           })}
         </Swiper>

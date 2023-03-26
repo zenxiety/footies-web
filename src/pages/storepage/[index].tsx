@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -20,7 +21,11 @@ export default function Produk() {
   const [lat, setLat] = useState(-7.770797393657097);
   const [location, setLocation] = useState("");
   const [coord, setCoord] = useState("");
-  console.log(data);
+  const [like, setLike] = useState(false);
+  const toggleLike = () => {
+    setLike((prev) => !prev);
+  };
+
   return (
     <>
       <div className="relative h-full w-full overflow-hidden bg-secondary-500 px-5 pt-12">
@@ -98,12 +103,14 @@ export default function Produk() {
                     </div>
                     <h1 className="text-sm">Distance</h1>
                   </div>
-                  <div className="flex flex-col items-center justify-center rounded-md bg-secondary-300 p-3 font-literata font-light text-white">
-                    <div className="flex flex-row items-center gap-x-2">
+                  <div className="flex flex-col items-center justify-center rounded-md bg-secondary-300 font-literata font-light text-white">
+                    <div className="flex flex-row items-center justify-center gap-x-2">
                       <i className="fas fa-clock text-white" />
                       <h1>{item.waktu}</h1>
                     </div>
-                    <h1 className="text-sm">Waktu Tempuh</h1>
+                    <h1 className="items-center text-center text-sm">
+                      Waktu Tempuh
+                    </h1>
                   </div>
                   <div className="flex flex-col items-center justify-center rounded-md bg-secondary-300 p-3 font-literata font-light text-white">
                     <div className="flex flex-row items-center gap-x-2">
@@ -143,26 +150,27 @@ export default function Produk() {
                   direction="horizontal"
                   centeredSlides={true}
                 >
-                  {data.voucher?.map((item, i) => {
+                  {item.voucher.map(({ persen, sampai }, i) => {
                     return (
                       <SwiperSlide key={i} className="w-full">
                         <div className="rounded-md bg-secondary-300 p-5">
                           <div className="flex flex-row items-center justify-between gap-x-2">
-                            <i className="fas fa-ticket -rotate-45 text-2xl text-primary-300" />
+                            <i className="fas fa-ticket -rotate-45 text-4xl text-primary-300" />
                             <h1 className="text-light font-literata text-sm text-white">
-                              Diskon {item.persen} s/d {item.sampai}
+                              Diskon {persen} s/d {sampai}
                             </h1>
-                            <h1 className="rounded-full bg-primary-300 px-3 py-1 font-literata">
+
+                            <button className="rounded-full bg-primary-300 px-3 py-1 font-literata">
                               Klaim
-                            </h1>
+                            </button>
                           </div>
                         </div>
                       </SwiperSlide>
                     );
                   })}
                 </Swiper>
-                <div className="h-full w-full rounded-t-2xl bg-secondary-300">
-                  <div className="flex flex-row items-center gap-x-2 px-5 py-3">
+                <div className="h-full w-full rounded-t-2xl bg-secondary-300 px-3">
+                  <div className="flex flex-row items-center gap-x-2 py-3">
                     <Image
                       className=""
                       src="/assets/fire.png"
@@ -173,31 +181,81 @@ export default function Produk() {
                     <h1 className="font-literata text-white">Hot Deals</h1>
                   </div>
 
-                  {data.produk?.map((item) => {
-                    <>
-                    <div className="flex flex-row items-center justify-between gap-x-2 px-5 py-3">
-                      <div className="flex flex-row gap-x-2">
-                        <Image src={item.image} alt="" width={50} height={50} />
-                        <div className="flex flex-col items-start justify-center">
-                          <h1>{item.nama}</h1>
-                          <h1>{item.deskripsi}</h1>
-                          <div className="flex flex-row items-center gap-x-2">
-                            <h1 className={item.promo ? "bg-failed rounded-full font-literata text-white" : "hidden"}>Promo</h1>
-                            <h1>{item.harga}</h1>
+                  {item.produk.map((item) => {
+                    return (
+                      <>
+                        <div className="flex flex-row items-start justify-between gap-x-2 py-3 text-white">
+                          <div className="flex flex-row justify-between gap-x-2">
+                            <Image
+                              src={item.image}
+                              alt=""
+                              width={100}
+                              height={50}
+                            />
+                            <button className="flex flex-col items-start justify-center gap-y-1" onClick={() => router.push(`/itempage/${item.id}`)}>
+                              <h1 className="font-literata text-xl">
+                                {item.nama}
+                              </h1>
+                              <h1 className="font-louis text-sm">
+                                {item.deskripsi}
+                              </h1>
+                              <div className="flex flex-row items-center gap-x-2">
+                                <h1
+                                  className={
+                                    item.promo
+                                      ? "rounded-full bg-failed py-1 px-3 font-literata text-white"
+                                      : "hidden"
+                                  }
+                                >
+                                  Promo
+                                </h1>
+                                <h1 className="font-literata">{item.harga}</h1>
+                              </div>
+                            </button>
                           </div>
+                          <button
+                            className={`fas fa-heart text-xl ${
+                              like ? "text-failed" : "text-white"
+                            }`}
+                            onClick={toggleLike}
+                          />
                         </div>
-                      </div>
-                      <button className="fas fa-hearth text-white " />
-                    </div>
-                    <div className="flex flex-row justify-between items-center">
-                      <div className="flex flex-row items-center gap-x-2 px-5 py-3">
-                        <Image src="/assets/custom.png" alt="" width={50} height={50} />
-                        <h1>Customizable</h1>
-                      </div>
-                    </div>
-                    </>
+                        <div className="flex flex-row items-center justify-between font-literata font-light">
+                          <div className="flex flex-row items-center gap-x-2 py-3">
+                            <Image
+                              src="/assets/custom.png"
+                              alt=""
+                              width={25}
+                              height={25}
+                            />
+                            <h1 className="text-white">Customizable</h1>
+                          </div>
+                          <svg
+                            width="23"
+                            height="27"
+                            viewBox="0 0 23 27"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <rect
+                              x="0.869141"
+                              y="2.5"
+                              width="21.9344"
+                              height="21.9345"
+                              rx="10.9672"
+                              fill="#F6C73B"
+                            />
+                            <path
+                              d="M16.5315 14.7058H13.1396V18.1874H10.7707V14.7058H7.37883V12.5164H10.7707V9.03476H13.1396V12.5164H16.5315V14.7058Z"
+                              fill="#000000"
+                            />
+                          </svg>
+                        </div>
+                      </>
+                    );
                   })}
                 </div>
+               
               </>
             );
           }

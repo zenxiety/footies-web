@@ -50,6 +50,12 @@ function MenuBar(
     <button className="block w-full" onClick={() => void signOut()}>
       {children}
     </button>
+  ) : menu == "daganganku" ? (
+    <>
+      <Link href="/seller/my-items">
+        <button className="block w-full">{children}</button>
+      </Link>
+    </>
   ) : (
     <>
       <ComingSoon popup={popup} setPopup={setPopup}>
