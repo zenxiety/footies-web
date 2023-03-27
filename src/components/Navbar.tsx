@@ -27,9 +27,9 @@ const data = [
 
 const Navbar = () => {
   return (
-    <div className="relative h-screen bg-[#141313]">
-      <div className="absolute bottom-0 z-0 h-[10%] w-full rounded-t-md border-t-2 border-t-primary-300 bg-gray-700">
-        <div className="relative flex flex-row items-center justify-around px-4 pt-7">
+    <div className="h-fit fixed bg-[#141313] z-50 bottom-0">
+      <div className="bottom-0 z-0 h-[10%] rounded-t-md border-t-2 border-t-primary-300 bg-gray-700">
+        <div className="flex flex-row items-center justify-around px-4 pt-7">
           {data.map((item) => (
             <>
               <div
