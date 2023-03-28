@@ -28,7 +28,7 @@ const History = () => {
           {history.map(({ item }) => {
             return (
               <div className="my-1 w-fit bg-primary-300 p-1">
-                <h1 className="font-literata">{item}</h1>
+                <h1 className="font-louis">{item}</h1>
               </div>
             );
           })}

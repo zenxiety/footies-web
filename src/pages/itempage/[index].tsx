@@ -1,5 +1,4 @@
-// @ts-nocheck
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import data from "../../components/homepage/data.json";
@@ -8,12 +7,26 @@ import Pedas from "../../components/itempage/Pedas";
 import Toping from "../../components/itempage/Toping";
 // import Navbar from "../../components/Navbar";
 
+import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
+import { Navigation, Pagination, EffectCoverflow, Autoplay } from "swiper";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+import "swiper/css/effect-coverflow";
+import { api } from "../../utils/api";
 
 export default function Produk() {
   const router = useRouter();
   const { index } = router.query;
   const [count, setCount] = React.useState(0);
 
+
+  // const item = data[0]!;
+
+  // const { data: menuData } = api.merchant.getSpecificMenu.useQuery(
+  //   index as string
+  // );
 
   return (
     <>
@@ -30,10 +43,10 @@ export default function Produk() {
                         <div className="flex flex-row items-center justify-between pb-6">
                           <button
                             className="fas fa-arrow-left text-3xl text-white "
-                            onClick={() => router.replace('/homepage')}
+                            onClick={() => router.back()}
                           />
                           <h1 className="truncate text-4xl text-white">
-                            {item.nama}
+                          {item.nama}
                           </h1>
                           <button className="fa-solid fa-star peer hidden text-2xl text-white" />
 
@@ -99,6 +112,24 @@ export default function Produk() {
             );
           }
         })}
+      {/* <div className="relative h-full w-full overflow-hidden bg-secondary-500 px-5 pt-12">
+        <div className="flex flex-row items-center justify-between">
+          <button
+            className="fas fa-arrow-left text-3xl text-white "
+            onClick={() => router.push(`/storepage/${menuData?.id as string}`)}
+          />
+          <h1 className="truncate text-4xl text-white">{menuData?.nama}</h1>
+          <button className="fa-solid fa-star text-2xl text-white" />
+          <button className="fa-solid fa-share-nodes text-2xl text-white" />
+        </div>
+        <Image
+          className="w-full"
+          alt=""
+          src={menuData?.gambar as string}
+          width={100}
+          height={100}
+        />
+        <div className="relative rounded-xl border-2 border-primary-300 bg-secondary-300"></div> */}
       </div>
     </>
   );

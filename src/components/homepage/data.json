@@ -40,46 +40,6 @@
   },
   {
     "id": 2,
-    "title": "Coklat Bubadibako, Kotabaru, Yogyakarta",
-    "partner": false,
-    "category": "Fast food, Sweets, Drinks, etc",
-    "halal": true,
-    "image": "/assets/burger.png",
-    "jarak": "1.5 km",
-    "waktu": "40 min",
-    "rating": "4.8",
-    "voucher": [
-      {
-        "persen": "20%",
-        "sampai": 10000
-      },
-      {
-        "persen": "20%",
-        "sampai": 10000
-      }
-    ],
-
-    "produk": [
-      {
-        "id": 1,
-        "nama": "SD (Susu Dingin)",
-        "image": "/assets/susu.png",
-        "deskripsi": "Susu Murni dengan es batu",
-        "promo": true,
-        "harga": 10000
-      },
-      {
-        "id": 2,
-        "nama": "Burger Babi Babi Babi",
-        "image": "/assets/burger.png",
-        "deskripsi": "Burger Babi yang buat kek babi",
-        "promo": true,
-        "harga": 10000
-      }
-    ]
-  },
-  {
-    "id": 3,
     "title": "Babi Guling Cak DikiBagast, Klaten",
     "partner": true,
     "category": "Fast food, Sweets, Drinks, etc",
@@ -104,6 +64,45 @@
         "id": 1,
         "nama": "SD (Susu Dingin)",
         "image": "/assets/susu.png",
+        "deskripsi": "Susu Murni dengan es batu",
+        "promo": true,
+        "harga": 10000
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "title": "Nasi Goreng Cak Rizz, Kotabaru",
+    "partner": true,
+    "category": "Fast food, Sweets, Drinks, etc",
+    "halal": false,
+    "image": "/assets/burger.png",
+    "jarak": "0.2 km",
+    "waktu": "32 min",
+    "rating": "4.9",
+    "voucher": [
+      {
+        "persen": "20%",
+        "sampai": 10000
+      },
+      {
+        "persen": "20%",
+        "sampai": 10000
+      }
+    ],
+
+    "produk": [
+      {
+        "id": 3,
+        "nama": "SD (Susu Dingin)",
+        "image": "/assets/susu.png",
+        "deskripsi": "Susu Murni dengan es batu",
+        "promo": true,
+        "harga": 10000
+      },
+      { "id": 2,
+        "nama": "Burger Babi Babi Babi Babi Babi Babi Babi Babi Babi",
+        "image": "/assets/burger.png",
         "deskripsi": "Susu Murni dengan es batu",
         "promo": true,
         "harga": 10000

@@ -4,7 +4,7 @@ import Head from "next/head";
 import Link from "next/link";
 
 import { signIn, signOut, useSession } from "next-auth/react";
-import Welcome from "./welcome";
+import Welcome from "./Welcome";
 
 import { api } from "../utils/api";
 
