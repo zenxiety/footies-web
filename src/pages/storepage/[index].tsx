@@ -14,6 +14,7 @@ import "swiper/css/scrollbar";
 import "swiper/css/effect-coverflow";
 import { api } from "../../utils/api";
 import { useForm } from "react-hook-form";
+import Navbar from "../../components/Navbar";
 
 export default function Produk() {
   const router = useRouter();
@@ -48,6 +49,7 @@ export default function Produk() {
   return (
     <>
       <div className="relative h-full w-full overflow-hidden bg-secondary-500 px-5 pt-12">
+        <Navbar />
         <div className="flex flex-row items-center justify-between">
           <button
             className="fas fa-arrow-left text-3xl text-white "

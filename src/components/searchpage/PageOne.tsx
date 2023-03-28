@@ -13,6 +13,7 @@ import data from "../homepage/data.json";
 import History from "./History";
 import SearchQuery from "./SearchQuery";
 import Jenis from "./Jenis";
+import Navbar from "../Navbar";
 
 const PageOne = ({
   formStep,
@@ -31,6 +32,7 @@ const PageOne = ({
   );
   const router = useRouter();
   return (
+    <>
     <div hidden={formStep != 0}>
       <div className="relative h-full w-full bg-secondary-400 p-5">
         <input
@@ -120,6 +122,7 @@ const PageOne = ({
       <SearchQuery />
       <Jenis />
     </div>
+    </>
   );
 };
 

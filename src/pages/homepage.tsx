@@ -19,6 +19,7 @@ import Rekomendasi from "../components/homepage/Rekomendasi";
 import { api } from "../utils/api";
 import useDebounce from "../hooks/useDebounce";
 import PageTwo from "../components/searchpage/PageTwo";
+import Navbar from "../components/Navbar";
 
 const Homepage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -63,6 +64,7 @@ const Homepage = () => {
   } else {
     return (
       <>
+        <Navbar />
         <div className="h-full w-full rounded-b-xl bg-secondary-400">
           <div className="flex flex-col justify-center p-5">
             <div className="flex flex-row justify-center gap-x-6">
