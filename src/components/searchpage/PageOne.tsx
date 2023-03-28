@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, Dispatch, SetStateAction } from "react";
 import "@fortawesome/fontawesome-free/css/all.css";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, EffectCoverflow, Autoplay } from "swiper";
@@ -15,15 +15,19 @@ import SearchQuery from "./SearchQuery";
 import Jenis from "./Jenis";
 
 const PageOne = ({
-    formStep,
-    nextFormStep,
-  }: {
-    formStep: number;
-    nextFormStep: () => void;
-  }) => {
-  const [searchQuery, setSearchQuery] = useState("");
+  formStep,
+  nextFormStep,
+  setSearchQuery,
+  searchQuery,
+}: {
+  formStep: number;
+  nextFormStep: () => void;
+  setSearchQuery: Dispatch<SetStateAction<string>>;
+  searchQuery: string;
+}) => {
+  // const [searchQuery, setSearchQuery] = useState("");
   const filteredData = data.filter((item) =>
-    item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    item.title.toLowerCase().includes(searchQuery?.toLowerCase())
   );
   const router = useRouter();
   return (
@@ -33,9 +37,9 @@ const PageOne = ({
           className=" w-full rounded-full bg-white p-3 font-louis"
           placeholder="Mau makan apa hari ini?"
           value={searchQuery}
+          autoFocus
           onChange={(e) => setSearchQuery(e.target.value)}
           type="text"
-          onClick={nextFormStep}
         />
       </div>
       <History />

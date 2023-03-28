@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.css";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -8,48 +8,60 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "swiper/css/effect-coverflow";
 import data from "../homepage/data.json";
+import { inferRouterOutputs } from "@trpc/server";
+import { AppRouter } from "../../server/api/root";
+
+type RouterOutput = inferRouterOutputs<AppRouter>;
 
 const PageTwo = ({
   prevFormStep,
   formStep,
+  data,
+  setSearchQuery,
+  searchQuery,
 }: {
   prevFormStep: () => void;
   formStep: number;
+  data: RouterOutput["user"]["searchProductandMerchant"] | undefined;
+  setSearchQuery: Dispatch<SetStateAction<string>>;
+  searchQuery: string;
 }) => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const filteredData = data.filter((item) =>
-    item.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-  const history = [
-    {
-      item: "mixue",
-    },
-    {
-      item: "sabana murah",
-    },
-    {
-      item: "warung santai",
-    },
-    {
-      item: "gacoan",
-    },
-    {
-      item: "morgans kebab",
-    },
-    {
-      item: "warung rata-rata",
-    },
-    {
-      item: "penyetan mas kobis",
-    },
-  ];
+  const router = useRouter();
+  // const [searchQuery, setSearchQuery] = useState("");
+  // const filteredData = data.filter((item) =>
+  //   item.title.toLowerCase().includes(searchQuery.toLowerCase())
+  // );
+  // const history = [
+  //   {
+  //     item: "mixue",
+  //   },
+  //   {
+  //     item: "sabana murah",
+  //   },
+  //   {
+  //     item: "warung santai",
+  //   },
+  //   {
+  //     item: "gacoan",
+  //   },
+  //   {
+  //     item: "morgans kebab",
+  //   },
+  //   {
+  //     item: "warung rata-rata",
+  //   },
+  //   {
+  //     item: "penyetan mas kobis",
+  //   },
+  // ];
   return (
     <>
-      <div hidden={formStep != 1}>
+      <div className="min-h-screen" hidden={formStep != 1}>
         <div className="relative z-0 h-full w-full rounded-b-xl bg-secondary-300 p-5">
           <input
             className=" w-full rounded-full bg-white py-3 pl-3 pr-12 font-louis"
             placeholder="Mau makan apa hari ini?"
+            autoFocus
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             type="text"
@@ -83,7 +95,7 @@ const PageTwo = ({
             />
           </svg>
         </div>
-        <div className="w-full bg-secondary-500 p-5">
+        {/* <div className="w-full bg-secondary-500 p-5">
           <h1 className="pb-5 font-literata text-2xl text-white">
             Mencari makanan ini?
           </h1>
@@ -96,17 +108,22 @@ const PageTwo = ({
               );
             })}
           </div>
-        </div>
+        </div> */}
         <div className="mx-5 border-t-2 border-secondary-300 pb-5" />
         <div className="w-full bg-secondary-500 p-5">
           <h1 className="pb-5 font-literata text-2xl text-white">
             Restoran yang cocok
           </h1>
 
-          {filteredData.map((item) => {
-            return item.title ? (
+          {data?.map((item) => {
+            return (
               <>
-                <div className="relative flex flex-row items-center gap-x-2 py-3">
+                <div
+                  onClick={async () =>
+                    await router.push(`/storepage/${item.id}`)
+                  }
+                  className="relative flex cursor-pointer flex-row items-center gap-x-2 py-3"
+                >
                   <div className="flex flex-col items-center rounded-xl border-2 border-primary-300 bg-failed">
                     <Image
                       src="/assets/burger.png"
@@ -119,21 +136,21 @@ const PageTwo = ({
                       <i className="fas fa-star text-primary-300" />
                       <h1 className="font-louis text-white">{item.rating}</h1>
                     </div>
-                    <h1 className="font-louis text-white pb-1">35% off</h1>
+                    <h1 className="pb-1 font-louis text-white">35% off</h1>
                   </div>
 
                   <div className="flex flex-col gap-y-2">
                     <h1 className=" font-2xl truncate font-literata text-white">
-                      {item.title}
+                      {item.nama}
                     </h1>
                     <h1 className="font-louis font-bold text-secondary-300">
                       <span className="text-white">$</span>$$${" "}
-                      <span className="text-white">• {item.category} </span>
+                      <span className="text-white">• {item.labels} </span>
                     </h1>
                     <div className="border-t-2 border-secondary-300" />
-                    <h1 className="font-louis text-sm font-bold text-white">
+                    {/* <h1 className="font-louis text-sm font-bold text-white">
                       {item.jarak} • {item.waktu}{" "}
-                    </h1>
+                    </h1> */}
                     <div className="flex flex-row items-center gap-x-2">
                       <svg
                         width="13"
@@ -149,13 +166,13 @@ const PageTwo = ({
                           fill="#F51C2F"
                         />
                       </svg>
-                      <h1 className="font-louis text-white font-light">35% off up to 15k</h1>
+                      <h1 className="font-louis font-light text-white">
+                        35% off up to 15k
+                      </h1>
                     </div>
                   </div>
                 </div>
               </>
-            ) : (
-              ""
             );
           })}
         </div>
