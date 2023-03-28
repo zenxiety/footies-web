@@ -64,7 +64,7 @@ const Homepage = () => {
   } else {
     return (
       <>
-        <Navbar />
+        {/* <Navbar /> */}
         <div className="h-full w-full rounded-b-xl bg-secondary-400">
           <div className="flex flex-col justify-center p-5">
             <div className="flex flex-row justify-center gap-x-6">

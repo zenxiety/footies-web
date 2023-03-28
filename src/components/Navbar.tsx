@@ -51,7 +51,7 @@ const Navbar = () => {
           <i className="fas fa-building pr-[25%] text-4xl text-white hover:text-primary-300 hover:underline" onClick={() => router.push("/")}/>
           <i className="fas fa-search absolute left-[50%] -top-[40%] translate-x-[-50%] rounded-full border-2 border-primary-300 bg-gray-700  p-4 text-5xl text-white hover:text-primary-300" onClick={() => router.push("/search")}/>
           <i className="fas fa-receipt text-4xl text-white hover:text-primary-300 hover:underline" onClick={() => router.push("/homepage")}/>
-          <i className="fas fa-user text-4xl text-white hover:text-primary-300 hover:underline" onClick={() => router.push("/homepage")}/>
+          <i className="fas fa-user text-4xl text-white hover:text-primary-300 hover:underline" onClick={() => router.push("/dashboard")}/>
           
         </div>
       </div>
