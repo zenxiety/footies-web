@@ -25,9 +25,9 @@ const History = () => {
           Riwayat Pencarian
         </h1>
         <div className="flex flex-row flex-wrap justify-start gap-x-2">
-          {history.map(({ item }) => {
+          {history.map(({ item }, i) => {
             return (
-              <div className="my-1 w-fit bg-primary-300 p-1">
+              <div key={i} className="my-1 w-fit bg-primary-300 p-1">
                 <h1 className="font-louis">{item}</h1>
               </div>
             );
