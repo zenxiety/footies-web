@@ -29,7 +29,7 @@ export default function Produk() {
   };
 
   const { data: merchantData } = api.user.getSpecificMerchant.useQuery({
-    id: "clfl1h63q0004ueowt6drtqh5",
+    id: index as string,
   });
 
   const { setValue } = useForm();

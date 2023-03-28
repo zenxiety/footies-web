@@ -145,7 +145,7 @@ const PageTwo = ({
                     </h1>
                     <h1 className="font-louis font-bold text-secondary-300">
                       <span className="text-white">$</span>$$${" "}
-                      <span className="text-white">• {item.labels} </span>
+                      <span className="text-white">• {item.deskripsi} </span>
                     </h1>
                     <div className="border-t-2 border-secondary-300" />
                     {/* <h1 className="font-louis text-sm font-bold text-white">
