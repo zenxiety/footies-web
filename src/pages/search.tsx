@@ -47,7 +47,7 @@ const Search = () => {
   if (page === 0) {
     return (
       <>
-      <Navbar />
+      
       <PageOne
         setSearchQuery={setSearchQuery}
         searchQuery={searchQuery}
@@ -59,7 +59,7 @@ const Search = () => {
   } else {
     return (
       <>
-      <Navbar />
+      
       <PageTwo
         data={searchMenu.data}
         setSearchQuery={setSearchQuery}

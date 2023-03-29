@@ -30,7 +30,7 @@ const History = () => {
   ];
   return (
     <>
-      <div className="w-full bg-secondary-300 p-5 rounded-t-xl">
+      <div className="w-full bg-secondary-300 p-5 rounded-xl mb-40 overflow-hidden">
         <h1 className="pb-5 font-literata text-2xl text-white">
           Jelajahi jenis makanan
         </h1>

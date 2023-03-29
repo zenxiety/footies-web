@@ -33,7 +33,7 @@ const PageOne = ({
   const router = useRouter();
   return (
     <>
-    <div hidden={formStep != 0}>
+    <div hidden={formStep != 0} className="overflow-hidden h-full">
       <div className="relative h-full w-full bg-secondary-400 p-5">
         <input
           className=" w-full rounded-full bg-white p-3 font-louis"

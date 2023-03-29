@@ -29,7 +29,7 @@ export default function Produk() {
   };
 
   const { data: merchantData } = api.user.getSpecificMerchant.useQuery({
-    id: "clfl1h63q0004ueowt6drtqh5",
+    id: index as string,
   });
 
   const { setValue } = useForm();
@@ -48,7 +48,7 @@ export default function Produk() {
 
   return (
     <>
-      <div className="relative h-full w-full overflow-hidden bg-secondary-500 px-5 pt-12">
+      <div className="relative h-full w-full overflow-hidden bg-secondary-500 px-5 pt-12 mb-12">
         {/* <Navbar /> */}
         <div className="flex flex-row items-center justify-between">
           <button
@@ -264,7 +264,7 @@ export default function Produk() {
             );
           })}
         </div>
-        <div className="absolute bottom-[10%] w-full max-w-[465px] flex flex-row justify-between bg-secondary-500 p-3 z-50">
+        <div className="fixed bottom-[15%] w-full max-w-[465px] flex flex-row justify-between bg-secondary-500 p-3 z-50">
           <svg
             width="24"
             height="30"

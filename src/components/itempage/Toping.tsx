@@ -3,7 +3,7 @@ import React from "react";
 const Pedas = () => {
   return (
     <>
-      <div className="relative rounded-md bg-secondary-400 px-5 mt-6">
+      <div className="relative rounded-md bg-secondary-400 px-5 mt-6 mb-32">
         <div className="relative flex flex-col gap-y-5 py-5">
           <h1 className="font-literata text-2xl text-white">
             Toping
