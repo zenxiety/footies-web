@@ -17,7 +17,7 @@ export const merchantRouter = createTRPCRouter({
       z.object({
         productName: z.string(),
         price: z.number(),
-        labels: z.array(z.string()).optional(),
+        label: z.string().optional(),
         description: z.string().optional(),
         options: z.string().optional(),
         picture: z.string(),
@@ -25,6 +25,8 @@ export const merchantRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      // console.log(input.label);
+
       const data = await ctx.prisma.menu.create({
         data: {
           nama: input.productName,
@@ -32,8 +34,8 @@ export const merchantRouter = createTRPCRouter({
           deskripsi: input.description,
           options: input.options,
           gambar: input.picture,
-          promo: input.promo,
-          kategori: input.labels,
+          promo: input.promo || "0",
+          kategori: input.label?.toLowerCase().trimEnd(),
           Merchant: {
             connect: {
               userId: ctx.session.user.id,
@@ -57,6 +59,28 @@ export const merchantRouter = createTRPCRouter({
     return data;
   }),
 
+  getMenuGroupByCategory: protectedProcedureMerchant.query(async ({ ctx }) => {
+    const data = await ctx.prisma.menu.findMany({
+      where: {
+        Merchant: {
+          userId: ctx.session.user.id,
+        },
+      },
+    });
+
+    const kategori = data
+      ?.map((item) => item.kategori)
+      .filter((v, i, a) => a.indexOf(v) === i);
+
+    const dataByCategory = kategori?.map((item) => {
+      return {
+        category: item,
+        data: data?.filter((dataItem) => dataItem.kategori === item),
+      };
+    });
+    return dataByCategory;
+  }),
+
   getSpecificMenu: protectedProcedureMerchant
     .input(z.string())
     .query(async ({ ctx, input }) => {
@@ -75,7 +99,7 @@ export const merchantRouter = createTRPCRouter({
         id: z.string(),
         productName: z.string(),
         price: z.number(),
-        labels: z.array(z.string()).optional(),
+        label: z.string().optional(),
         description: z.string().optional(),
         options: z.string().optional(),
         picture: z.string(),
@@ -93,8 +117,8 @@ export const merchantRouter = createTRPCRouter({
           deskripsi: input.description,
           options: input.options,
           gambar: input.picture,
-          promo: input.promo,
-          kategori: input.labels,
+          promo: input.promo || "0",
+          kategori: input.label?.toLowerCase().trimEnd(),
         },
       });
       console.log(data);

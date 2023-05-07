@@ -5,7 +5,8 @@ import Category from "../../../components/seller/Category";
 import { api } from "../../../utils/api";
 
 export default function MyItems() {
-  const menus = api.merchant.getMenu.useQuery();
+  const menus = api.merchant.getMenuGroupByCategory.useQuery();
+  // remove duplicate category
 
   const [category, setCategory] = useState(0);
   const [isAvailable, setIsAvailable] = useState(true);
@@ -73,9 +74,9 @@ export default function MyItems() {
           </button>
         </div>
         {/* Promo */}
-        <Category menus={menus.data} />
-        {/* Promo */}
-        <Category menus={menus.data} />
+        {menus?.data?.map(({ category, data }, i) => {
+          return <Category key={i} menus={data} title={category ?? ""} />;
+        })}
       </section>
       {/* Tambah Menu */}
       <Link href="./my-items/add">

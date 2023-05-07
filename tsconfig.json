@@ -24,6 +24,6 @@
     "**/*.cjs",
     "**/*.mjs",
     "next.config.mjs"
-, "src/pages/navbar.tsxx"  ],
+, "src/pages/navbar.tsxx", "src/pages/storepage/[index].tsxx", "src/components/storepage/CartContext.tsxx"  ],
   "exclude": ["node_modules"]
 }

@@ -1,6 +1,7 @@
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
+import Navbar from "../components/Navbar";
 
 import { api } from "../utils/api";
 
@@ -62,6 +63,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <div
           className={`${louis.variable} relative mx-auto font-sans shadow-xl xs:max-w-[500px]`}
         >
+          <Navbar />
           <SessionProvider session={session}>
             <Component {...pageProps} />
           </SessionProvider>

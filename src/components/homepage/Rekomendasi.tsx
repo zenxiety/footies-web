@@ -2,13 +2,14 @@ import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { Navigation, Pagination, EffectCoverflow, Autoplay } from "swiper";
 import "@fortawesome/fontawesome-free/css/all.css";
 import Image from "next/image";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "swiper/css/effect-coverflow";
 import { api } from "../../utils/api";
+import { useRouter } from "next/router";
 
 const data = [
   {
@@ -51,10 +52,16 @@ const data = [
 
 const Rekomendasi = () => {
   const data = api.user.getRecommendedRestaurant.useQuery();
+  const router = useRouter();
+  useEffect(() => {
+    console.log(data.data)
+  }, [])
+  
+  console.log(data)
 
   return (
     <>
-      <div className="mt-12 h-full w-full overflow-hidden rounded-xl bg-secondary-300 pt-5">
+      <div className="mt-12 h-full w-full overflow-hidden rounded-xl bg-secondary-300 pt-5 mb-40">
         <h1 className="px-5 font-literata text-2xl text-white">
           Restoran Rekomendasi
         </h1>
@@ -95,13 +102,16 @@ const Rekomendasi = () => {
             return (
               <SwiperSlide
                 key={id}
-                className="flex flex-col justify-start rounded-3xl bg-[#A06235]"
+                onClick={async () => {
+                  await router.push(`/storepage/${id}`);
+                }}
+                className="flex cursor-pointer flex-col justify-start rounded-3xl bg-[#A06235]"
               >
                 <>
                   <Image
                     src={Menu[0]?.gambar || "/assets/burger.png"}
                     alt=""
-                    className="mx-auto block rounded-3xl border-2 border-[#A06235]"
+                    className="mx-auto block rounded-3xl border-2 border-[#A06235] aspect-square"
                     width={250}
                     height={250}
                   />

@@ -44,6 +44,11 @@ export const userRouter = createTRPCRouter({
   getRecommendedRestaurant: protectedProcedure.query(async ({ ctx }) => {
     const data = await ctx.prisma.merchant.findMany({
       take: 10,
+      where: {
+        Menu: {
+          some: {},
+        },
+      },
       include: {
         Menu: {
           take: 1,
@@ -54,6 +59,63 @@ export const userRouter = createTRPCRouter({
       },
     });
 
+    console.log(data);
+
     return data;
   }),
+
+  searchProductandMerchant: protectedProcedure
+    .input(
+      z.object({
+        search: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.prisma.merchant.findMany({
+        where: {
+          Menu: {
+            some: {},
+          },
+          OR: [
+            {
+              nama: {
+                contains: input.search,
+                mode: "insensitive",
+              },
+            },
+            {
+              Menu: {
+                some: {
+                  nama: {
+                    contains: input.search,
+                    mode: "insensitive",
+                  },
+                },
+              },
+            },
+          ],
+        },
+      });
+
+      return data;
+    }),
+
+  getSpecificMerchant: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.prisma.merchant.findUnique({
+        include: {
+          Menu: true,
+        },
+        where: {
+          id: input.id,
+        },
+      });
+
+      return data;
+    }),
 });

@@ -34,9 +34,6 @@ const data = [
 ];
 
 const Promo = () => {
-  const swiper = useSwiper();
-  const swiperRef = useRef();
-  const [swiperIndex, setSwiperIndex] = useState(0);
   const [active, setActive] = useState(false);
   const togglePromo = () => {
     setActive((prev) => !prev);
@@ -48,10 +45,11 @@ const Promo = () => {
           // scrollbar={{ draggable: false }}
           onSwiper={(swiper) => console.log(swiper)}
           className="my-6 h-[150%]"
-          onSlideChange={(swiper) => setSwiperIndex(swiper.realIndex)}
+         
           modules={[Navigation, Pagination, EffectCoverflow, Autoplay]}
-          slidesPerView={2}
+          slidesPerView={1.5}
           spaceBetween={30}
+          grabCursor={true}
           effect="coverflow"
           coverflowEffect={{
             scale: 1,
@@ -65,20 +63,8 @@ const Promo = () => {
           }}
           direction="horizontal"
           centeredSlides={true}
-          pagination={{
-            el: ".swiper-pagination",
-            clickable: true,
-            type: "bullets",
-            bulletActiveClass: "swiper-pagination-bullet",
-            renderBullet: (i, classname) => {
-              return `<div class="${classname} w-4 h-8 sm:w-6 sm:h-10 bg-pagination bg-no-repeat bg-contain bg-center"></div>`;
-            },
-          }}
-          navigation={{
-            disabledClass: "opacity-100",
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-          }}
+          pagination={true}
+          
         >
           {data.map(({ image }, i) => {
             return (
@@ -123,7 +109,7 @@ const Promo = () => {
             />
           </svg>
         </div>
-        <Image src="/assets/promo.png" alt="" width={500} height={700} className={`${active ? 'block' : 'hidden'} py-5 duration-300`}/>
+        <Image src="/assets/promo.png" alt="" width={500} height={700} className={`${active ? 'block rounded-xl' : 'hidden'} py-5 duration-300 rounded-xl`}/>
       </div>
     </>
   );
