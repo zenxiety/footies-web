@@ -3,33 +3,12 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 
-const data = [
-  {
-    id: 1,
-    logo: "fas fa-house",
-  },
-  {
-    id: 2,
-    logo: "fas fa-building",
-  },
-  {
-    id: 3,
-    logo: "fas fa-bell-concierge",
-  },
-  {
-    id: 4,
-    logo: "fas fa-receipt",
-  },
-  {
-    id: 5,
-    logo: "fas fa-store",
-  },
-];
+
 
 const Navbar = () => {
   const router = useRouter();
   return (
-    <div className="fixed bottom-0 z-50 h-fit rounded-t-md w-full max-w-[500px] bg-[#141313]">
+    <div className="fixed bottom-0 z-50 h-fit w-full max-w-[500px] rounded-t-md bg-[#141313]">
       <div className="bottom-0 z-0 h-[10%] rounded-t-md border-t-2 border-t-primary-300 bg-secondary-400">
         <div className="flex scale-[150%] flex-row items-center justify-around px-20 py-4">
           {/* {data.map((item) => (
@@ -74,7 +53,7 @@ const Navbar = () => {
             fill="none"
             stroke="#EFEFEF"
             xmlns="http://www.w3.org/2000/svg"
-            className="hover:cursor-pointer hover:stroke-primary-300 mr-20"
+            className="mr-20 hover:cursor-pointer hover:stroke-primary-300"
             onClick={() => router.push("/")}
           >
             <path
@@ -113,6 +92,8 @@ const Navbar = () => {
             className="fas fa-search absolute left-[50%] -top-[40%] translate-x-[-50%] scale-[75%] rounded-full border-2 border-primary-300  bg-secondary-400 p-4 text-5xl text-white hover:text-primary-300"
             onClick={() => router.push("/search")}
           />
+            
+     
           <svg
             width="23"
             height="25"

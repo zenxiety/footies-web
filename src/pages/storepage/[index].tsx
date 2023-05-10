@@ -14,7 +14,7 @@ import "swiper/css/scrollbar";
 import "swiper/css/effect-coverflow";
 import { api } from "../../utils/api";
 import { useForm } from "react-hook-form";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/Navbarbuyer";
 
 export default function Produk() {
   const router = useRouter();
@@ -48,7 +48,7 @@ export default function Produk() {
 
   return (
     <>
-      <div className="relative h-full w-full overflow-hidden bg-secondary-500 px-5 pt-12 mb-12">
+      <div className="relative mb-12 h-full w-full overflow-hidden bg-secondary-500 px-5 pt-12">
         {/* <Navbar /> */}
         <div className="flex flex-row items-center justify-between">
           <button
@@ -264,7 +264,7 @@ export default function Produk() {
             );
           })}
         </div>
-        <div className="fixed bottom-[15%] w-full max-w-[465px] flex flex-row justify-between bg-secondary-500 p-3 z-50">
+        <div className="fixed bottom-[15%] z-50 flex w-full max-w-[465px] flex-row justify-between bg-secondary-500 p-3">
           <svg
             width="24"
             height="30"
@@ -277,10 +277,10 @@ export default function Produk() {
               fill="#F6C73B"
             />
           </svg>
-          <div className="flex flex-row justify-between items-center gap-x-2">
-            <h1 className="font-louis text-white font-light">Rp13.000</h1>
-            <div className="rounded-full bg-primary-300 font-louis font-regular px-3 py-1">
-              <h1 className="" >Checkout &#62;</h1> 
+          <div className="flex flex-row items-center justify-between gap-x-2">
+            <h1 className="font-louis font-light text-white">Rp13.000</h1>
+            <div className="font-regular rounded-full bg-primary-300 px-3 py-1 font-louis">
+              <h1 className="">Checkout &#62;</h1>
             </div>
           </div>
         </div>
