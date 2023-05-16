@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Verifikasi({ page }: { page: number }) {
   return (
@@ -43,7 +44,14 @@ export default function Verifikasi({ page }: { page: number }) {
             className="animate-spin-fast"
           />
         </div>
-        <div />
+        <Link href="/dashboard">
+          <button
+            type="button"
+            className="mb-7 rounded-full bg-primary-300 px-4 py-1 font-louis text-base text-secondary-500"
+          >
+            Kembali
+          </button>
+        </Link>
       </div>
     </>
   );

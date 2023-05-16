@@ -112,7 +112,7 @@ export default function Seller(props: {
   };
 
   const prevFormStep = () => {
-    setPage((page) => page - 1);
+    page == 0 ? setPage(0) : setPage((page) => page - 1);
   };
 
   const [domLoaded, setDomLoaded] = useState(false);

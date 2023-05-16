@@ -24,6 +24,7 @@ export default function Detail({
     formState: { errors },
     register,
     setValue,
+    getValues,
   } = useForm<SellerFormValues>({ mode: "all" });
 
   const onSubmit = (values: SellerFormValues) => {
@@ -45,16 +46,16 @@ export default function Detail({
       e.currentTarget.value = e.currentTarget.value.slice(0, 2);
     }
 
-    if (parseInt(e.target.value) < 0) {
+    if (parseInt(e.target.value) <= 0) {
       e.currentTarget.value = "0";
     }
 
     if (e.target.classList.contains("hour")) {
-      if (parseInt(e.target.value) > 24) {
+      if (parseInt(e.target.value) >= 24) {
         e.currentTarget.value = "24";
       }
     } else {
-      if (parseInt(e.target.value) > 60) {
+      if (parseInt(e.target.value) >= 60) {
         e.currentTarget.value = "00";
       }
     }
@@ -95,7 +96,12 @@ export default function Detail({
         <div className="flex flex-col justify-between">
           <p>Detail Toko</p>
           <div className="mx-auto mt-12 w-1/3">
-            <p className="mb-1 text-[15px] text-others-white">Jam Buka</p>
+            <p
+              className={`mb-1 text-[15px] duration-500
+          ${getValues("jamBuka") ? "text-primary-300" : "text-secondary-100"}`}
+            >
+              Jam Buka
+            </p>
             <div className="relative flex gap-x-6">
               <input
                 {...register("jamBuka")}
@@ -114,7 +120,12 @@ export default function Detail({
                 className="w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
               />
             </div>
-            <p className="mt-7 mb-1 text-[15px] text-others-white">Jam Tutup</p>
+            <p
+              className={`mt-7 mb-1 text-[15px] duration-500
+          ${getValues("jamTutup") ? "text-primary-300" : "text-secondary-100"}`}
+            >
+              Jam Tutup
+            </p>
             <div className="relative flex gap-x-6">
               <input
                 {...register("jamTutup")}
@@ -133,7 +144,12 @@ export default function Detail({
                 className="w-1/2 border-b border-others-white bg-transparent py-1 text-center font-louis font-light tracking-wider text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none"
               />
             </div>
-            <p className="mt-7 text-[15px] text-others-white">Label</p>
+            <p
+              className={`mt-7 text-[15px] duration-500
+          ${!errors.labels ? "text-primary-300" : "text-secondary-100"}`}
+            >
+              Label
+            </p>
             <input
               type="text"
               autoComplete={"off"}

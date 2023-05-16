@@ -85,7 +85,7 @@ export default function Dashboard() {
                 />
               </svg>
               {/* User Profile Detail */}
-              <div className="ml-2 text-[14px] leading-tight text-others-white">
+              <div className="ml-2 text-[14px] leading-normal text-others-white">
                 <p className="font-medium text-primary-300">
                   {userData.data?.name}
                 </p>
@@ -101,7 +101,7 @@ export default function Dashboard() {
                     </div>
                   </>
                 ) : (
-                  <p>{userData.data?.telepon}</p>
+                  <p>(+62) {userData.data?.telepon}</p>
                 )}
                 {roles == "USER" ? (
                   <p>{userData.data?.email}</p>
