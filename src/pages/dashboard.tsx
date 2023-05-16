@@ -8,6 +8,7 @@ import Menu from "../components/dashboard/Menu";
 import SaldoPoin from "../components/dashboard/SaldoPoin";
 import TipeAkun from "../components/dashboard/TipeAkun";
 import { api } from "../utils/api";
+import Navbar from "../components/Navbarseller";
 
 export default function Dashboard() {
   const [roles, setRoles] = useState<Role>("USER");
@@ -38,6 +39,7 @@ export default function Dashboard() {
       <Head>
         <title>Dashboard - Footies</title>
       </Head>
+      <Navbar />
       <section className="min-h-screen bg-secondary-500 pt-[2.5vh] font-louis">
         {/* Back Button / Page Title */}
         <div className={`${roles != "MITRA" ? "px-8" : ""}`}>

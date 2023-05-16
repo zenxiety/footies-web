@@ -3,11 +3,9 @@ import React from "react";
 const Pedas = () => {
   return (
     <>
-      <div className="relative rounded-md bg-secondary-400 px-5 mt-6 mb-32">
+      <div className="relative mt-6 mb-32 rounded-md bg-secondary-400 px-5">
         <div className="relative flex flex-col gap-y-5 py-5">
-          <h1 className="font-literata text-2xl text-white">
-            Toping
-          </h1>
+          <h1 className="font-literata text-2xl text-white">Toping</h1>
           <h1 className="font-louis text-sm text-white">
             <span className="text-secondary-200">Opsional</span> - Pilih 1
           </h1>
