@@ -54,7 +54,8 @@ const Ketentuan = ({
         <h1 className="pt-5 text-justify font-louis text-white">
           1) PENTING: Voucher hanya dapat digunakan untuk layanan Footies
           Delivery, tidak untuk Pickup. Kamu dapat menikmati bentuk promo
-          lainnya untuk layanan Pickup, cek di tab "Pickup" atau tab "Promo".
+          lainnya untuk layanan Pickup, cek di tab &quot;Pickup&quot; atau tab
+          &quot;Promo&quot;.
         </h1>
         <h1 className="pt-5 text-justify font-louis text-white">
           2) Voucher dapat digunakan di hampir semua resto Footies Partner.
