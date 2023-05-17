@@ -51,22 +51,24 @@ enum Role {
     USER
     MITRA
     MERCHANT
+    ADMIN
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String       @id @default(cuid())
     name          String?
-    email         String?   @unique
+    email         String?      @unique
     firstName     String?
     lastName      String?
-    isVerified    Boolean   @default(false)
+    isVerified    Boolean      @default(false)
     emailVerified DateTime?
     password      String?
     image         String?
     telepon       String?
+    isOrder       Boolean      @default(false)
     task          Task[]
-    saldo         Int       @default(0)
-    roles         Role[]    @default([USER])
+    saldo         Int          @default(0)
+    roles         Role[]       @default([USER])
     accounts      Account[]
     sessions      Session[]
     Cart          Cart[]
@@ -74,6 +76,7 @@ model User {
     Mitra         Mitra?
     Alamat        Alamat[]
     Merchant      Merchant?
+    UserVoucer    UserVoucer[]
 }
 
 model Task {
@@ -123,6 +126,7 @@ model Mitra {
     userId         String     @unique
     user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
     Kendaraan      Kendaraan?
+    Order          Order[]
 }
 
 model Kendaraan {
@@ -142,7 +146,9 @@ enum MetodePembayaran {
 
 model Order {
     id               String            @id @default(cuid())
-    userId           String            @unique
+    createdAt        DateTime          @default(now())
+    updatedAt        DateTime          @updatedAt
+    userId           String
     total            Int
     status           String
     User             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -150,6 +156,8 @@ model Order {
     menuId           String?           @unique
     Merchant         Merchant?         @relation(fields: [merchantId], references: [id])
     merchantId       String?
+    Mitra            Mitra?            @relation(fields: [mitraId], references: [id])
+    mitraId          String?
     DetailPembayaran DetailPembayaran?
     MetodePembayaran MetodePembayaran
     Cart             Cart?
@@ -167,39 +175,59 @@ model DetailPembayaran {
 }
 
 model Cart {
-    id         String   @id @default(cuid())
+    id         String     @id @default(cuid())
     userId     String
-    menuId     String
-    qty        Int
-    user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    menu       Menu     @relation(fields: [menuId], references: [id], onDelete: Cascade)
-    Order      Order    @relation(fields: [orderId], references: [id])
-    orderId    String   @unique
+    user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+    Order      Order?     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+    orderId    String?    @unique
     merchantId String
-    merchant   Merchant @relation(fields: [merchantId], references: [id])
+    merchant   Merchant   @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+    CartMenu   CartMenu[]
+}
+
+model UserVoucer {
+    id        String  @id @default(cuid())
+    userId    String
+    voucherId String
+    user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    voucher   Voucher @relation(fields: [voucherId], references: [id], onDelete: Cascade)
 }
 
 model Voucher {
     id               String             @id @default(cuid())
     kode             String             @unique
-    diskon           Int
+    name             String
+    value            Int
+    type             String
+    expired          DateTime
     DetailPembayaran DetailPembayaran[]
+    UserVoucer       UserVoucer[]
+}
+
+model CartMenu {
+    cartId String
+    menuId String
+    qty    Int
+    Cart   Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
+    Menu   Menu   @relation(fields: [menuId], references: [id])
+
+    @@id([cartId, menuId])
 }
 
 model Menu {
-    id          String    @id @default(cuid())
+    id          String     @id @default(cuid())
     nama        String
-    isAvailable Boolean   @default(true)
+    isAvailable Boolean    @default(true)
     harga       Int
     deskripsi   String?
     gambar      String
     kategori    String?
     promo       String?
     options     String[]
-    Cart        Cart[]
     Order       Order[]
-    Merchant    Merchant? @relation(fields: [merchantId], references: [id])
+    Merchant    Merchant?  @relation(fields: [merchantId], references: [id])
     merchantId  String?
+    CartMenu    CartMenu[]
 }
 
 // model KategoriOnMenu {

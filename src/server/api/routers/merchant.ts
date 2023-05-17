@@ -81,7 +81,7 @@ export const merchantRouter = createTRPCRouter({
     return dataByCategory;
   }),
 
-  getSpecificMenu: protectedProcedureMerchant
+  getSpecificMenu: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
       const data = await ctx.prisma.menu.findUnique({
