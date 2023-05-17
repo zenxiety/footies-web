@@ -10,7 +10,7 @@ export default function Category({
   title,
 }: {
   menus: RouterOutput["merchant"]["getMenu"] | undefined;
-  title: string[];
+  title: string;
 }) {
   const [itemPopup, setItemPopup] = useState(0);
   return (
