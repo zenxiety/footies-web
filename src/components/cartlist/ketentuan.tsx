@@ -10,7 +10,7 @@ const Ketentuan = (
   }
 ) => {
   return (
-    <div hidden={formStep!=3}>
+    <div hidden={formStep != 3}>
       <div className="relative h-full w-full overflow-hidden bg-[#212121]">
         <div className="flex flex-row items-center gap-x-4 pt-16 pl-12 pb-8">
           <svg
@@ -33,7 +33,7 @@ const Ketentuan = (
           </p>
         </div>
       </div>
-      <div className="w-full bg-[#191919] px-8 py-5 h-screen">
+      <div className="h-screen w-full bg-[#191919] px-8 py-5">
         <div className="rounded-xl bg-[#0C7040] p-5">
           <div className="flex flex-row items-center gap-x-3">
             <svg
@@ -56,7 +56,8 @@ const Ketentuan = (
         <h1 className="pt-5 text-justify font-louis text-white">
           1) PENTING: Voucher hanya dapat digunakan untuk layanan Footies
           Delivery, tidak untuk Pickup. Kamu dapat menikmati bentuk promo
-          lainnya untuk layanan Pickup, cek di tab "Pickup" atau tab "Promo".
+          lainnya untuk layanan Pickup, cek di tab &quot;Pickup&quot; atau tab
+          &quot;Promo&quot;.
         </h1>
         <h1 className="pt-5 text-justify font-louis text-white">
           2) Voucher dapat digunakan di hampir semua resto Footies Partner.
@@ -71,14 +72,13 @@ const Ketentuan = (
         </h1>
         <h1 className="pt-5 text-justify font-louis text-white">
           5) Penggunaan voucher tidak dapat digabungkan dengan voucher lainnya.
-
         </h1>
         <h1 className="pt-5 text-justify font-louis text-white">
-          6) Voucher akan hangus apabila ditemukan indikasi kecurangan dalam mendapatkan voucher ini
+          6) Voucher akan hangus apabila ditemukan indikasi kecurangan dalam
+          mendapatkan voucher ini
         </h1>
         <h1 className="pt-5 text-justify font-louis text-white">
-          7) Voucher hanya berlaku untuk minimum pembelian
- Rp15.000
+          7) Voucher hanya berlaku untuk minimum pembelian Rp15.000
         </h1>
       </div>
     </div>
