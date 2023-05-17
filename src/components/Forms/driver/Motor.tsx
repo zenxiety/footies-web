@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useCallback } from "react";
+import { ChangeEvent, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { Controller, useForm } from "react-hook-form";
 import { useFormData } from "../../../context/FormContext";
@@ -39,7 +39,14 @@ export default function Motor({
     handleSubmit,
     formState: { errors },
     setValue,
+    getValues,
   } = useForm<DriverFormValues>({ mode: "all" });
+
+  const handlePlateNum = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.currentTarget.value.length > 4) {
+      e.currentTarget.value = e.currentTarget.value.slice(0, 4);
+    }
+  };
 
   return (
     <>
@@ -57,7 +64,11 @@ export default function Motor({
             formStep == 4 ? "" : "-translate-x-1/3 opacity-0"
           }`}
         />
-        <h4 className="text-base">
+        <h4
+          className={`text-base duration-500 ${
+            getValues("platNomor") ? "text-primary-300" : "text-secondary-100"
+          }`}
+        >
           Nomor Pelat Kendaraan <span className="text-failed">*</span>
         </h4>
         <div className="mx-auto mt-[.25em] flex justify-center gap-x-4 px-14">
@@ -70,9 +81,9 @@ export default function Motor({
             placeholder="XX"
           />
           <input
-            type="tel"
+            type="number"
+            onChange={(e) => handlePlateNum(e)}
             className="w-[22%] border-b border-others-white bg-transparent text-center font-louis text-base font-normal text-others-white focus:outline-none"
-            maxLength={4}
             autoComplete="off"
             placeholder="0000"
           />
@@ -84,24 +95,40 @@ export default function Motor({
             placeholder="XXX"
           />
         </div>
-        <h4 className="mt-[1em] text-base">
+        <h4
+          className={`mt-[1em] text-base duration-500 ${
+            getValues("merk") ? "text-primary-300" : "text-secondary-100"
+          }`}
+        >
           Merk <span className="text-failed">*</span>
         </h4>
         <input
           {...register("merk", { required: true })}
           type="text"
-          className="inline-block w-[15%] max-w-[20%] overflow-auto border-b border-secondary-100 bg-transparent text-center font-louis text-base font-normal text-others-white focus:outline-none"
+          className="inline-block w-[15%] max-w-[20%] overflow-auto border-b border-secondary-100 bg-transparent py-[1px] text-center font-louis text-base font-normal text-others-white focus:outline-none"
         />
-        <h4 className="mt-[1em] text-base">
+        <h4
+          className={`mt-[1em] text-base duration-500 ${
+            getValues("tipeKendaraan")
+              ? "text-primary-300"
+              : "text-secondary-100"
+          }`}
+        >
           Tipe <span className="text-failed">*</span>
         </h4>
         <input
           {...register("tipeKendaraan", { required: true })}
           type="text"
-          className="inline-block w-[15%] max-w-[20%] overflow-auto border-b border-secondary-100 bg-transparent text-center font-louis text-base font-normal text-others-white focus:outline-none"
+          className="inline-block w-[15%] max-w-[20%] overflow-auto border-b border-secondary-100 bg-transparent py-[1px] text-center font-louis text-base font-normal text-others-white focus:outline-none"
         />
 
-        <h4 className="mt-[1em] text-base">
+        <h4
+          className={`mt-[1em] text-base duration-500 ${
+            getValues("tahunProduksi")
+              ? "text-primary-300"
+              : "text-secondary-100"
+          }`}
+        >
           Tahun Produksi <span className="text-failed">*</span>
         </h4>
         <input
@@ -110,7 +137,7 @@ export default function Motor({
           // pattern="[0-9]{4}-[0-9]{4}-[0-9]{4}"
           // max={4}
           maxLength={4}
-          className="mb-12 inline-block w-[15%] max-w-[20%] overflow-auto border-b border-secondary-100 bg-transparent text-center font-louis text-base font-normal text-others-white focus:outline-none"
+          className="mb-12 inline-block w-[15%] max-w-[20%] overflow-auto border-b border-secondary-100 bg-transparent py-[1px] text-center font-louis text-base font-normal text-others-white focus:outline-none"
         />
         {signUp.isError && (
           <p className="mt-2 text-[12px] text-failed">

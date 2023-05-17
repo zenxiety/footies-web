@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, EffectCoverflow, Autoplay} from "swiper";
+import { Navigation, Pagination, EffectCoverflow, Autoplay } from "swiper";
 import "@fortawesome/fontawesome-free/css/all.css";
 import Image from "next/image";
 import React, { useRef, useState } from "react";
@@ -8,7 +8,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "swiper/css/effect-coverflow";
-import 'swiper/swiper-bundle.css';
+import "swiper/swiper-bundle.css";
 
 const data = [
   {
@@ -46,7 +46,7 @@ const Terdekat = () => {
   return (
     <>
       <div className="mt-8 h-full w-full overflow-hidden rounded-xl bg-secondary-300 pt-5">
-        <h1 className="font-literata text-2xl text-white px-5">Kategori</h1>
+        <h1 className="px-5 font-literata text-2xl text-white">Kategori</h1>
         <Swiper
           // scrollbar={{ draggable: true }}
           onSwiper={(swiper) => console.log(swiper)}

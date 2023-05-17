@@ -63,7 +63,10 @@ export default function STNK({
           <div className="z-[5] mx-auto mt-8 w-fit rounded-md border-[6px] border-primary-300 bg-white/10">
             <Image src="/signup/stnk.png" alt="" width={260} height={170} />
           </div>
-          <p className="mt-10 mb-1 mr-auto text-start text-[15px] font-medium  text-others-white">
+          <p
+            className={`mt-10 mb-1 mr-auto text-start text-[15px] font-medium  duration-500
+          ${getValues("stnk") ? "text-primary-300" : "text-secondary-100"}`}
+          >
             Unggah foto <span className="text-failed">*</span>
           </p>
           <Controller

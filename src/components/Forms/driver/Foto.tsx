@@ -80,7 +80,14 @@ export default function Foto({
               />
             </svg>
           </div>
-          <p className="mt-10 mb-1 mr-auto text-start text-[15px] font-medium  text-others-white">
+          <p
+            className={`mt-10 mb-1 mr-auto text-start text-[15px] font-medium  duration-500
+          ${
+            getValues("profilePicture")
+              ? "text-primary-300"
+              : "text-secondary-100"
+          }`}
+          >
             Unggah foto <span className="text-failed">*</span>
           </p>
           <Controller
@@ -93,7 +100,9 @@ export default function Foto({
               <>
                 <div
                   {...getRootProps()}
-                  className="relative mt-3 flex h-[200px] w-full flex-col items-center justify-center overflow-hidden rounded-md border border-dashed"
+                  className={`relative mx-auto mt-3 flex h-[200px] flex-col items-center justify-center overflow-hidden rounded-md border border-dashed ${
+                    getValues("profilePicture") != null ? "w-[200px]" : "w-full"
+                  }`}
                 >
                   <input type="file" {...getInputProps({ onChange })} />
                   {getValues("profilePicture") != null ? (

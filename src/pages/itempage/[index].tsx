@@ -5,7 +5,7 @@ import data from "../../components/homepage/data.json";
 import "@fortawesome/fontawesome-free/css/all.css";
 import Pedas from "../../components/itempage/Pedas";
 import Toping from "../../components/itempage/Toping";
-import Navbar from "../../components/Navbar";
+import Navbar from "../../components/Navbarbuyer";
 
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { Navigation, Pagination, EffectCoverflow, Autoplay } from "swiper";
@@ -30,7 +30,7 @@ export default function Produk() {
   return (
     <>
       <div className="relative h-full w-full overflow-hidden bg-secondary-500 pt-12">
-        {/* <Navbar /> */}
+        <Navbar />
         <div className="flex flex-row items-center justify-between pb-6">
           <button
             className="fas fa-arrow-left text-3xl text-white "

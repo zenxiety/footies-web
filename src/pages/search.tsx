@@ -9,7 +9,7 @@ import "swiper/css/effect-coverflow";
 import data from "../components/homepage/data.json";
 import PageOne from "../components/searchpage/PageOne";
 import PageTwo from "../components/searchpage/PageTwo";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/Navbarbuyer";
 import { api } from "../utils/api";
 import useDebounce from "../hooks/useDebounce";
 
@@ -47,26 +47,25 @@ const Search = () => {
   if (page === 0) {
     return (
       <>
-      
-      <PageOne
-        setSearchQuery={setSearchQuery}
-        searchQuery={searchQuery}
-        formStep={page}
-        nextFormStep={nextFormStep}
-      />
+        <Navbar />
+        <PageOne
+          setSearchQuery={setSearchQuery}
+          searchQuery={searchQuery}
+          formStep={page}
+          nextFormStep={nextFormStep}
+        />
       </>
     );
   } else {
     return (
       <>
-      
-      <PageTwo
-        data={searchMenu.data}
-        setSearchQuery={setSearchQuery}
-        searchQuery={searchQuery}
-        formStep={page}
-        prevFormStep={prevFormStep}
-      />
+        <PageTwo
+          data={searchMenu.data}
+          setSearchQuery={setSearchQuery}
+          searchQuery={searchQuery}
+          formStep={page}
+          prevFormStep={prevFormStep}
+        />
       </>
     );
   }
