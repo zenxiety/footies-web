@@ -8,7 +8,7 @@ import Menu from "../components/dashboard/Menu";
 import SaldoPoin from "../components/dashboard/SaldoPoin";
 import TipeAkun from "../components/dashboard/TipeAkun";
 import { api } from "../utils/api";
-import Navbar from "../components/Navbarseller"
+import Navbar from "../components/Navbarseller";
 
 export default function Dashboard() {
   const [roles, setRoles] = useState<Role>("USER");
@@ -87,7 +87,7 @@ export default function Dashboard() {
                 />
               </svg>
               {/* User Profile Detail */}
-              <div className="ml-2 text-[14px] leading-tight text-others-white">
+              <div className="ml-2 text-[14px] leading-normal text-others-white">
                 <p className="font-medium text-primary-300">
                   {userData.data?.name}
                 </p>
@@ -103,7 +103,7 @@ export default function Dashboard() {
                     </div>
                   </>
                 ) : (
-                  <p>{userData.data?.telepon}</p>
+                  <p>(+62) {userData.data?.telepon}</p>
                 )}
                 {roles == "USER" ? (
                   <p>{userData.data?.email}</p>

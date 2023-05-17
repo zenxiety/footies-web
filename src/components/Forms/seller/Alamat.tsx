@@ -119,7 +119,10 @@ export default function Alamat({
                 </div>
               </label> */}
             </div>
-            <p className="mt-6 mb-1 mr-auto text-start text-sm text-secondary-100">
+            <p
+              className={`mt-6 mb-1 mr-auto text-start text-sm duration-500
+          ${getValues("alamat") ? "text-primary-300" : "text-secondary-100"}`}
+            >
               Alamat Toko <span className="text-failed">*</span>
             </p>
             <input

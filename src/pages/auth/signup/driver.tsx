@@ -311,13 +311,6 @@ export default function Driver(props: {
             />
           </svg>
         </div>
-        <Link href="/dashboard" className={`${page == 5 ? "" : "hidden"}`}>
-          <div className="mx-auto mb-7">
-            <span className="rounded-full bg-primary-300 px-4 py-2 font-bold text-secondary-500">
-              Kembali
-            </span>
-          </div>
-        </Link>
       </div>
     </>
   );

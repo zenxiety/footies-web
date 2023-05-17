@@ -56,6 +56,12 @@ function MenuBar(
         <button className="block w-full">{children}</button>
       </Link>
     </>
+  ) : menu == "pesanan" ? (
+    <>
+      <Link href="/seller/my-orders">
+        <button className="block w-full">{children}</button>
+      </Link>
+    </>
   ) : (
     <>
       <ComingSoon popup={popup} setPopup={setPopup}>

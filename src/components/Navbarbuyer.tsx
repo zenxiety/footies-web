@@ -3,8 +3,6 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 
-
-
 const Navbar = () => {
   const router = useRouter();
   return (
@@ -92,8 +90,7 @@ const Navbar = () => {
             className="fas fa-search absolute left-[50%] -top-[40%] translate-x-[-50%] scale-[75%] rounded-full border-2 border-primary-300  bg-secondary-400 p-4 text-5xl text-white hover:text-primary-300"
             onClick={() => router.push("/search")}
           />
-            
-     
+
           <svg
             width="23"
             height="25"

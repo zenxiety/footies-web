@@ -89,7 +89,10 @@ export default function Dokumen({
             />
           </div>
           <div className="">
-            <p className="mt-10 mb-1 mr-auto text-start text-[15px] font-medium  text-others-white">
+            <p
+              className={`mt-10 mb-1 mr-auto text-start text-[15px] font-medium  duration-500
+          ${getValues("dokumen") ? "text-primary-300" : "text-secondary-100"}`}
+            >
               Unggah Dokumen <span className="text-failed">*</span>
             </p>
             <p className="mb-1 mr-auto text-start font-louis text-[12px] font-medium  text-others-white">
@@ -164,7 +167,12 @@ export default function Dokumen({
                   </div>
                   <div>
                     {fieldState.error && (
-                      <span role="alert">{fieldState.error.message}</span>
+                      <span
+                        role="alert"
+                        className="font-louis text-base text-failed"
+                      >
+                        {fieldState.error.message}
+                      </span>
                     )}
                   </div>
                 </>

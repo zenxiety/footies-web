@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 
-const Ketentuan = (
-  {
-    formStep,
-    promoStep
-  }:{
-    formStep: number,
-    promoStep: () => void;
-  }
-) => {
+const Ketentuan = ({
+  formStep,
+  promoStep,
+}: {
+  formStep: number;
+  promoStep: () => void;
+}) => {
   return (
     <div hidden={formStep != 3}>
       <div className="relative h-full w-full overflow-hidden bg-[#212121]">

@@ -19,6 +19,7 @@ export default function Info({
     handleSubmit,
     formState: { errors },
     register,
+    getValues,
   } = useForm<SellerFormValues>({ mode: "all" });
 
   const onSubmit = (values: SellerFormValues) => {
@@ -38,7 +39,10 @@ export default function Info({
           <Image src="/signup/info.png" alt="" width={300} height={210} />
         </div>
         <div className="px-8">
-          <p className="mt-6 mr-auto text-start text-sm text-secondary-100">
+          <p
+            className={`mt-6 mr-auto text-start text-sm duration-500
+          ${!errors.nama ? "text-primary-300" : "text-secondary-100"}`}
+          >
             Nama Toko <span className="text-failed">*</span>
           </p>
           <input
@@ -56,7 +60,12 @@ export default function Info({
               Nama toko tidak boleh kosong
             </span>
           )}
-          <p className="mt-6 mr-auto text-start text-sm text-secondary-100">
+          <p
+            className={`mt-6 mr-auto text-start text-sm duration-500
+          ${
+            getValues("deskripsi") ? "text-primary-300" : "text-secondary-100"
+          }`}
+          >
             Deskripsi Toko
           </p>
           <textarea
