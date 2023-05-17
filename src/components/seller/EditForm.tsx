@@ -194,7 +194,7 @@ export default function EditForm({
       setValue("hargaAwal", menu.harga.toString());
       setValue("deskripsi", menu.deskripsi ?? "");
       setValue("diskon", parseInt(menu.promo ?? "0"));
-      setValue("kategori", menu.kategori?.join(" ") ?? "");
+      setValue("kategori", menu.kategori ?? "");
       const discounted =
         menu.harga - (menu.harga * parseInt(menu.promo ?? "0")) / 100;
       setDiscounted(discounted);
