@@ -192,6 +192,7 @@ export const transactionRouter = createTRPCRouter({
         where: {
           userId: ctx.session.user.id,
           merchantId: input.merchantId,
+          orderId: null,
         },
         include: {
           CartMenu: {
