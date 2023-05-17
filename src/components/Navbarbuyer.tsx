@@ -1,12 +1,30 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "@fortawesome/fontawesome-free/css/all.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 
 const Navbar = () => {
+  const [isNavbarVisible, setIsNavbarVisible] = useState(true);
+  const [prevScrollPos, setPrevScrollPos] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.pageYOffset;
+      const isScrollingUp = prevScrollPos > currentScrollPos;
+
+      setIsNavbarVisible(isScrollingUp || currentScrollPos === 0);
+      setPrevScrollPos(currentScrollPos);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [prevScrollPos]);
   const router = useRouter();
   return (
-    <div className="fixed bottom-0 z-50 h-fit w-full max-w-[500px] rounded-t-md bg-[#141313]">
+    <div
+      className={`fixed z-50 h-fit w-full max-w-[500px] rounded-t-md bg-[#141313] duration-500 ${
+        isNavbarVisible ? "bottom-0" : "-bottom-[200px]"
+      }`}
+    >
       <div className="bottom-0 z-0 h-[10%] rounded-t-md border-t-2 border-t-primary-300 bg-secondary-400">
         <div className="flex scale-[150%] flex-row items-center justify-around px-20 py-4">
           {/* {data.map((item) => (
