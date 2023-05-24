@@ -1,17 +1,26 @@
-import { defaultTransformer } from "@trpc/server";
+import { defaultTransformer, inferRouterOutputs } from "@trpc/server";
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
+import { AppRouter } from "../../server/api/root";
+
+type RouterOutput = inferRouterOutputs<AppRouter>;
 
 const DetailPesanan = ({
+  roles,
   cancel,
   setCancel,
   detailPesanan,
   setDetailPesanan,
+  data,
+  onClick,
 }: {
+  roles: string;
   cancel: boolean;
   setCancel: Dispatch<SetStateAction<boolean>>;
   detailPesanan: boolean;
   setDetailPesanan: Dispatch<SetStateAction<boolean>>;
+  data?: RouterOutput["transaction"]["getOrderMerchant"][0];
+  onClick?: () => void;
 }) => {
   const handleCancel = () => {
     // setDetailPesanan(false);
@@ -61,8 +70,10 @@ const DetailPesanan = ({
             </button>
             <span>Detail Pesanan</span>
           </div>
-          <p className="text-xs text-secondary-100">Pemesan: Diki Bagastama</p>
-          <p className="text-xs text-secondary-100">ID Pesanan: 696969</p>
+          <p className="text-xs text-secondary-100">
+            Pemesan: {data?.User.firstName} {data?.User.lastName}
+          </p>
+          <p className="text-xs text-secondary-100">ID Pesanan: {data?.id}</p>
           <p className="mt-3 text-xs">Detail Pengantaran</p>
           <div className="mt-4">
             <div className="flex">
@@ -99,7 +110,7 @@ const DetailPesanan = ({
                 <p className="max-h-[1em] overflow-hidden text-xs leading-none text-secondary-100">
                   Alamat Tujuan • 2.0 KM
                 </p>
-                <p className="max-h-[1.4em] overflow-hidden">
+                <p className="">
                   Jl. Jalan Sama Kamu Tapi Apa Mung... Jl. Jalan Sama Kamu Tapi
                   Apa Mung...Jl. Jalan Sama Kamu Tapi Apa Mung...
                 </p>

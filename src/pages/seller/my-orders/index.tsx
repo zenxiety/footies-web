@@ -1,16 +1,23 @@
 import Head from "next/head";
 import PesananMasuk from "../../../components/seller/PesananMasuk";
-import { Fragment, useState } from "react";
+import { Dispatch, SetStateAction, useState, Fragment, useEffect } from "react";
 import PesananBatal from "../../../components/seller/PesananBatal";
 import Image from "next/image";
 import DetailPesanan from "../../../components/seller/DetailPesanan";
-import { api } from "../../../utils/api";
+import PesananSelesai from "../../../components/seller/PesananSelesai";
+
+import { Role } from "@prisma/client";
 import { numberFormat } from "../../../utils/transactions";
+import { api } from "../../../utils/api";
 
 const MyOrders = () => {
+  const [roles, setRoles] = useState<Role>("MERCHANT");
+
   const [pop, setPop] = useState(false);
   const [cancel, setCancel] = useState(false);
+  const [complete, setComplete] = useState(false);
   const [detailPesanan, setDetailPesanan] = useState(false);
+  const [idDetailPesanan, setIdDetailPesanan] = useState<string>("");
 
   const [sectionIdx, setSectionIdx] = useState(0);
   const sectionLabel = ["dalam proses", "riwayat"];
@@ -22,6 +29,15 @@ const MyOrders = () => {
     setCancel(true);
   };
 
+  useEffect(() => {
+    const data =
+      getOrder.data?.filter((item) => item.status == "pending") || [];
+    if (data && data.length > 0) {
+      console.log(data);
+      setPop(true);
+    }
+  }, [getOrder.data]);
+
   const totalOrderPending =
     getOrder.data?.filter((item) => item.status == "pending") || [];
 
@@ -31,6 +47,11 @@ const MyOrders = () => {
     ) || [];
 
   const acceptOrder = api.transaction.acceptOrderMerchant.useMutation();
+
+  const detailPesananHandler = (id: string) => {
+    setIdDetailPesanan(id);
+    setDetailPesanan(true);
+  };
 
   return (
     <>
@@ -74,14 +95,6 @@ const MyOrders = () => {
             </button>
           ))}
         </div>
-        <PesananMasuk
-          pop={pop}
-          setPop={setPop}
-          cancel={cancel}
-          setCancel={setCancel}
-        />
-        <PesananBatal cancel={cancel} setCancel={setCancel} />
-
         <div>
           {totalOrderPending.length > 0 && (
             <>
@@ -94,7 +107,7 @@ const MyOrders = () => {
               {getOrder.data?.map((item) => {
                 if (item.status == "pending") {
                   return (
-                    <Fragment key={item.id}>
+                    <>
                       <div className="my-3 bg-secondary-400 px-7 py-2">
                         <div className="flex items-center justify-between">
                           <span className="font-literata text-2xl font-bold text-primary-300">
@@ -125,6 +138,7 @@ const MyOrders = () => {
                               />
                             </button>
                             <button
+                              className="rounded-full bg-primary-300 py-2 px-4 font-bold text-secondary-400"
                               onClick={async () => {
                                 await acceptOrder.mutateAsync({
                                   orderId: item.id,
@@ -132,7 +146,6 @@ const MyOrders = () => {
 
                                 await getOrder.refetch();
                               }}
-                              className="rounded-full bg-primary-300 py-2 px-4 font-bold text-secondary-400"
                             >
                               Terima
                             </button>
@@ -145,20 +158,18 @@ const MyOrders = () => {
                           </div>
                           <button
                             className="ml-auto block text-xs text-primary-300"
-                            onClick={() => setDetailPesanan(true)}
+                            onClick={() => detailPesananHandler(item.id)}
                           >
                             Detail Pesanan &gt;
                           </button>
                         </div>
                       </div>
-                    </Fragment>
+                    </>
                   );
                 }
               })}
             </>
           )}
-        </div>
-        <div>
           {totalOrderProses.length > 0 && (
             <>
               <span className="ml-7 text-secondary-100">
@@ -191,7 +202,7 @@ const MyOrders = () => {
                       <div className="relative mt-3">
                         <button
                           className="ml-auto block text-xs text-primary-300"
-                          onClick={() => setDetailPesanan(true)}
+                          onClick={() => detailPesananHandler(item.id)}
                         >
                           Detail Pesanan &gt;
                         </button>
@@ -202,17 +213,41 @@ const MyOrders = () => {
               })}
             </>
           )}
-        </div>
-        <DetailPesanan
-          detailPesanan={detailPesanan}
-          setDetailPesanan={setDetailPesanan}
-          cancel={cancel}
-          setCancel={setCancel}
-        />
-        <div className="grid w-full place-content-center">
-          <button onClick={() => setPop(!pop)} className="bg-primary-500 p-4">
-            <span className="text-xl">{pop}</span>
-          </button>
+          <DetailPesanan
+            roles={roles}
+            detailPesanan={detailPesanan}
+            setDetailPesanan={setDetailPesanan}
+            cancel={cancel}
+            setCancel={setCancel}
+            data={
+              getOrder.data?.filter((item) => item.id == idDetailPesanan)[0]
+            }
+            onClick={async () => {
+              await acceptOrder.mutateAsync({
+                orderId: idDetailPesanan,
+              });
+
+              await getOrder.refetch();
+            }}
+          />
+          <PesananMasuk
+            roles={roles}
+            pop={pop}
+            setPop={setPop}
+            cancel={cancel}
+            complete={complete}
+            detailPesanan={detailPesanan}
+            setCancel={setCancel}
+            setComplete={setComplete}
+            setDetailPesanan={setDetailPesanan}
+          />
+          <PesananBatal cancel={cancel} setCancel={setCancel} />
+          <PesananSelesai complete={complete} setComplete={setComplete} />
+          <div className="grid w-full place-content-center">
+            <button onClick={() => setPop(!pop)} className="bg-primary-500 p-4">
+              <span className="text-xl">{pop}</span>
+            </button>
+          </div>
         </div>
       </section>
     </>
@@ -220,3 +255,38 @@ const MyOrders = () => {
 };
 
 export default MyOrders;
+
+const DummyOrder = ({
+  setDetailPesanan,
+}: {
+  setDetailPesanan: Dispatch<SetStateAction<boolean>>;
+}) => {
+  return (
+    <>
+      <div className="my-3 bg-secondary-400 px-7 py-2">
+        <div className="flex items-center justify-between">
+          <span className="font-literata text-2xl font-bold text-primary-300">
+            3 items
+          </span>
+          <span className="font-bold">Rp54.000</span>
+        </div>
+        <p className="max-h-[3em] overflow-hidden">
+          1 Burger Babi, 2 Burger Babi apa Babi, 1 Burger Babi Vegan, 2 Burger
+          bingung, 1 Burger Babi, 2 Burger Babi apa Babi, 1 Burger Babi Vegan, 2
+          Burger bingung, 1 Burger Babi, 2 Burger Babi apa Babi, 1 Burger Babi
+          Vegan, 2 Burger bingung, ...
+        </p>
+        <p className="text-xs text-secondary-100">Pemesan: Diki Bagastama</p>
+        <p className="text-xs text-secondary-100">ID Pesanan: 696969</p>
+        <div className="relative mt-3">
+          <button
+            className="ml-auto block text-xs text-primary-300"
+            onClick={() => setDetailPesanan(true)}
+          >
+            Detail Pesanan &gt;
+          </button>
+        </div>
+      </div>
+    </>
+  );
+};

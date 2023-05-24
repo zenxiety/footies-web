@@ -1,16 +1,26 @@
 import Head from "next/head";
 import PesananMasuk from "../../../components/seller/PesananMasuk";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, Dispatch, SetStateAction, useState, useEffect } from "react";
 import PesananBatal from "../../../components/seller/PesananBatal";
 import Image from "next/image";
-import DetailPesanan from "../../../components/seller/DetailPesanan";
-import { api } from "../../../utils/api";
+
+import { Role } from "@prisma/client";
+import PesananSelesai from "../../../components/seller/PesananSelesai";
+import Navbar from "../../../components/Navbardriver";
+import DetailRute from "../../../components/driver/DetailRute";
 import { numberFormat } from "../../../utils/transactions";
+import { api } from "../../../utils/api";
 
 const MyOrders = () => {
+  const [roles, setRoles] = useState<Role>("MITRA");
+
   const [pop, setPop] = useState(false);
   const [cancel, setCancel] = useState(false);
+  const [complete, setComplete] = useState(false);
   const [detailPesanan, setDetailPesanan] = useState(false);
+
+  const [menerimaPesanan, setMenerimaPesanan] = useState(false);
+  const [rute, setRute] = useState(false);
 
   const [sectionIdx, setSectionIdx] = useState(0);
   const sectionLabel = ["dalam proses", "riwayat"];
@@ -22,7 +32,8 @@ const MyOrders = () => {
       getOrder.data?.filter(
         (item) => item.status == "accepted" && item.mitraId == null
       ) || [];
-    if (data.length > 0) {
+    if (data && data.length > 0) {
+      console.log(data);
       setPop(true);
     }
   }, [getOrder.data]);
@@ -45,7 +56,7 @@ const MyOrders = () => {
       </Head>
       <style jsx>{`
         .countdown {
-          animation: countdown 60s linear infinite;
+          animation: countdown 15s linear infinite;
         }
 
         @keyframes countdown {
@@ -58,116 +69,160 @@ const MyOrders = () => {
         }
       `}</style>
       <section
-        className={`relative min-h-screen overflow-hidden bg-secondary-500 pt-[2.5vh] font-louis text-others-white`}
+        className={`relative flex h-screen flex-col justify-between overflow-hidden bg-secondary-500 pt-[2.5vh] font-louis text-others-white`}
       >
-        <span className="ml-5 font-literata text-2xl">Pesanan</span>
-        <hr className="my-4 border-secondary-300" />
-        <div className="ml-5 mb-7 flex gap-x-1">
-          {sectionLabel.map((section, i) => (
+        <div>
+          <span className="ml-5 font-literata text-2xl">Pesanan</span>
+          <hr className="my-4 border-secondary-300" />
+          <div className="mx-5 flex justify-between">
+            <span className="font-bold">Menerima Pesanan</span>
             <button
-              key={i}
-              onClick={() => setSectionIdx(i)}
-              className={`relative px-3 pb-3 text-center capitalize duration-300 ${
-                sectionIdx == i ? "" : "text-secondary-100"
+              className={`relative h-5 w-10 rounded-full duration-500 ${
+                menerimaPesanan ? "bg-primary-300" : "bg-secondary-300"
               }`}
+              onClick={() => setMenerimaPesanan(!menerimaPesanan)}
             >
-              {section}
               <div
-                className={`absolute bottom-0 left-1/2 h-px -translate-x-1/2 bg-primary-300 duration-500 ${
-                  sectionIdx == i ? "w-full" : "w-0"
+                className={`absolute top-1/2 left-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-secondary-400 duration-500 ${
+                  menerimaPesanan ? "translate-x-[25%]" : "-translate-x-[125%]"
                 }`}
               ></div>
             </button>
-          ))}
+          </div>
         </div>
-
-        <div>
-          {totalOrderPending.length > 0 && (
-            <>
-              <span className="ml-7 text-secondary-100">
-                Pesanan baru{" "}
-                <span className="text-primary-300">
-                  ({totalOrderPending?.length})
-                </span>
-              </span>
-              {getOrder.data?.map((item) => {
-                if (item.status == "accepted" && item.mitraId == null) {
-                  return (
-                    <Fragment key={item.id}>
-                      <div className="my-3 bg-secondary-400 px-7 py-2">
-                        <div className="flex items-center justify-between">
-                          <span className="font-literata text-2xl font-bold text-primary-300">
-                            {item.Cart?.CartMenu.length} items
-                          </span>
-                          <span className="font-bold">
-                            {numberFormat(item.total)}
-                          </span>
-                        </div>
-                        <p className="max-h-[3em] overflow-hidden">
-                          {item.Cart?.CartMenu.map((item) => item.Menu.nama)}
+        <div className="mt-4 flex h-full flex-col justify-between bg-secondary-400 px-5 py-4 pb-20">
+          <span className="text-xl font-bold">Pesanan Masuk</span>
+          {getOrder.data?.map((item) => {
+            if (item.status == "accepted" && item.mitraId == null) {
+              return (
+                <>
+                  <div className="my-3 font-bold">
+                    <p className="leading-tight text-secondary-100">
+                      Pemesan: {item.User.firstName} {item.User.lastName}
+                    </p>
+                    <p className="leading-tight text-secondary-100">
+                      ID Pesanan: {item.id}
+                    </p>
+                  </div>
+                  <p className="font-bold">
+                    <span className="text-primary-300">Restoran</span>
+                    <span className="mx-[.3em]">:</span>Burger Klenger,
+                    Tegalrejo
+                  </p>
+                  <div className="mt-3">
+                    <div className="flex">
+                      <Image
+                        src="/assets/spoon-fork.svg"
+                        alt=""
+                        width={20}
+                        height={20}
+                        quality={100}
+                      />
+                      <div className="ml-4">
+                        <p className="text-xs leading-none text-secondary-100">
+                          Alamat Restoran
                         </p>
-                        <p className="text-xs text-secondary-100">
-                          Pemesan: {item.User.firstName} {item.User.lastName}
-                        </p>
-                        <p className="text-xs text-secondary-100">
-                          ID Pesanan: {item.id}
-                        </p>
-                        <div className="relative mt-6">
-                          <div className="flex justify-between pl-3">
-                            <button onClick={() => handleCancel()}>
-                              <Image
-                                src="/assets/cancel.svg"
-                                alt=""
-                                width={20}
-                                height={20}
-                                quality={100}
-                              />
-                            </button>
-                            <button
-                              onClick={async () => {
-                                await acceptOrder.mutateAsync({
-                                  orderId: item.id,
-                                });
-
-                                await getOrder.refetch();
-                              }}
-                              className="rounded-full bg-primary-300 py-2 px-4 font-bold text-secondary-400"
-                            >
-                              Terima
-                            </button>
-                          </div>
-                          <div className="relative my-8">
-                            <div className="absolute bottom-2 h-1 w-full bg-secondary-300"></div>
-                            <div
-                              className={`countdown absolute bottom-2 h-1 bg-white`}
-                            ></div>
-                          </div>
-                          <button
-                            className="ml-auto block text-xs text-primary-300"
-                            onClick={() => setDetailPesanan(true)}
-                          >
-                            Detail Pesanan &gt;
-                          </button>
-                        </div>
+                        <p>Burger Klenger, Tegalrejo</p>
                       </div>
-                    </Fragment>
-                  );
-                }
-              })}
-            </>
-          )}
-        </div>
+                    </div>
+                    <div className="my-2 flex w-5 flex-col items-center justify-center gap-y-[2px]">
+                      <div className="h-1 w-1 rounded-full bg-white"></div>
+                      <div className="h-1 w-1 rounded-full bg-white"></div>
+                      <div className="h-1 w-1 rounded-full bg-white"></div>
+                      <div className="h-1 w-1 rounded-full bg-white"></div>
+                    </div>
+                    <div className="flex">
+                      <Image
+                        src="/assets/target.svg"
+                        alt=""
+                        width={20}
+                        height={20}
+                        quality={100}
+                        className="scale-125"
+                      />
+                      <div className="ml-4">
+                        <p className="max-h-[1em] overflow-hidden text-xs leading-none text-secondary-100">
+                          Alamat Tujuan • 2.0 KM
+                        </p>
+                        <p className="">
+                          Jl. Jalan Sama Kamu Tapi Apa Mung... Jl. Jalan Sama
+                          Kamu Tapi Apa Mung...Jl. Jalan Sama Kamu Tapi Apa
+                          Mung...
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      className="mt-2 text-xs text-primary-300"
+                      onClick={() => setRute(true)}
+                    >
+                      Lihat Rute &gt;
+                    </button>
+                  </div>
+                  <div className="mt-6 flex items-center justify-between">
+                    <span className="font-literata text-xl font-bold text-primary-300">
+                      {item.Cart?.CartMenu.length} Items
+                    </span>
+                    <span className="font-bold">
+                      {numberFormat(item.total)}
+                    </span>
+                  </div>
+                  <p>{item.Cart?.CartMenu.map((item) => item.Menu.nama)}</p>
+                  <button className="mt-2 mr-auto text-xs text-primary-300">
+                    Lihat Detail Pesanan &gt;
+                  </button>
+                  <div className="mt-6 flex items-center justify-between">
+                    <div>
+                      <p className="text-[1.1rem] font-bold leading-tight text-primary-300">
+                        Ongkir Driver
+                      </p>
+                      <p className="leading-tight text-secondary-100">Cash</p>
+                    </div>
+                    <span className="font-bold">
+                      {numberFormat(item.total)}
+                    </span>
+                  </div>
+                  <div className="relative flex justify-between bg-secondary-400 pt-6 pb-10">
+                    <button onClick={() => handleCancel()}>
+                      <Image
+                        src="/assets/cancel.svg"
+                        alt=""
+                        width={20}
+                        height={20}
+                        quality={100}
+                      />
+                    </button>
+                    <button
+                      onClick={async () => {
+                        await acceptOrder.mutateAsync({
+                          orderId: item.id,
+                        });
 
+                        await getOrder.refetch();
+                      }}
+                      className="rounded-full bg-primary-300 py-2 px-4 font-bold text-secondary-400"
+                    >
+                      Terima
+                    </button>
+                    <div className="absolute bottom-4 h-1 w-full bg-secondary-300"></div>
+                    <div
+                      className={`countdown absolute bottom-4 h-1 bg-white`}
+                    ></div>
+                  </div>
+                </>
+              );
+            }
+          })}
+        </div>
         <PesananMasuk
+          roles={roles}
           pop={pop}
           setPop={setPop}
           cancel={cancel}
+          complete={complete}
+          detailPesanan={detailPesanan}
           setCancel={setCancel}
-          data={
-            getOrder.data?.filter(
-              (item) => item.status == "accepted" && item.mitraId == null
-            )[0]
-          }
+          setComplete={setComplete}
+          setDetailPesanan={setDetailPesanan}
           onClick={async () => {
             await acceptOrder.mutateAsync({
               orderId: getOrder.data?.filter(
@@ -177,20 +232,22 @@ const MyOrders = () => {
 
             await getOrder.refetch();
           }}
+          data={
+            getOrder.data?.filter(
+              (item) => item.status == "accepted" && item.mitraId == null
+            )[0]
+          }
         />
         <PesananBatal cancel={cancel} setCancel={setCancel} />
+        <PesananSelesai complete={complete} setComplete={setComplete} />
+        <DetailRute rute={rute} setRute={setRute} />
 
-        <DetailPesanan
-          detailPesanan={detailPesanan}
-          setDetailPesanan={setDetailPesanan}
-          cancel={cancel}
-          setCancel={setCancel}
-        />
         <div className="grid w-full place-content-center">
           <button onClick={() => setPop(!pop)} className="bg-primary-500 p-4">
             <span className="text-xl">{pop}</span>
           </button>
         </div>
+        <Navbar />
       </section>
     </>
   );

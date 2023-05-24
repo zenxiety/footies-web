@@ -7,20 +7,23 @@ import ComingSoon from "./ComingSoon";
 export default function Menu({ roles }: { roles: Role }) {
   const menuBuyer = ["pesanan", "langganan", "promo", "pesan", "keluar"];
   const menuSeller = ["daganganku", ...menuBuyer];
+  const menuDriver = ["pesanan", "pesan", "keluar"];
 
   const [popup, setPopup] = useState(false);
-  const menus = roles == "USER" ? menuBuyer : menuSeller;
+  const menus =
+    roles == "USER" ? menuBuyer : roles == "MERCHANT" ? menuSeller : menuDriver;
 
   return (
     <>
       <div className="mt-[4vh] w-full">
-        {menus.map((menu, i) => MenuBar(menu, i, popup, setPopup))}
+        {menus.map((menu, i) => MenuBar(roles, menu, i, popup, setPopup))}
       </div>
     </>
   );
 }
 
 function MenuBar(
+  roles: string,
   menu: string,
   i: number,
   popup: boolean,
@@ -58,7 +61,15 @@ function MenuBar(
     </>
   ) : menu == "pesanan" ? (
     <>
-      <Link href="/seller/my-orders">
+      <Link
+        href={`${
+          roles == "USER"
+            ? "/my-orders"
+            : roles == "MERCHANT"
+            ? "/seller/my-orders"
+            : "driver/my-orders"
+        }`}
+      >
         <button className="block w-full">{children}</button>
       </Link>
     </>

@@ -15,7 +15,7 @@ export default function General({ roles }: { roles: Role }) {
     <>
       <div className="mt-[4vh]">
         <span className="ml-5 font-literata text-[15px] font-medium text-primary-300">
-          General
+          Umum
         </span>
       </div>
       <div className="mt-[.5vh]">
