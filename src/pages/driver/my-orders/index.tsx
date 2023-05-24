@@ -1,6 +1,6 @@
 import Head from "next/head";
 import PesananMasuk from "../../../components/seller/PesananMasuk";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Fragment, Dispatch, SetStateAction, useState, useEffect } from "react";
 import PesananBatal from "../../../components/seller/PesananBatal";
 import Image from "next/image";
 
@@ -8,6 +8,8 @@ import { Role } from "@prisma/client";
 import PesananSelesai from "../../../components/seller/PesananSelesai";
 import Navbar from "../../../components/Navbardriver";
 import DetailRute from "../../../components/driver/DetailRute";
+import { numberFormat } from "../../../utils/transactions";
+import { api } from "../../../utils/api";
 
 const MyOrders = () => {
   const [roles, setRoles] = useState<Role>("MITRA");
@@ -23,10 +25,30 @@ const MyOrders = () => {
   const [sectionIdx, setSectionIdx] = useState(0);
   const sectionLabel = ["dalam proses", "riwayat"];
 
+  const getOrder = api.transaction.getOrderMitra.useQuery();
+
+  useEffect(() => {
+    const data =
+      getOrder.data?.filter(
+        (item) => item.status == "accepted" && item.mitraId == null
+      ) || [];
+    if (data && data.length > 0) {
+      console.log(data);
+      setPop(true);
+    }
+  }, [getOrder.data]);
+
   const handleCancel = () => {
     setPop(false);
     setCancel(true);
   };
+
+  const acceptOrder = api.transaction.acceptOrderMitra.useMutation();
+
+  const totalOrderPending =
+    getOrder.data?.filter(
+      (item) => item.status == "accepted" && item.mitraId == null
+    ) || [];
 
   return (
     <>
@@ -71,105 +93,126 @@ const MyOrders = () => {
         </div>
         <div className="mt-4 flex h-full flex-col justify-between bg-secondary-400 px-5 py-4 pb-20">
           <span className="text-xl font-bold">Pesanan Masuk</span>
-          <div className="my-3 font-bold">
-            <p className="leading-tight text-secondary-100">
-              Pemesan: Diki Bagastama
-            </p>
-            <p className="leading-tight text-secondary-100">
-              ID Pesanan: 696969
-            </p>
-          </div>
-          <p className="font-bold">
-            <span className="text-primary-300">Restoran</span>
-            <span className="mx-[.3em]">:</span>Burger Klenger, Tegalrejo
-          </p>
-          <div className="mt-3">
-            <div className="flex">
-              <Image
-                src="/assets/spoon-fork.svg"
-                alt=""
-                width={20}
-                height={20}
-                quality={100}
-              />
-              <div className="ml-4">
-                <p className="text-xs leading-none text-secondary-100">
-                  Alamat Restoran
-                </p>
-                <p>Burger Klenger, Tegalrejo</p>
-              </div>
-            </div>
-            <div className="my-2 flex w-5 flex-col items-center justify-center gap-y-[2px]">
-              <div className="h-1 w-1 rounded-full bg-white"></div>
-              <div className="h-1 w-1 rounded-full bg-white"></div>
-              <div className="h-1 w-1 rounded-full bg-white"></div>
-              <div className="h-1 w-1 rounded-full bg-white"></div>
-            </div>
-            <div className="flex">
-              <Image
-                src="/assets/target.svg"
-                alt=""
-                width={20}
-                height={20}
-                quality={100}
-                className="scale-125"
-              />
-              <div className="ml-4">
-                <p className="max-h-[1em] overflow-hidden text-xs leading-none text-secondary-100">
-                  Alamat Tujuan • 2.0 KM
-                </p>
-                <p className="">
-                  Jl. Jalan Sama Kamu Tapi Apa Mung... Jl. Jalan Sama Kamu Tapi
-                  Apa Mung...Jl. Jalan Sama Kamu Tapi Apa Mung...
-                </p>
-              </div>
-            </div>
-            <button
-              className="mt-2 text-xs text-primary-300"
-              onClick={() => setRute(true)}
-            >
-              Lihat Rute &gt;
-            </button>
-          </div>
-          <div className="mt-6 flex items-center justify-between">
-            <span className="font-literata text-xl font-bold text-primary-300">
-              7 Items
-            </span>
-            <span className="font-bold">Rp102.700</span>
-          </div>
-          <p>
-            1 Burger Babi, 2 Burger Babi apa Babi, 1 Burger Babi Vegan, 2 Burger
-            bingung, 1 Burger roti doang. 1 Burger Babi, 2 Burger Babi apa Babi,
-            1 Burger Babi Vegan, 2 Burger bingung, 1 Burger roti doang.
-          </p>
-          <button className="mt-2 mr-auto text-xs text-primary-300">
-            Lihat Detail Pesanan &gt;
-          </button>
-          <div className="mt-6 flex items-center justify-between">
-            <div>
-              <p className="text-[1.1rem] font-bold leading-tight text-primary-300">
-                Ongkir Driver
-              </p>
-              <p className="leading-tight text-secondary-100">Cash</p>
-            </div>
-            <span className="font-bold">Rp16.000</span>
-          </div>
-          <div className="relative flex justify-between bg-secondary-400 pt-6 pb-10">
-            <button onClick={() => handleCancel()}>
-              <Image
-                src="/assets/cancel.svg"
-                alt=""
-                width={20}
-                height={20}
-                quality={100}
-              />
-            </button>
-            <button className="rounded-full bg-primary-300 py-2 px-4 font-bold text-secondary-400">
-              Terima
-            </button>
-            <div className="absolute bottom-4 h-1 w-full bg-secondary-300"></div>
-            <div className={`countdown absolute bottom-4 h-1 bg-white`}></div>
-          </div>
+          {getOrder.data?.map((item) => {
+            if (item.status == "accepted" && item.mitraId == null) {
+              return (
+                <>
+                  <div className="my-3 font-bold">
+                    <p className="leading-tight text-secondary-100">
+                      Pemesan: {item.User.firstName} {item.User.lastName}
+                    </p>
+                    <p className="leading-tight text-secondary-100">
+                      ID Pesanan: {item.id}
+                    </p>
+                  </div>
+                  <p className="font-bold">
+                    <span className="text-primary-300">Restoran</span>
+                    <span className="mx-[.3em]">:</span>Burger Klenger,
+                    Tegalrejo
+                  </p>
+                  <div className="mt-3">
+                    <div className="flex">
+                      <Image
+                        src="/assets/spoon-fork.svg"
+                        alt=""
+                        width={20}
+                        height={20}
+                        quality={100}
+                      />
+                      <div className="ml-4">
+                        <p className="text-xs leading-none text-secondary-100">
+                          Alamat Restoran
+                        </p>
+                        <p>Burger Klenger, Tegalrejo</p>
+                      </div>
+                    </div>
+                    <div className="my-2 flex w-5 flex-col items-center justify-center gap-y-[2px]">
+                      <div className="h-1 w-1 rounded-full bg-white"></div>
+                      <div className="h-1 w-1 rounded-full bg-white"></div>
+                      <div className="h-1 w-1 rounded-full bg-white"></div>
+                      <div className="h-1 w-1 rounded-full bg-white"></div>
+                    </div>
+                    <div className="flex">
+                      <Image
+                        src="/assets/target.svg"
+                        alt=""
+                        width={20}
+                        height={20}
+                        quality={100}
+                        className="scale-125"
+                      />
+                      <div className="ml-4">
+                        <p className="max-h-[1em] overflow-hidden text-xs leading-none text-secondary-100">
+                          Alamat Tujuan • 2.0 KM
+                        </p>
+                        <p className="">
+                          Jl. Jalan Sama Kamu Tapi Apa Mung... Jl. Jalan Sama
+                          Kamu Tapi Apa Mung...Jl. Jalan Sama Kamu Tapi Apa
+                          Mung...
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      className="mt-2 text-xs text-primary-300"
+                      onClick={() => setRute(true)}
+                    >
+                      Lihat Rute &gt;
+                    </button>
+                  </div>
+                  <div className="mt-6 flex items-center justify-between">
+                    <span className="font-literata text-xl font-bold text-primary-300">
+                      {item.Cart?.CartMenu.length} Items
+                    </span>
+                    <span className="font-bold">
+                      {numberFormat(item.total)}
+                    </span>
+                  </div>
+                  <p>{item.Cart?.CartMenu.map((item) => item.Menu.nama)}</p>
+                  <button className="mt-2 mr-auto text-xs text-primary-300">
+                    Lihat Detail Pesanan &gt;
+                  </button>
+                  <div className="mt-6 flex items-center justify-between">
+                    <div>
+                      <p className="text-[1.1rem] font-bold leading-tight text-primary-300">
+                        Ongkir Driver
+                      </p>
+                      <p className="leading-tight text-secondary-100">Cash</p>
+                    </div>
+                    <span className="font-bold">
+                      {numberFormat(item.total)}
+                    </span>
+                  </div>
+                  <div className="relative flex justify-between bg-secondary-400 pt-6 pb-10">
+                    <button onClick={() => handleCancel()}>
+                      <Image
+                        src="/assets/cancel.svg"
+                        alt=""
+                        width={20}
+                        height={20}
+                        quality={100}
+                      />
+                    </button>
+                    <button
+                      onClick={async () => {
+                        await acceptOrder.mutateAsync({
+                          orderId: item.id,
+                        });
+
+                        await getOrder.refetch();
+                      }}
+                      className="rounded-full bg-primary-300 py-2 px-4 font-bold text-secondary-400"
+                    >
+                      Terima
+                    </button>
+                    <div className="absolute bottom-4 h-1 w-full bg-secondary-300"></div>
+                    <div
+                      className={`countdown absolute bottom-4 h-1 bg-white`}
+                    ></div>
+                  </div>
+                </>
+              );
+            }
+          })}
         </div>
         <PesananMasuk
           roles={roles}
@@ -181,10 +224,25 @@ const MyOrders = () => {
           setCancel={setCancel}
           setComplete={setComplete}
           setDetailPesanan={setDetailPesanan}
+          onClick={async () => {
+            await acceptOrder.mutateAsync({
+              orderId: getOrder.data?.filter(
+                (item) => item.status == "accepted" && item.mitraId == null
+              )[0]?.id as string,
+            });
+
+            await getOrder.refetch();
+          }}
+          data={
+            getOrder.data?.filter(
+              (item) => item.status == "accepted" && item.mitraId == null
+            )[0]
+          }
         />
         <PesananBatal cancel={cancel} setCancel={setCancel} />
         <PesananSelesai complete={complete} setComplete={setComplete} />
         <DetailRute rute={rute} setRute={setRute} />
+
         <div className="grid w-full place-content-center">
           <button onClick={() => setPop(!pop)} className="bg-primary-500 p-4">
             <span className="text-xl">{pop}</span>

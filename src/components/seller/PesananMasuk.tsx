@@ -1,7 +1,13 @@
+import { inferRouterOutputs } from "@trpc/server";
 import Image from "next/image";
 import Link from "next/link";
 import { Dispatch, MouseEvent, SetStateAction, useEffect } from "react";
 import { setInterval } from "timers";
+import { AppRouter } from "../../server/api/root";
+import { numberFormat } from "../../utils/transactions";
+import { number } from "zod";
+
+type RouterOutput = inferRouterOutputs<AppRouter>;
 
 const PesananMasuk = ({
   roles,
@@ -13,6 +19,8 @@ const PesananMasuk = ({
   setCancel,
   setComplete,
   setDetailPesanan,
+  data,
+  onClick,
 }: {
   roles: string;
   pop: boolean;
@@ -23,6 +31,10 @@ const PesananMasuk = ({
   setCancel: Dispatch<SetStateAction<boolean>>;
   setComplete: Dispatch<SetStateAction<boolean>>;
   setDetailPesanan: Dispatch<SetStateAction<boolean>>;
+  data?:
+    | RouterOutput["transaction"]["getOrderMitra"][0]
+    | RouterOutput["transaction"]["getOrderMerchant"][0];
+  onClick?: () => void;
 }) => {
   useEffect(() => {
     if (pop) {
@@ -81,12 +93,12 @@ const PesananMasuk = ({
         {roles == "MERCHANT" ? (
           <>
             <div className="flex items-center justify-between">
-              <span className="font-literata text-2xl font-bold">3 items</span>
-              <span className="">Rp54.396</span>
+              <span className="font-literata text-2xl font-bold">
+                {data?.Cart?.CartMenu.length} items
+              </span>
+              <span className="">{numberFormat(data?.total || 0)}</span>
             </div>
-            <span>
-              1 Burger Babi, 1 Burger Babi apa Babi, 1 Burger Babi Vegan
-            </span>
+            <span>{data?.Cart?.CartMenu.map((item) => item.Menu.nama)}</span>
           </>
         ) : (
           <>
@@ -99,10 +111,9 @@ const PesananMasuk = ({
               Jl. Jalan Sama Kamu Tapi Apa MungkinJl. Jalan Sama Kamu Tapi Apa
               Mungkin
             </p>
-            <p className="mt-2">Rp102.700</p>
+            <p className="mt-2">{numberFormat(data?.total || 0)}</p>
           </>
         )}
-
         {/* buttons */}
         <div className="relative mt-6 flex justify-between pb-5 text-white">
           <button className="mx-4" onClick={(e) => handleCancel(e)}>
@@ -130,7 +141,10 @@ const PesananMasuk = ({
           >
             <button
               className="relative mx-4 h-full place-self-center"
-              onClick={(e) => handleAccept(e)}
+              onClick={(e) => {
+                handleAccept(e);
+                onClick && onClick();
+              }}
             >
               <Image
                 src="/assets/accept.svg"
@@ -143,6 +157,7 @@ const PesananMasuk = ({
               <div className="absolute top-1/2 left-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full bg-success"></div>
             </button>
           </Link>
+
           <div className="absolute bottom-0 h-1 w-full bg-primary-100"></div>
           <div
             className={`absolute bottom-0 h-1 bg-white ${

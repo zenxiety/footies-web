@@ -7,19 +7,27 @@ import {
   protectedProcedureMerchant,
   protectedProcedureMitra,
 } from "../trpc";
+import { TRPCError } from "@trpc/server";
 
 export const transactionRouter = createTRPCRouter({
   getOrderMerchant: protectedProcedureMerchant.query(async ({ ctx }) => {
     const data = await ctx.prisma.order.findMany({
       where: {
-        Cart: {
-          merchant: {
-            userId: ctx.session.user.id,
-          },
+        Merchant: {
+          userId: ctx.session.user.id,
         },
       },
       include: {
         User: true,
+        Cart: {
+          include: {
+            CartMenu: {
+              include: {
+                Menu: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -36,6 +44,15 @@ export const transactionRouter = createTRPCRouter({
       },
       include: {
         User: true,
+        Cart: {
+          include: {
+            CartMenu: {
+              include: {
+                Menu: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -112,7 +129,10 @@ export const transactionRouter = createTRPCRouter({
         if (!user) throw new Error("User tidak ditemukan");
 
         if (user.saldo < input.total) {
-          throw new Error("Wallet tidak cukup");
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Saldo tidak cukup",
+          });
         }
 
         await ctx.prisma.user.update({
@@ -135,6 +155,7 @@ export const transactionRouter = createTRPCRouter({
               id: input.cartId,
             },
           },
+          merchantId: input.mitraId,
           status: "pending",
         },
       });
