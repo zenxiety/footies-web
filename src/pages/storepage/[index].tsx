@@ -58,6 +58,7 @@ export default function Produk() {
   const addToCartHandler = async ({ id }: { id: string }) => {
     await addToCart.mutateAsync({
       productId: id,
+      add: true,
       merchantId: index as string,
     });
 
@@ -322,7 +323,7 @@ export default function Produk() {
                     total: total || 0,
                   });
 
-                  if (!createOrder.isError) {
+                  if (createOrder.isError) {
                     alert(createOrder.error);
                   }
                 }}
