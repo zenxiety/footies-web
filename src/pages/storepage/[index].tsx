@@ -32,6 +32,11 @@ export default function Produk() {
     id: index as string,
   });
 
+  const { data: cartItem, refetch: cartRefetch } =
+    api.transaction.getCart.useQuery({
+      mitraId: index as string,
+    });
+
   const { setValue } = useForm();
 
   useEffect(() => {
@@ -45,6 +50,29 @@ export default function Produk() {
   }, [merchantData]);
 
   const item = data[0]!;
+
+  const addToCart = api.transaction.addToCart.useMutation();
+
+  const createOrder = api.transaction.createOrder.useMutation();
+
+  const addToCartHandler = async ({ id }: { id: string }) => {
+    await addToCart.mutateAsync({
+      productId: id,
+      merchantId: index as string,
+    });
+
+    await cartRefetch();
+  };
+
+  const total = cartItem?.CartMenu.reduce((acc, curr) => {
+    return acc + (curr.qty * curr.Menu.harga || 0);
+  }, 0);
+
+  const numberFormat = (value: number) =>
+    new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    }).format(value);
 
   return (
     <>
@@ -239,51 +267,72 @@ export default function Produk() {
                     />
                     <h1 className="text-white">Customizable</h1>
                   </div>
-                  <svg
-                    width="23"
-                    height="27"
-                    viewBox="0 0 23 27"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect
-                      x="0.869141"
-                      y="2.5"
-                      width="21.9344"
-                      height="21.9345"
-                      rx="10.9672"
-                      fill="#F6C73B"
-                    />
-                    <path
-                      d="M16.5315 14.7058H13.1396V18.1874H10.7707V14.7058H7.37883V12.5164H10.7707V9.03476H13.1396V12.5164H16.5315V14.7058Z"
-                      fill="#000000"
-                    />
-                  </svg>
+                  <button onClick={() => addToCartHandler({ id: item.id })}>
+                    <svg
+                      width="23"
+                      height="27"
+                      viewBox="0 0 23 27"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <rect
+                        x="0.869141"
+                        y="2.5"
+                        width="21.9344"
+                        height="21.9345"
+                        rx="10.9672"
+                        fill="#F6C73B"
+                      />
+                      <path
+                        d="M16.5315 14.7058H13.1396V18.1874H10.7707V14.7058H7.37883V12.5164H10.7707V9.03476H13.1396V12.5164H16.5315V14.7058Z"
+                        fill="#000000"
+                      />
+                    </svg>
+                  </button>
                 </div>
               </>
             );
           })}
         </div>
-        <div className="fixed bottom-[15%] z-50 flex w-full max-w-[465px] flex-row justify-between bg-secondary-500 p-3">
-          <svg
-            width="24"
-            height="30"
-            viewBox="0 0 24 30"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M22.5 7.5H18V6C18 4.4087 17.3679 2.88258 16.2426 1.75736C15.1174 0.632141 13.5913 0 12 0C10.4087 0 8.88258 0.632141 7.75736 1.75736C6.63214 2.88258 6 4.4087 6 6V7.5H1.5C1.10218 7.5 0.720645 7.65804 0.43934 7.93934C0.158036 8.22064 0 8.60217 0 9V25.5C0 26.6935 0.474106 27.8381 1.31802 28.682C2.16193 29.5259 3.30653 30 4.5 30H19.5C20.6935 30 21.8381 29.5259 22.682 28.682C23.5259 27.8381 24 26.6935 24 25.5V9C24 8.60217 23.842 8.22064 23.5607 7.93934C23.2794 7.65804 22.8978 7.5 22.5 7.5ZM9 6C9 5.20435 9.31607 4.44129 9.87868 3.87868C10.4413 3.31607 11.2044 3 12 3C12.7956 3 13.5587 3.31607 14.1213 3.87868C14.6839 4.44129 15 5.20435 15 6V7.5H9V6ZM21 25.5C21 25.8978 20.842 26.2794 20.5607 26.5607C20.2794 26.842 19.8978 27 19.5 27H4.5C4.10218 27 3.72064 26.842 3.43934 26.5607C3.15804 26.2794 3 25.8978 3 25.5V10.5H6H9H15H18H21V25.5Z"
-              fill="#F6C73B"
-            />
-          </svg>
-          <div className="flex flex-row items-center justify-between gap-x-2">
-            <h1 className="font-louis font-light text-white">Rp13.000</h1>
-            <div className="font-regular rounded-full bg-primary-300 px-3 py-1 font-louis">
-              <h1 className="">Checkout &#62;</h1>
+
+        {cartItem?.CartMenu && cartItem.CartMenu.length > 0 && (
+          <div className="fixed bottom-0 z-50 flex w-full max-w-[465px] flex-row justify-between bg-secondary-500 p-3">
+            <svg
+              width="24"
+              height="30"
+              viewBox="0 0 24 30"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M22.5 7.5H18V6C18 4.4087 17.3679 2.88258 16.2426 1.75736C15.1174 0.632141 13.5913 0 12 0C10.4087 0 8.88258 0.632141 7.75736 1.75736C6.63214 2.88258 6 4.4087 6 6V7.5H1.5C1.10218 7.5 0.720645 7.65804 0.43934 7.93934C0.158036 8.22064 0 8.60217 0 9V25.5C0 26.6935 0.474106 27.8381 1.31802 28.682C2.16193 29.5259 3.30653 30 4.5 30H19.5C20.6935 30 21.8381 29.5259 22.682 28.682C23.5259 27.8381 24 26.6935 24 25.5V9C24 8.60217 23.842 8.22064 23.5607 7.93934C23.2794 7.65804 22.8978 7.5 22.5 7.5ZM9 6C9 5.20435 9.31607 4.44129 9.87868 3.87868C10.4413 3.31607 11.2044 3 12 3C12.7956 3 13.5587 3.31607 14.1213 3.87868C14.6839 4.44129 15 5.20435 15 6V7.5H9V6ZM21 25.5C21 25.8978 20.842 26.2794 20.5607 26.5607C20.2794 26.842 19.8978 27 19.5 27H4.5C4.10218 27 3.72064 26.842 3.43934 26.5607C3.15804 26.2794 3 25.8978 3 25.5V10.5H6H9H15H18H21V25.5Z"
+                fill="#F6C73B"
+              />
+            </svg>
+            <div className="flex flex-row items-center justify-between gap-x-2">
+              <h1 className="font-louis font-light text-white">
+                {numberFormat(total || 0)}
+              </h1>
+              <button
+                onClick={async () => {
+                  await createOrder.mutateAsync({
+                    cartId: cartItem.id,
+                    MetodePembayaran: "WALLET",
+                    mitraId: index as string,
+                    total: total || 0,
+                  });
+
+                  if (!createOrder.isError) {
+                    alert(createOrder.error);
+                  }
+                }}
+                className="font-regular rounded-full bg-primary-300 px-3 py-1 font-louis"
+              >
+                <h1 className="">Checkout &#62;</h1>
+              </button>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );

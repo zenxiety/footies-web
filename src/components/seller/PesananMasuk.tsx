@@ -1,18 +1,29 @@
+import { inferRouterOutputs } from "@trpc/server";
 import Image from "next/image";
 import Link from "next/link";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { setInterval } from "timers";
+import { AppRouter } from "../../server/api/root";
+import { numberFormat } from "../../utils/transactions";
+
+type RouterOutput = inferRouterOutputs<AppRouter>;
 
 const PesananMasuk = ({
   pop,
   cancel,
   setPop,
   setCancel,
+  data,
+  onClick,
 }: {
   pop: boolean;
   cancel: boolean;
   setPop: Dispatch<SetStateAction<boolean>>;
   setCancel: Dispatch<SetStateAction<boolean>>;
+  data?:
+    | RouterOutput["transaction"]["getOrderMitra"][0]
+    | RouterOutput["transaction"]["getOrderMerchant"][0];
+  onClick?: () => void;
 }) => {
   useEffect(() => {
     if (pop) {
@@ -51,10 +62,12 @@ const PesananMasuk = ({
         {/* summary pesanan atas */}
         <span className="text-lg text-secondary-200">Pesanan Masuk</span>
         <div className="flex items-center justify-between">
-          <span className="font-literata text-2xl font-bold">3 items</span>
-          <span className="">Rp54.396</span>
+          <span className="font-literata text-2xl font-bold">
+            {data?.Cart?.CartMenu.length} items
+          </span>
+          <span className=""> {numberFormat(data?.total || 0)}</span>
         </div>
-        <span>1 Burger Babi, 1 Burger Babi apa Babi, 1 Burger Babi Vegan</span>
+        <span>{data?.Cart?.CartMenu.map((item) => item.Menu.nama)}</span>
         {/* buttons */}
         <div className="relative mt-6 flex justify-between pb-5 text-white">
           <button className="mx-4" onClick={() => handleCancel()}>
@@ -71,7 +84,10 @@ const PesananMasuk = ({
               Detail<span> &gt;</span>
             </button>
           </Link>
-          <button className="relative mx-4 h-full place-self-center">
+          <button
+            onClick={onClick}
+            className="relative mx-4 h-full place-self-center"
+          >
             <Image
               src="/assets/accept.svg"
               alt=""

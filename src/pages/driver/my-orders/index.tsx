@@ -1,6 +1,6 @@
 import Head from "next/head";
 import PesananMasuk from "../../../components/seller/PesananMasuk";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import PesananBatal from "../../../components/seller/PesananBatal";
 import Image from "next/image";
 import DetailPesanan from "../../../components/seller/DetailPesanan";
@@ -15,23 +15,29 @@ const MyOrders = () => {
   const [sectionIdx, setSectionIdx] = useState(0);
   const sectionLabel = ["dalam proses", "riwayat"];
 
-  const getOrder = api.transaction.getOrderMerchant.useQuery();
+  const getOrder = api.transaction.getOrderMitra.useQuery();
+
+  useEffect(() => {
+    const data =
+      getOrder.data?.filter(
+        (item) => item.status == "accepted" && item.mitraId == null
+      ) || [];
+    if (data.length > 0) {
+      setPop(true);
+    }
+  }, [getOrder.data]);
 
   const handleCancel = () => {
     setPop(false);
     setCancel(true);
   };
 
-  const totalOrderPending =
-    getOrder.data?.filter((item) => item.status == "pending") || [];
+  const acceptOrder = api.transaction.acceptOrderMitra.useMutation();
 
-  const totalOrderProses =
+  const totalOrderPending =
     getOrder.data?.filter(
       (item) => item.status == "accepted" && item.mitraId == null
     ) || [];
-
-  const acceptOrder = api.transaction.acceptOrderMerchant.useMutation();
-
   return (
     <>
       <Head>
@@ -74,13 +80,6 @@ const MyOrders = () => {
             </button>
           ))}
         </div>
-        <PesananMasuk
-          pop={pop}
-          setPop={setPop}
-          cancel={cancel}
-          setCancel={setCancel}
-        />
-        <PesananBatal cancel={cancel} setCancel={setCancel} />
 
         <div>
           {totalOrderPending.length > 0 && (
@@ -92,7 +91,7 @@ const MyOrders = () => {
                 </span>
               </span>
               {getOrder.data?.map((item) => {
-                if (item.status == "pending") {
+                if (item.status == "accepted" && item.mitraId == null) {
                   return (
                     <Fragment key={item.id}>
                       <div className="my-3 bg-secondary-400 px-7 py-2">
@@ -158,51 +157,29 @@ const MyOrders = () => {
             </>
           )}
         </div>
-        <div>
-          {totalOrderProses.length > 0 && (
-            <>
-              <span className="ml-7 text-secondary-100">
-                Pesanan dalam proses
-              </span>
-              {getOrder.data?.map((item) => {
-                if (item.status == "accepted" && item.mitraId == null) {
-                  return (
-                    <div
-                      key={item.id}
-                      className="my-3 bg-secondary-400 px-7 py-2"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="font-literata text-2xl font-bold text-primary-300">
-                          {item.Cart?.CartMenu.length} items
-                        </span>
-                        <span className="font-bold">
-                          {numberFormat(item.total)}
-                        </span>
-                      </div>
-                      <p className="max-h-[3em] overflow-hidden">
-                        {item.Cart?.CartMenu.map((item) => item.Menu.nama)}
-                      </p>
-                      <p className="text-xs text-secondary-100">
-                        Pemesan: {item.User.firstName} {item.User.lastName}
-                      </p>
-                      <p className="text-xs text-secondary-100">
-                        ID Pesanan: {item.id}
-                      </p>
-                      <div className="relative mt-3">
-                        <button
-                          className="ml-auto block text-xs text-primary-300"
-                          onClick={() => setDetailPesanan(true)}
-                        >
-                          Detail Pesanan &gt;
-                        </button>
-                      </div>
-                    </div>
-                  );
-                }
-              })}
-            </>
-          )}
-        </div>
+
+        <PesananMasuk
+          pop={pop}
+          setPop={setPop}
+          cancel={cancel}
+          setCancel={setCancel}
+          data={
+            getOrder.data?.filter(
+              (item) => item.status == "accepted" && item.mitraId == null
+            )[0]
+          }
+          onClick={async () => {
+            await acceptOrder.mutateAsync({
+              orderId: getOrder.data?.filter(
+                (item) => item.status == "accepted" && item.mitraId == null
+              )[0]?.id as string,
+            });
+
+            await getOrder.refetch();
+          }}
+        />
+        <PesananBatal cancel={cancel} setCancel={setCancel} />
+
         <DetailPesanan
           detailPesanan={detailPesanan}
           setDetailPesanan={setDetailPesanan}
