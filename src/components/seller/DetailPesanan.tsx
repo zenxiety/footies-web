@@ -3,11 +3,13 @@ import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
 
 const DetailPesanan = ({
+  roles,
   cancel,
   setCancel,
   detailPesanan,
   setDetailPesanan,
 }: {
+  roles: string;
   cancel: boolean;
   setCancel: Dispatch<SetStateAction<boolean>>;
   detailPesanan: boolean;
@@ -99,7 +101,7 @@ const DetailPesanan = ({
                 <p className="max-h-[1em] overflow-hidden text-xs leading-none text-secondary-100">
                   Alamat Tujuan • 2.0 KM
                 </p>
-                <p className="max-h-[1.4em] overflow-hidden">
+                <p className="">
                   Jl. Jalan Sama Kamu Tapi Apa Mung... Jl. Jalan Sama Kamu Tapi
                   Apa Mung...Jl. Jalan Sama Kamu Tapi Apa Mung...
                 </p>

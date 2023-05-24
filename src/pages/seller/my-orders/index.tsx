@@ -1,13 +1,19 @@
 import Head from "next/head";
 import PesananMasuk from "../../../components/seller/PesananMasuk";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import PesananBatal from "../../../components/seller/PesananBatal";
 import Image from "next/image";
 import DetailPesanan from "../../../components/seller/DetailPesanan";
+import PesananSelesai from "../../../components/seller/PesananSelesai";
+
+import { Role } from "@prisma/client";
 
 const MyOrders = () => {
+  const [roles, setRoles] = useState<Role>("MERCHANT");
+
   const [pop, setPop] = useState(false);
   const [cancel, setCancel] = useState(false);
+  const [complete, setComplete] = useState(false);
   const [detailPesanan, setDetailPesanan] = useState(false);
 
   const [sectionIdx, setSectionIdx] = useState(0);
@@ -60,13 +66,6 @@ const MyOrders = () => {
             </button>
           ))}
         </div>
-        <PesananMasuk
-          pop={pop}
-          setPop={setPop}
-          cancel={cancel}
-          setCancel={setCancel}
-        />
-        <PesananBatal cancel={cancel} setCancel={setCancel} />
         <div>
           <span className="ml-7 text-secondary-100">
             Pesanan baru <span className="text-primary-300">(1)</span>
@@ -96,7 +95,10 @@ const MyOrders = () => {
                     quality={100}
                   />
                 </button>
-                <button className="rounded-full bg-primary-300 py-2 px-4 font-bold text-secondary-400">
+                <button
+                  className="rounded-full bg-primary-300 py-2 px-4 font-bold text-secondary-400"
+                  onClick={() => setComplete(true)}
+                >
                   Terima
                 </button>
               </div>
@@ -115,62 +117,25 @@ const MyOrders = () => {
             </div>
           </div>
         </div>
-        <div>
-          <span className="ml-7 text-secondary-100">Pesanan dalam proses</span>
-          <div className="my-3 bg-secondary-400 px-7 py-2">
-            <div className="flex items-center justify-between">
-              <span className="font-literata text-2xl font-bold text-primary-300">
-                3 items
-              </span>
-              <span className="font-bold">Rp54.000</span>
-            </div>
-            <p className="max-h-[3em] overflow-hidden">
-              1 Burger Babi, 2 Burger Babi apa Babi, 1 Burger Babi Vegan, 2
-              Burger bingung, 1 Burger Babi, 2 Burger Babi apa Babi, 1 Burger
-              Babi Vegan, 2 Burger bingung, 1 Burger Babi, 2 Burger Babi apa
-              Babi, 1 Burger Babi Vegan, 2 Burger bingung, ...
-            </p>
-            <p className="text-xs text-secondary-100">
-              Pemesan: Diki Bagastama
-            </p>
-            <p className="text-xs text-secondary-100">ID Pesanan: 696969</p>
-            <div className="relative mt-3">
-              <button
-                className="ml-auto block text-xs text-primary-300"
-                onClick={() => setDetailPesanan(true)}
-              >
-                Detail Pesanan &gt;
-              </button>
-            </div>
-          </div>
-          <div className="my-3 bg-secondary-400 px-7 py-2">
-            <div className="flex items-center justify-between">
-              <span className="font-literata text-2xl font-bold text-primary-300">
-                3 items
-              </span>
-              <span className="font-bold">Rp54.000</span>
-            </div>
-            <p className="max-h-[3em] overflow-hidden">
-              1 Burger Babi, 2 Burger Babi apa Babi, 1 Burger Babi Vegan, 2
-              Burger bingung, 1 Burger Babi, 2 Burger Babi apa Babi, 1 Burger
-              Babi Vegan, 2 Burger bingung, 1 Burger Babi, 2 Burger Babi apa
-              Babi, 1 Burger Babi Vegan, 2 Burger bingung, ...
-            </p>
-            <p className="text-xs text-secondary-100">
-              Pemesan: Diki Bagastama
-            </p>
-            <p className="text-xs text-secondary-100">ID Pesanan: 696969</p>
-            <div className="relative mt-3">
-              <button
-                className="ml-auto block text-xs text-primary-300"
-                onClick={() => setDetailPesanan(true)}
-              >
-                Detail Pesanan &gt;
-              </button>
-            </div>
-          </div>
-        </div>
+        <span className="ml-7 text-secondary-100">Pesanan dalam proses</span>
+        <DummyOrder setDetailPesanan={setDetailPesanan} />
+        <DummyOrder setDetailPesanan={setDetailPesanan} />
+        <DummyOrder setDetailPesanan={setDetailPesanan} />
+        <PesananMasuk
+          roles={roles}
+          pop={pop}
+          setPop={setPop}
+          cancel={cancel}
+          complete={complete}
+          detailPesanan={detailPesanan}
+          setCancel={setCancel}
+          setComplete={setComplete}
+          setDetailPesanan={setDetailPesanan}
+        />
+        <PesananBatal cancel={cancel} setCancel={setCancel} />
+        <PesananSelesai complete={complete} setComplete={setComplete} />
         <DetailPesanan
+          roles={roles}
           detailPesanan={detailPesanan}
           setDetailPesanan={setDetailPesanan}
           cancel={cancel}
@@ -187,3 +152,38 @@ const MyOrders = () => {
 };
 
 export default MyOrders;
+
+const DummyOrder = ({
+  setDetailPesanan,
+}: {
+  setDetailPesanan: Dispatch<SetStateAction<boolean>>;
+}) => {
+  return (
+    <>
+      <div className="my-3 bg-secondary-400 px-7 py-2">
+        <div className="flex items-center justify-between">
+          <span className="font-literata text-2xl font-bold text-primary-300">
+            3 items
+          </span>
+          <span className="font-bold">Rp54.000</span>
+        </div>
+        <p className="max-h-[3em] overflow-hidden">
+          1 Burger Babi, 2 Burger Babi apa Babi, 1 Burger Babi Vegan, 2 Burger
+          bingung, 1 Burger Babi, 2 Burger Babi apa Babi, 1 Burger Babi Vegan, 2
+          Burger bingung, 1 Burger Babi, 2 Burger Babi apa Babi, 1 Burger Babi
+          Vegan, 2 Burger bingung, ...
+        </p>
+        <p className="text-xs text-secondary-100">Pemesan: Diki Bagastama</p>
+        <p className="text-xs text-secondary-100">ID Pesanan: 696969</p>
+        <div className="relative mt-3">
+          <button
+            className="ml-auto block text-xs text-primary-300"
+            onClick={() => setDetailPesanan(true)}
+          >
+            Detail Pesanan &gt;
+          </button>
+        </div>
+      </div>
+    </>
+  );
+};
