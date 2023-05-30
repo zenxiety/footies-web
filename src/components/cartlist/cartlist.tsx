@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { api } from "../../utils/api";
+import { distance, numberFormat } from "../../utils/transactions";
 
 const Cart = ({
   paymentStep,
@@ -12,7 +14,9 @@ const Cart = ({
   formStep: number;
 }) => {
   const router = useRouter();
+  const { index } = router.query;
   const [count, setCount] = useState(0);
+  const [pembayaranTunai, setPembayaranTunai] = useState(true);
   function handleIncrement() {
     setCount(count + 1);
   }
@@ -20,6 +24,86 @@ const Cart = ({
     setCount(count - 1);
   }
 
+  const getData = api.transaction.getCart.useQuery({
+    mitraId: index as string,
+  });
+
+  const lng_lat = getData.data?.user.Alamat[0]?.alamat.split(",");
+  const lng_latMerchant = getData.data?.merchant.alamat.split(",");
+
+  const [location, setLocation] = useState("");
+  const [estimated, setEstimated] = useState({
+    time: 0,
+    distance: 0,
+    biaya: 0,
+  });
+
+  useEffect(() => {
+    fetch(
+      `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&featureTypes=&location=${lng_lat![1]!}%2C${lng_lat![0]!}`
+    )
+      .then((res) => res.json())
+      .then((data: { address: { Match_addr: string } }) =>
+        setLocation(data.address.Match_addr)
+      )
+      .catch((e) => console.log(e));
+
+    const distance = estimatedTime();
+    setEstimated({
+      time: parseFloat(distance.time),
+      distance: parseFloat(distance.distance),
+      biaya: parseFloat(distance.distance) * 5000,
+    });
+  }, []);
+
+  const estimatedTime = () => {
+    const x = distance({
+      lat1: parseFloat(lng_lat![1]!),
+      lon1: parseFloat(lng_lat![0]!),
+      lat2: parseFloat(lng_latMerchant![1]!),
+      lon2: parseFloat(lng_latMerchant![0]!),
+      unit: "K",
+    });
+    const speed = 30;
+    const time = (x / speed) * 60;
+    return { time: time.toFixed(2), distance: x.toFixed(2) };
+  };
+
+  const biayaLayanan = 4000;
+
+  const createOrder = api.transaction.createOrder.useMutation();
+  const total =
+    getData.data?.CartMenu.reduce((acc, curr) => {
+      return acc + (curr.qty * curr.Menu.harga || 0);
+    }, 0) || 0;
+
+  const bayar = async () => {
+    const data = await createOrder.mutateAsync({
+      cartId: getData.data?.id as string,
+      MetodePembayaran: pembayaranTunai ? "CASH" : "WALLET",
+      mitraId: index as string,
+      total: total + estimated.biaya + biayaLayanan,
+    });
+
+    if (data) {
+      await router.push(`/order/${data.id}`);
+    }
+  };
+
+  const handlePayment = () => {
+    if (pembayaranTunai) {
+      if (
+        (getData.data?.user.saldo || 0) <
+        total + estimated.biaya + biayaLayanan
+      ) {
+        alert("Saldo anda tidak cukup");
+      } else {
+        setPembayaranTunai((val) => !val);
+      }
+    } else {
+      setPembayaranTunai((val) => !val);
+    }
+  };
   return (
     <div hidden={formStep != 0}>
       <div className="relative h-full w-full overflow-hidden bg-[#212121]">
@@ -76,10 +160,7 @@ const Cart = ({
               />
             </svg>
           </div>
-          <p className="pl-6 font-louis font-light text-white">
-            Jl. Jalan sama kamu tapi apa mungkin No. 12 RT 02 RW 03, Kel. Tanah
-            Baru, Kec. Beji, Kota Depok, Jawa Barat
-          </p>
+          <p className="pl-6 font-louis font-light text-white">{location}</p>
           <div className="flex flex-row items-center gap-x-3 pt-2">
             <svg
               width="13"
@@ -95,7 +176,7 @@ const Cart = ({
               />
             </svg>
             <p className="font-louis font-light text-white">
-              69 menit (2,1 km)
+              {estimated.time} menit ({estimated.distance} km)
             </p>
           </div>
         </div>
@@ -115,178 +196,24 @@ const Cart = ({
                   fill="#F6C73B"
                 />
               </svg>
-              <p className="font-literata text-white">Mie Gacoan - Depok</p>
+              <p className="font-literata text-white">
+                {getData.data?.merchant.nama}
+              </p>
             </div>
-            <div className="flex flex-row items-start justify-between pb-4">
-              <div className="flex flex-row gap-x-5">
-                <Image src="/assets/susu.png" alt="" width={100} height={100} />
-                <div className="flex flex-col gap-y-1">
-                  <p className="font-literata text-xl text-white">
-                    SD (Susu Dingin)
-                  </p>
-                  <p className="font-louis text-white">Tidak Pedas, Less Ice</p>
-                </div>
-              </div>
-              <p className=" font-louis text-white">Rp 10.000</p>
-            </div>
-            <div className="flex flex-row items-center justify-between pb-8">
-              <div className="flex flex-row gap-x-5">
-                <svg
-                  width="15"
-                  height="19"
-                  viewBox="0 0 15 19"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="scale-150 hover:cursor-pointer"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M2.39986 0.444336H12.3997C13.5042 0.444336 14.3996 1.33977 14.3996 2.44434V16.4443C14.3996 17.5489 13.5042 18.4443 12.3997 18.4443H2.39986C1.29532 18.4443 0.399902 17.5489 0.399902 16.4443V2.44434C0.399902 1.33977 1.29532 0.444336 2.39986 0.444336ZM4.39937 3.58815C3.9268 3.58815 3.54371 3.97124 3.54371 4.4438C3.54371 4.91636 3.9268 5.29945 4.39937 5.29945H10.3992C10.8718 5.29945 11.2549 4.91636 11.2549 4.4438C11.2549 3.97124 10.8718 3.58815 10.3992 3.58815H4.39937ZM3.54371 8.44414C3.54371 7.97158 3.9268 7.58849 4.39937 7.58849H10.3992C10.8718 7.58849 11.2549 7.97158 11.2549 8.44414C11.2549 8.9167 10.8718 9.29979 10.3992 9.29979H4.39937C3.9268 9.29979 3.54371 8.9167 3.54371 8.44414ZM4.39951 11.5887C3.92695 11.5887 3.54386 11.9718 3.54386 12.4443C3.54386 12.9169 3.92695 13.3 4.39951 13.3H8.39943C8.872 13.3 9.25508 12.9169 9.25508 12.4443C9.25508 11.9718 8.872 11.5887 8.39943 11.5887H4.39951Z"
-                    fill="#F6C73B"
-                  />
-                </svg>
-
-                <p className="font-louis text-white">Notes</p>
-              </div>
-              <div className="flex flex-row items-center gap-x-3">
-                <svg
-                  width="23"
-                  height="27"
-                  viewBox="0 0 23 27"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className={`${
-                    count === 0 ? "hidden" : "block hover:cursor-pointer"
-                  }`}
-                  onClick={handleDecrement}
-                >
-                  <path
-                    d="M22.8033 13.4672C22.8033 7.41018 17.8931 2.5 11.8361 2.5C5.77908 2.5 0.868896 7.41018 0.868896 13.4672V13.4673C0.868896 19.5243 5.77908 24.4345 11.8361 24.4345C17.8931 24.4345 22.8033 19.5243 22.8033 13.4673V13.4672Z"
-                    fill="#F6C73B"
-                  />
-                  <path
-                    d="M16.5313 14.706H13.1395H10.7705H7.37866V12.5166H10.7705H13.1395H16.5313V14.706Z"
-                    fill="#2F2D2D"
-                  />
-                </svg>
-
-                <p
-                  className={`font-louis text-white ${
-                    count === 0 ? "hidden" : "block"
-                  }`}
-                >
-                  {count}
-                </p>
-                <svg
-                  width="23"
-                  height="27"
-                  viewBox="0 0 23 27"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  onClick={handleIncrement}
-                >
-                  <rect
-                    x="0.868896"
-                    y="2.5"
-                    width="21.9344"
-                    height="21.9345"
-                    rx="10.9672"
-                    fill="#F6C73B"
-                  />
-                  <path
-                    d="M16.5312 14.7058H13.1394V18.1874H10.7704V14.7058H7.37858V12.5164H10.7704V9.03476H13.1394V12.5164H16.5312V14.7058Z"
-                    fill="#2F2D2D"
-                  />
-                </svg>
-              </div>
-            </div>
-            <hr className="border-1 h-1 border-primary-300 pb-8" />
-
-            <div className="flex flex-row items-start justify-between pb-4">
-              <div className="flex flex-row gap-x-5">
-                <Image src="/assets/susu.png" alt="" width={100} height={100} />
-                <div className="flex flex-col gap-y-1">
-                  <p className="font-literata text-xl text-white">
-                    SD (Susu Dingin)
-                  </p>
-                  <p className="font-louis text-white">Tidak Pedas, Less Ice</p>
-                </div>
-              </div>
-              <p className=" font-louis text-white">Rp 10.000</p>
-            </div>
-            <div className="flex flex-row items-center justify-between">
-              <div className="flex flex-row gap-x-5">
-                <svg
-                  width="15"
-                  height="19"
-                  viewBox="0 0 15 19"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="scale-150 hover:cursor-pointer"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M2.39986 0.444336H12.3997C13.5042 0.444336 14.3996 1.33977 14.3996 2.44434V16.4443C14.3996 17.5489 13.5042 18.4443 12.3997 18.4443H2.39986C1.29532 18.4443 0.399902 17.5489 0.399902 16.4443V2.44434C0.399902 1.33977 1.29532 0.444336 2.39986 0.444336ZM4.39937 3.58815C3.9268 3.58815 3.54371 3.97124 3.54371 4.4438C3.54371 4.91636 3.9268 5.29945 4.39937 5.29945H10.3992C10.8718 5.29945 11.2549 4.91636 11.2549 4.4438C11.2549 3.97124 10.8718 3.58815 10.3992 3.58815H4.39937ZM3.54371 8.44414C3.54371 7.97158 3.9268 7.58849 4.39937 7.58849H10.3992C10.8718 7.58849 11.2549 7.97158 11.2549 8.44414C11.2549 8.9167 10.8718 9.29979 10.3992 9.29979H4.39937C3.9268 9.29979 3.54371 8.9167 3.54371 8.44414ZM4.39951 11.5887C3.92695 11.5887 3.54386 11.9718 3.54386 12.4443C3.54386 12.9169 3.92695 13.3 4.39951 13.3H8.39943C8.872 13.3 9.25508 12.9169 9.25508 12.4443C9.25508 11.9718 8.872 11.5887 8.39943 11.5887H4.39951Z"
-                    fill="#F6C73B"
-                  />
-                </svg>
-
-                <p className="font-louis text-white">Notes</p>
-              </div>
-              <div className="flex flex-row items-center gap-x-3">
-                <svg
-                  width="23"
-                  height="27"
-                  viewBox="0 0 23 27"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className={`${
-                    count === 0 ? "hidden" : "block hover:cursor-pointer"
-                  }`}
-                  onClick={handleDecrement}
-                >
-                  <path
-                    d="M22.8033 13.4672C22.8033 7.41018 17.8931 2.5 11.8361 2.5C5.77908 2.5 0.868896 7.41018 0.868896 13.4672V13.4673C0.868896 19.5243 5.77908 24.4345 11.8361 24.4345C17.8931 24.4345 22.8033 19.5243 22.8033 13.4673V13.4672Z"
-                    fill="#F6C73B"
-                  />
-                  <path
-                    d="M16.5313 14.706H13.1395H10.7705H7.37866V12.5166H10.7705H13.1395H16.5313V14.706Z"
-                    fill="#2F2D2D"
-                  />
-                </svg>
-
-                <p
-                  className={`font-louis text-white ${
-                    count === 0 ? "hidden" : "block"
-                  }`}
-                >
-                  {count}
-                </p>
-                <svg
-                  width="23"
-                  height="27"
-                  viewBox="0 0 23 27"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  onClick={handleIncrement}
-                >
-                  <rect
-                    x="0.868896"
-                    y="2.5"
-                    width="21.9344"
-                    height="21.9345"
-                    rx="10.9672"
-                    fill="#F6C73B"
-                  />
-                  <path
-                    d="M16.5312 14.7058H13.1394V18.1874H10.7704V14.7058H7.37858V12.5164H10.7704V9.03476H13.1394V12.5164H16.5312V14.7058Z"
-                    fill="#2F2D2D"
-                  />
-                </svg>
-              </div>
-            </div>
+            {getData.data?.CartMenu.map((item, i) => (
+              <CartItem
+                key={item.Menu.id}
+                count={item.qty}
+                name={item.Menu.nama}
+                price={item.Menu.harga}
+                image={item.Menu.gambar}
+                merchantId={index as string}
+                id={item.Menu.id}
+                last={
+                  i == (getData.data?.CartMenu.length ?? 0) - 1 ? true : false
+                }
+              />
+            ))}
           </div>
         </div>
         <div className="mx-5 mt-8 flex flex-row items-center justify-between rounded-xl border-2 border-primary-300 p-5">
@@ -350,8 +277,11 @@ const Cart = ({
             </h1>
           </div>
 
-          <h1 className=" font-louis text-xl font-light text-white">
-            Tunai &gt;
+          <h1
+            className=" cursor-pointer font-louis text-xl font-light text-white"
+            onClick={() => handlePayment()}
+          >
+            {pembayaranTunai ? "Tunai" : "Wallet"} &gt;
           </h1>
         </div>
         <div className="mx-5 mt-4 items-center justify-between rounded-xl border-2 border-primary-300 p-5">
@@ -360,24 +290,30 @@ const Cart = ({
           </h1>
           <div className="mb-4 flex flex-row justify-between gap-x-5 text-lg">
             <h1 className=" font-literata font-light text-white">
-              Harga (2 menu)
+              Harga ({getData.data?.CartMenu.length} menu)
             </h1>
 
-            <h1 className=" font-literata font-light text-white">51.000</h1>
+            <h1 className=" font-literata font-light text-white">
+              {numberFormat(total)}
+            </h1>
           </div>
           <div className="mb-4 flex flex-row justify-between gap-x-5 text-lg">
             <h1 className=" font-literata font-light text-white">
               Biaya Pengiriman
             </h1>
 
-            <h1 className=" font-literata font-light text-white">11.000</h1>
+            <h1 className=" font-literata font-light text-white">
+              {numberFormat(estimated.biaya)}
+            </h1>
           </div>
           <div className="mb-4 flex flex-row justify-between gap-x-5 text-lg">
             <h1 className=" font-literata font-light text-white">
               Biaya Layanan
             </h1>
 
-            <h1 className=" font-literata font-light text-white">4.000</h1>
+            <h1 className=" font-literata font-light text-white">
+              {numberFormat(biayaLayanan)}
+            </h1>
           </div>
           <hr className="border-1 h-1 border-primary-300 py-4" />
           <div className="mb-4 flex flex-row justify-between gap-x-5 text-lg">
@@ -386,7 +322,7 @@ const Cart = ({
             </h1>
 
             <h1 className=" font-literata text-xl font-light text-white">
-              66.000
+              {numberFormat(total + estimated.biaya + biayaLayanan)}
             </h1>
           </div>
         </div>
@@ -395,138 +331,133 @@ const Cart = ({
         <div className="p-8">
           <div className="mb-4 flex w-full flex-row items-center justify-between gap-x-5 text-lg">
             <div className="flex flex-row items-center justify-between gap-x-5">
-              <div className="flex flex-row items-center justify-between gap-x-3">
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="scale-150"
-                >
-                  <path
-                    d="M18.9474 16.3333V17.3889C18.9474 17.9488 18.7256 18.4858 18.3308 18.8817C17.9359 19.2776 17.4005 19.5 16.8421 19.5H2.10526C1.54691 19.5 1.01143 19.2776 0.616617 18.8817C0.221804 18.4858 0 17.9488 0 17.3889V2.61111C0 2.05121 0.221804 1.51424 0.616617 1.11833C1.01143 0.72242 1.54691 0.5 2.10526 0.5H16.8421C17.4005 0.5 17.9359 0.72242 18.3308 1.11833C18.7256 1.51424 18.9474 2.05121 18.9474 2.61111V3.66667H9.47368C8.91533 3.66667 8.37985 3.88909 7.98504 4.285C7.59023 4.68091 7.36842 5.21788 7.36842 5.77778V14.2222C7.36842 14.7821 7.59023 15.3191 7.98504 15.715C8.37985 16.1109 8.91533 16.3333 9.47368 16.3333M9.47368 14.2222H20V5.77778H9.47368M13.6842 11.5833C13.2654 11.5833 12.8638 11.4165 12.5677 11.1196C12.2716 10.8227 12.1053 10.4199 12.1053 10C12.1053 9.58007 12.2716 9.17735 12.5677 8.88041C12.8638 8.58348 13.2654 8.41667 13.6842 8.41667C14.103 8.41667 14.5046 8.58348 14.8007 8.88041C15.0968 9.17735 15.2632 9.58007 15.2632 10C15.2632 10.4199 15.0968 10.8227 14.8007 11.1196C14.5046 11.4165 14.103 11.5833 13.6842 11.5833Z"
-                    fill="#F6C73B"
-                  />
-                  <path
-                    d="M2.32197 9.05527C2.40695 9.05527 2.47599 8.98991 2.47893 8.90825C2.47599 8.82659 2.40695 8.76123 2.32197 8.76123C2.237 8.76123 2.16794 8.82659 2.16504 8.90825C2.16793 8.98991 2.23699 9.05527 2.32197 9.05527Z"
-                    fill="#212121"
-                  />
-                  <path
-                    d="M2.32166 8.69165C2.20227 8.69165 2.10547 8.78871 2.10547 8.90843C2.10547 9.02815 2.20228 9.12522 2.32166 9.12522C2.44104 9.12522 2.53784 9.02815 2.53784 8.90843C2.53784 8.78871 2.44104 8.69165 2.32166 8.69165ZM2.32165 9.06609C2.23481 9.06609 2.16442 8.9979 2.16442 8.91374C2.16442 8.91195 2.16466 8.91021 2.16472 8.90843C2.16466 8.90666 2.16442 8.90491 2.16442 8.90312C2.16442 8.81897 2.23482 8.75077 2.32165 8.75077C2.40849 8.75077 2.47888 8.81897 2.47888 8.90312C2.47888 8.90491 2.47867 8.90666 2.47862 8.90843C2.47868 8.91021 2.47888 8.91195 2.47888 8.91374C2.47887 8.9979 2.40849 9.06609 2.32165 9.06609Z"
-                    fill="#212121"
-                  />
-                  <path
-                    d="M4.69996 11.0449L3.56401 11.7765C3.74249 11.9329 4.18718 12.1874 4.53813 11.9547C4.88907 11.722 4.76599 11.1879 4.69996 11.0449Z"
-                    fill="#212121"
-                    stroke="#212121"
-                    stroke-width="0.234713"
-                    stroke-linecap="round"
-                  />
-                  <path
-                    d="M3.84808 8.20337C4.02335 8.20337 4.16575 8.06857 4.17181 7.90015C4.16575 7.73173 4.02335 7.59692 3.84808 7.59692C3.67283 7.59692 3.53039 7.73173 3.52441 7.90015C3.53037 8.06857 3.67281 8.20337 3.84808 8.20337Z"
-                    fill="#212121"
-                  />
-                  <path
-                    d="M3.84824 7.45288C3.602 7.45288 3.40234 7.65307 3.40234 7.9C3.40234 8.14691 3.60202 8.34711 3.84824 8.34711C4.09447 8.34711 4.29412 8.14691 4.29412 7.9C4.29412 7.65307 4.09447 7.45288 3.84824 7.45288ZM3.84822 8.22517C3.66912 8.22517 3.52393 8.08451 3.52393 7.91095C3.52393 7.90725 3.52443 7.90365 3.52455 7.9C3.52443 7.89634 3.52393 7.89272 3.52393 7.88904C3.52393 7.71548 3.66914 7.57482 3.84822 7.57482C4.02732 7.57482 4.17249 7.71548 4.17249 7.88904C4.17249 7.89272 4.17207 7.89634 4.17197 7.9C4.17209 7.90365 4.17249 7.90725 4.17249 7.91095C4.17247 8.08451 4.02732 8.22517 3.84822 8.22517Z"
-                    fill="#212121"
-                  />
-                  <path
-                    d="M2.93669 8.53655C3.04519 8.53655 3.13334 8.4531 3.1371 8.34884C3.13334 8.24458 3.04519 8.16113 2.93669 8.16113C2.8282 8.16113 2.74003 8.24458 2.73633 8.34884C2.74002 8.4531 2.82819 8.53655 2.93669 8.53655Z"
-                    fill="#212121"
-                  />
-                  <path
-                    d="M2.93716 8.07202C2.78473 8.07202 2.66113 8.19595 2.66113 8.34881C2.66113 8.50166 2.78474 8.62559 2.93716 8.62559C3.08959 8.62559 3.21318 8.50166 3.21318 8.34881C3.21318 8.19595 3.08959 8.07202 2.93716 8.07202ZM2.93715 8.55011C2.82628 8.55011 2.7364 8.46303 2.7364 8.35559C2.7364 8.3533 2.73671 8.35107 2.73679 8.34881C2.73671 8.34654 2.7364 8.3443 2.7364 8.34203C2.7364 8.23458 2.82629 8.14751 2.93715 8.14751C3.04802 8.14751 3.13789 8.23458 3.13789 8.34203C3.13789 8.3443 3.13763 8.34654 3.13757 8.34881C3.13764 8.35107 3.13789 8.3533 3.13789 8.35559C3.13788 8.46303 3.04802 8.55011 2.93715 8.55011Z"
-                    fill="#212121"
-                  />
-                  <path
-                    d="M3.32743 11.587C3.53746 10.4685 3.41369 9.83719 3.19137 9.69696L3.37019 9.63805C3.77428 10.7008 3.68804 11.2352 3.67985 11.4265C3.6363 11.6113 3.50926 11.657 3.472 11.6679C3.3444 11.7296 3.32245 11.6397 3.32743 11.587Z"
-                    fill="#212121"
-                    stroke="#212121"
-                    stroke-width="0.117356"
-                  />
-                  <path
-                    d="M4.454 8.98331C3.49635 9.48669 4.0842 10.4859 4.49783 10.9226C4.53031 10.9467 4.54517 10.9386 4.6395 10.8658C4.6649 10.8301 4.47618 10.5254 4.4515 10.4894C4.1216 10.0077 3.87313 9.14882 4.81032 8.94396L4.454 8.98331Z"
-                    fill="#212121"
-                    stroke="#212121"
-                    stroke-width="0.117356"
-                  />
-                  <path
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    d="M4.48704 9.11905L4.3593 8.93064C4.33236 8.87378 4.32524 8.81107 4.33643 8.75181C4.38162 8.51253 4.7122 8.32732 4.99764 8.38109C5.15523 8.41078 5.25882 8.56331 5.22892 8.72164C5.17476 9.00841 4.88273 9.25038 4.64427 9.20546C4.58535 9.19436 4.52989 9.1649 4.48704 9.11905Z"
-                    fill="#212121"
-                  />
-                  <path
-                    d="M2.82227 9.17456L3.02327 9.65096C3.04002 9.69066 3.12214 9.74942 3.31663 9.66682M3.31663 9.66682C3.51112 9.58423 3.52624 9.48418 3.50949 9.44448L3.30849 8.96808M3.31663 9.66682L3.06538 9.07132"
-                    stroke="#212121"
-                    stroke-width="0.352069"
-                    stroke-linecap="round"
-                  />
-                  <g clip-path="url(#clip0_2222_5786)">
+              {pembayaranTunai ? (
+                <div className="flex flex-row items-center justify-between gap-x-3">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="scale-150"
+                  >
                     <path
-                      d="M5.02921 8.10499C5.2629 8.10499 5.45277 7.92525 5.46085 7.70069C5.45277 7.47613 5.2629 7.29639 5.02921 7.29639C4.79554 7.29639 4.60563 7.47613 4.59766 7.70069C4.6056 7.92525 4.79552 8.10499 5.02921 8.10499Z"
+                      d="M19 2H1C0.734784 2 0.48043 2.10536 0.292893 2.29289C0.105357 2.48043 0 2.73478 0 3V17C0 17.2652 0.105357 17.5196 0.292893 17.7071C0.48043 17.8946 0.734784 18 1 18H19C19.2652 18 19.5196 17.8946 19.7071 17.7071C19.8946 17.5196 20 17.2652 20 17V3C20 2.73478 19.8946 2.48043 19.7071 2.29289C19.5196 2.10536 19.2652 2 19 2ZM18 13C17.2044 13 16.4413 13.3161 15.8787 13.8787C15.3161 14.4413 15 15.2044 15 16H5C5 15.2044 4.68393 14.4413 4.12132 13.8787C3.55871 13.3161 2.79565 13 2 13V7C2.79565 7 3.55871 6.68393 4.12132 6.12132C4.68393 5.55871 5 4.79565 5 4H15C15 4.79565 15.3161 5.55871 15.8787 6.12132C16.4413 6.68393 17.2044 7 18 7V13Z"
+                      fill="#F6C73B"
+                    />
+                    <path
+                      d="M10 6C7.794 6 6 7.794 6 10C6 12.206 7.794 14 10 14C12.206 14 14 12.206 14 10C14 7.794 12.206 6 10 6ZM10 12C8.897 12 8 11.103 8 10C8 8.897 8.897 8 10 8C11.103 8 12 8.897 12 10C12 11.103 11.103 12 10 12Z"
+                      fill="#F6C73B"
+                    />
+                  </svg>
+
+                  <div className="flex flex-col items-start justify-center">
+                    <p className="font-literata text-[#EFEFEF]">Tunai</p>
+                    <p className="font-louis text-[#EFEFEF]">
+                      {numberFormat(total + estimated.biaya + biayaLayanan)}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-row items-center justify-between gap-x-3">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="scale-150"
+                  >
+                    <path
+                      d="M18.9474 16.3333V17.3889C18.9474 17.9488 18.7256 18.4858 18.3308 18.8817C17.9359 19.2776 17.4005 19.5 16.8421 19.5H2.10526C1.54691 19.5 1.01143 19.2776 0.616617 18.8817C0.221804 18.4858 0 17.9488 0 17.3889V2.61111C0 2.05121 0.221804 1.51424 0.616617 1.11833C1.01143 0.72242 1.54691 0.5 2.10526 0.5H16.8421C17.4005 0.5 17.9359 0.72242 18.3308 1.11833C18.7256 1.51424 18.9474 2.05121 18.9474 2.61111V3.66667H9.47368C8.91533 3.66667 8.37985 3.88909 7.98504 4.285C7.59023 4.68091 7.36842 5.21788 7.36842 5.77778V14.2222C7.36842 14.7821 7.59023 15.3191 7.98504 15.715C8.37985 16.1109 8.91533 16.3333 9.47368 16.3333M9.47368 14.2222H20V5.77778H9.47368M13.6842 11.5833C13.2654 11.5833 12.8638 11.4165 12.5677 11.1196C12.2716 10.8227 12.1053 10.4199 12.1053 10C12.1053 9.58007 12.2716 9.17735 12.5677 8.88041C12.8638 8.58348 13.2654 8.41667 13.6842 8.41667C14.103 8.41667 14.5046 8.58348 14.8007 8.88041C15.0968 9.17735 15.2632 9.58007 15.2632 10C15.2632 10.4199 15.0968 10.8227 14.8007 11.1196C14.5046 11.4165 14.103 11.5833 13.6842 11.5833Z"
+                      fill="#F6C73B"
+                    />
+                    <path
+                      d="M2.32197 9.05527C2.40695 9.05527 2.47599 8.98991 2.47893 8.90825C2.47599 8.82659 2.40695 8.76123 2.32197 8.76123C2.237 8.76123 2.16794 8.82659 2.16504 8.90825C2.16793 8.98991 2.23699 9.05527 2.32197 9.05527Z"
                       fill="#212121"
                     />
                     <path
-                      d="M5.0291 7.10498C4.70077 7.10498 4.43457 7.37189 4.43457 7.70113C4.43457 8.03035 4.7008 8.29729 5.0291 8.29729C5.3574 8.29729 5.6236 8.03035 5.6236 7.70113C5.6236 7.37189 5.3574 7.10498 5.0291 7.10498ZM5.02907 8.1347C4.79027 8.1347 4.59668 7.94716 4.59668 7.71574C4.59668 7.71081 4.59736 7.70601 4.59752 7.70113C4.59736 7.69626 4.59668 7.69143 4.59668 7.68653C4.59668 7.45511 4.7903 7.26757 5.02907 7.26757C5.26787 7.26757 5.46144 7.45511 5.46144 7.68653C5.46144 7.69143 5.46087 7.69626 5.46074 7.70113C5.4609 7.70601 5.46144 7.71081 5.46144 7.71574C5.46141 7.94716 5.26787 8.1347 5.02907 8.1347Z"
+                      d="M2.32166 8.69165C2.20227 8.69165 2.10547 8.78871 2.10547 8.90843C2.10547 9.02815 2.20228 9.12522 2.32166 9.12522C2.44104 9.12522 2.53784 9.02815 2.53784 8.90843C2.53784 8.78871 2.44104 8.69165 2.32166 8.69165ZM2.32165 9.06609C2.23481 9.06609 2.16442 8.9979 2.16442 8.91374C2.16442 8.91195 2.16466 8.91021 2.16472 8.90843C2.16466 8.90666 2.16442 8.90491 2.16442 8.90312C2.16442 8.81897 2.23482 8.75077 2.32165 8.75077C2.40849 8.75077 2.47888 8.81897 2.47888 8.90312C2.47888 8.90491 2.47867 8.90666 2.47862 8.90843C2.47868 8.91021 2.47888 8.91195 2.47888 8.91374C2.47887 8.9979 2.40849 9.06609 2.32165 9.06609Z"
                       fill="#212121"
                     />
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_2222_5786">
-                      <rect
-                        width="1.72946"
-                        height="1.73426"
-                        fill="white"
-                        transform="translate(4.14355 6.83374)"
+                    <path
+                      d="M4.69996 11.0449L3.56401 11.7765C3.74249 11.9329 4.18718 12.1874 4.53813 11.9547C4.88907 11.722 4.76599 11.1879 4.69996 11.0449Z"
+                      fill="#212121"
+                      stroke="#212121"
+                      stroke-width="0.234713"
+                      stroke-linecap="round"
+                    />
+                    <path
+                      d="M3.84808 8.20337C4.02335 8.20337 4.16575 8.06857 4.17181 7.90015C4.16575 7.73173 4.02335 7.59692 3.84808 7.59692C3.67283 7.59692 3.53039 7.73173 3.52441 7.90015C3.53037 8.06857 3.67281 8.20337 3.84808 8.20337Z"
+                      fill="#212121"
+                    />
+                    <path
+                      d="M3.84824 7.45288C3.602 7.45288 3.40234 7.65307 3.40234 7.9C3.40234 8.14691 3.60202 8.34711 3.84824 8.34711C4.09447 8.34711 4.29412 8.14691 4.29412 7.9C4.29412 7.65307 4.09447 7.45288 3.84824 7.45288ZM3.84822 8.22517C3.66912 8.22517 3.52393 8.08451 3.52393 7.91095C3.52393 7.90725 3.52443 7.90365 3.52455 7.9C3.52443 7.89634 3.52393 7.89272 3.52393 7.88904C3.52393 7.71548 3.66914 7.57482 3.84822 7.57482C4.02732 7.57482 4.17249 7.71548 4.17249 7.88904C4.17249 7.89272 4.17207 7.89634 4.17197 7.9C4.17209 7.90365 4.17249 7.90725 4.17249 7.91095C4.17247 8.08451 4.02732 8.22517 3.84822 8.22517Z"
+                      fill="#212121"
+                    />
+                    <path
+                      d="M2.93669 8.53655C3.04519 8.53655 3.13334 8.4531 3.1371 8.34884C3.13334 8.24458 3.04519 8.16113 2.93669 8.16113C2.8282 8.16113 2.74003 8.24458 2.73633 8.34884C2.74002 8.4531 2.82819 8.53655 2.93669 8.53655Z"
+                      fill="#212121"
+                    />
+                    <path
+                      d="M2.93716 8.07202C2.78473 8.07202 2.66113 8.19595 2.66113 8.34881C2.66113 8.50166 2.78474 8.62559 2.93716 8.62559C3.08959 8.62559 3.21318 8.50166 3.21318 8.34881C3.21318 8.19595 3.08959 8.07202 2.93716 8.07202ZM2.93715 8.55011C2.82628 8.55011 2.7364 8.46303 2.7364 8.35559C2.7364 8.3533 2.73671 8.35107 2.73679 8.34881C2.73671 8.34654 2.7364 8.3443 2.7364 8.34203C2.7364 8.23458 2.82629 8.14751 2.93715 8.14751C3.04802 8.14751 3.13789 8.23458 3.13789 8.34203C3.13789 8.3443 3.13763 8.34654 3.13757 8.34881C3.13764 8.35107 3.13789 8.3533 3.13789 8.35559C3.13788 8.46303 3.04802 8.55011 2.93715 8.55011Z"
+                      fill="#212121"
+                    />
+                    <path
+                      d="M3.32743 11.587C3.53746 10.4685 3.41369 9.83719 3.19137 9.69696L3.37019 9.63805C3.77428 10.7008 3.68804 11.2352 3.67985 11.4265C3.6363 11.6113 3.50926 11.657 3.472 11.6679C3.3444 11.7296 3.32245 11.6397 3.32743 11.587Z"
+                      fill="#212121"
+                      stroke="#212121"
+                      stroke-width="0.117356"
+                    />
+                    <path
+                      d="M4.454 8.98331C3.49635 9.48669 4.0842 10.4859 4.49783 10.9226C4.53031 10.9467 4.54517 10.9386 4.6395 10.8658C4.6649 10.8301 4.47618 10.5254 4.4515 10.4894C4.1216 10.0077 3.87313 9.14882 4.81032 8.94396L4.454 8.98331Z"
+                      fill="#212121"
+                      stroke="#212121"
+                      stroke-width="0.117356"
+                    />
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M4.48704 9.11905L4.3593 8.93064C4.33236 8.87378 4.32524 8.81107 4.33643 8.75181C4.38162 8.51253 4.7122 8.32732 4.99764 8.38109C5.15523 8.41078 5.25882 8.56331 5.22892 8.72164C5.17476 9.00841 4.88273 9.25038 4.64427 9.20546C4.58535 9.19436 4.52989 9.1649 4.48704 9.11905Z"
+                      fill="#212121"
+                    />
+                    <path
+                      d="M2.82227 9.17456L3.02327 9.65096C3.04002 9.69066 3.12214 9.74942 3.31663 9.66682M3.31663 9.66682C3.51112 9.58423 3.52624 9.48418 3.50949 9.44448L3.30849 8.96808M3.31663 9.66682L3.06538 9.07132"
+                      stroke="#212121"
+                      stroke-width="0.352069"
+                      stroke-linecap="round"
+                    />
+                    <g clip-path="url(#clip0_2222_5786)">
+                      <path
+                        d="M5.02921 8.10499C5.2629 8.10499 5.45277 7.92525 5.46085 7.70069C5.45277 7.47613 5.2629 7.29639 5.02921 7.29639C4.79554 7.29639 4.60563 7.47613 4.59766 7.70069C4.6056 7.92525 4.79552 8.10499 5.02921 8.10499Z"
+                        fill="#212121"
                       />
-                    </clipPath>
-                  </defs>
-                </svg>
-                <div className="flex flex-col items-start justify-center">
-                  <p className="font-literata text-[#EFEFEF]">Footies Point</p>
-                  <p className="font-louis text-[#EFEFEF]">3.458</p>
+                      <path
+                        d="M5.0291 7.10498C4.70077 7.10498 4.43457 7.37189 4.43457 7.70113C4.43457 8.03035 4.7008 8.29729 5.0291 8.29729C5.3574 8.29729 5.6236 8.03035 5.6236 7.70113C5.6236 7.37189 5.3574 7.10498 5.0291 7.10498ZM5.02907 8.1347C4.79027 8.1347 4.59668 7.94716 4.59668 7.71574C4.59668 7.71081 4.59736 7.70601 4.59752 7.70113C4.59736 7.69626 4.59668 7.69143 4.59668 7.68653C4.59668 7.45511 4.7903 7.26757 5.02907 7.26757C5.26787 7.26757 5.46144 7.45511 5.46144 7.68653C5.46144 7.69143 5.46087 7.69626 5.46074 7.70113C5.4609 7.70601 5.46144 7.71081 5.46144 7.71574C5.46141 7.94716 5.26787 8.1347 5.02907 8.1347Z"
+                        fill="#212121"
+                      />
+                    </g>
+                    <defs>
+                      <clipPath id="clip0_2222_5786">
+                        <rect
+                          width="1.72946"
+                          height="1.73426"
+                          fill="white"
+                          transform="translate(4.14355 6.83374)"
+                        />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                  <div className="flex flex-col items-start justify-center">
+                    <p className="font-literata text-[#EFEFEF]">
+                      Footies Wallet
+                    </p>
+                    <p className="font-louis text-[#EFEFEF]">
+                      {numberFormat(total + estimated.biaya + biayaLayanan)}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <svg
-                width="10"
-                height="10"
-                viewBox="0 0 10 10"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="scale-150"
-              >
-                <path
-                  d="M9.375 4.375H5.625V0.625C5.625 0.45924 5.55915 0.300269 5.44194 0.183058C5.32473 0.0658481 5.16576 0 5 0C4.83424 0 4.67527 0.0658481 4.55806 0.183058C4.44085 0.300269 4.375 0.45924 4.375 0.625V4.375H0.625C0.45924 4.375 0.300269 4.44085 0.183058 4.55806C0.0658481 4.67527 0 4.83424 0 5C0 5.16576 0.0658481 5.32473 0.183058 5.44194C0.300269 5.55915 0.45924 5.625 0.625 5.625H4.375V9.375C4.375 9.54076 4.44085 9.69973 4.55806 9.81694C4.67527 9.93415 4.83424 10 5 10C5.16576 10 5.32473 9.93415 5.44194 9.81694C5.55915 9.69973 5.625 9.54076 5.625 9.375V5.625H9.375C9.54076 5.625 9.69973 5.55915 9.81694 5.44194C9.93415 5.32473 10 5.16576 10 5C10 4.83424 9.93415 4.67527 9.81694 4.55806C9.69973 4.44085 9.54076 4.375 9.375 4.375Z"
-                  fill="#EFEFEF"
-                />
-              </svg>
-
-              <div className="flex flex-row items-center justify-between gap-x-3">
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="scale-150"
-                >
-                  <path
-                    d="M19 2H1C0.734784 2 0.48043 2.10536 0.292893 2.29289C0.105357 2.48043 0 2.73478 0 3V17C0 17.2652 0.105357 17.5196 0.292893 17.7071C0.48043 17.8946 0.734784 18 1 18H19C19.2652 18 19.5196 17.8946 19.7071 17.7071C19.8946 17.5196 20 17.2652 20 17V3C20 2.73478 19.8946 2.48043 19.7071 2.29289C19.5196 2.10536 19.2652 2 19 2ZM18 13C17.2044 13 16.4413 13.3161 15.8787 13.8787C15.3161 14.4413 15 15.2044 15 16H5C5 15.2044 4.68393 14.4413 4.12132 13.8787C3.55871 13.3161 2.79565 13 2 13V7C2.79565 7 3.55871 6.68393 4.12132 6.12132C4.68393 5.55871 5 4.79565 5 4H15C15 4.79565 15.3161 5.55871 15.8787 6.12132C16.4413 6.68393 17.2044 7 18 7V13Z"
-                    fill="#F6C73B"
-                  />
-                  <path
-                    d="M10 6C7.794 6 6 7.794 6 10C6 12.206 7.794 14 10 14C12.206 14 14 12.206 14 10C14 7.794 12.206 6 10 6ZM10 12C8.897 12 8 11.103 8 10C8 8.897 8.897 8 10 8C11.103 8 12 8.897 12 10C12 11.103 11.103 12 10 12Z"
-                    fill="#F6C73B"
-                  />
-                </svg>
-
-                <div className="flex flex-col items-start justify-center">
-                  <p className="font-literata text-[#EFEFEF]">Tunai</p>
-                  <p className="font-louis text-[#EFEFEF]">3.458</p>
-                </div>
-              </div>
+              )}
             </div>
             <svg
               width="22"
@@ -543,8 +474,10 @@ const Cart = ({
               />
             </svg>
           </div>
-          <button className="mx-auto block w-full rounded-lg bg-primary-300 py-5 font-louis text-xl">
-            {" "}
+          <button
+            onClick={() => bayar()}
+            className="mx-auto block w-full rounded-lg bg-primary-300 py-5 font-louis text-xl"
+          >
             Pesan Sekarang
           </button>
         </div>
@@ -554,3 +487,148 @@ const Cart = ({
 };
 
 export default Cart;
+
+const CartItem = ({
+  id,
+  name,
+  price,
+  image,
+  desc,
+  count,
+  last,
+  merchantId,
+}: {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  desc?: string;
+  count: number;
+  last: boolean;
+  merchantId: string;
+}) => {
+  // const [count, setCount] = useState(quantity);
+
+  const addToCart = api.transaction.addToCart.useMutation();
+
+  const { refetch: cartRefetch } = api.transaction.getCart.useQuery({
+    mitraId: merchantId,
+  });
+
+  const handleIncrement = async () => {
+    await addToCart.mutateAsync({
+      productId: id,
+      add: true,
+      merchantId,
+    });
+
+    await cartRefetch();
+  };
+
+  const handleDecrement = async () => {
+    if (count > 0) {
+      await addToCart.mutateAsync({
+        productId: id,
+        add: false,
+        merchantId,
+      });
+
+      await cartRefetch();
+    }
+  };
+
+  return (
+    <>
+      <div className="flex flex-row items-start justify-between pb-4">
+        <div className="flex flex-row gap-x-5">
+          <Image
+            src={image}
+            alt=""
+            width={100}
+            height={100}
+            className="aspect-square"
+          />
+          <div className="flex flex-col gap-y-1">
+            <p className="font-literata text-xl text-white">{name}</p>
+            {desc && <p className="font-louis text-white">{desc}</p>}
+          </div>
+        </div>
+        <p className="mt-1 font-louis text-white">{numberFormat(price)}</p>
+      </div>
+      <div className="flex flex-row items-center justify-between pb-8">
+        <div className="flex flex-row gap-x-5">
+          <svg
+            width="15"
+            height="19"
+            viewBox="0 0 15 19"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="scale-150 hover:cursor-pointer"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M2.39986 0.444336H12.3997C13.5042 0.444336 14.3996 1.33977 14.3996 2.44434V16.4443C14.3996 17.5489 13.5042 18.4443 12.3997 18.4443H2.39986C1.29532 18.4443 0.399902 17.5489 0.399902 16.4443V2.44434C0.399902 1.33977 1.29532 0.444336 2.39986 0.444336ZM4.39937 3.58815C3.9268 3.58815 3.54371 3.97124 3.54371 4.4438C3.54371 4.91636 3.9268 5.29945 4.39937 5.29945H10.3992C10.8718 5.29945 11.2549 4.91636 11.2549 4.4438C11.2549 3.97124 10.8718 3.58815 10.3992 3.58815H4.39937ZM3.54371 8.44414C3.54371 7.97158 3.9268 7.58849 4.39937 7.58849H10.3992C10.8718 7.58849 11.2549 7.97158 11.2549 8.44414C11.2549 8.9167 10.8718 9.29979 10.3992 9.29979H4.39937C3.9268 9.29979 3.54371 8.9167 3.54371 8.44414ZM4.39951 11.5887C3.92695 11.5887 3.54386 11.9718 3.54386 12.4443C3.54386 12.9169 3.92695 13.3 4.39951 13.3H8.39943C8.872 13.3 9.25508 12.9169 9.25508 12.4443C9.25508 11.9718 8.872 11.5887 8.39943 11.5887H4.39951Z"
+              fill="#F6C73B"
+            />
+          </svg>
+
+          <p className="font-louis text-white">Notes</p>
+        </div>
+        <div className="flex flex-row items-center gap-x-3">
+          <svg
+            width="23"
+            height="27"
+            viewBox="0 0 23 27"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className={`${
+              count === 0 ? "hidden" : "block hover:cursor-pointer"
+            }`}
+            onClick={handleDecrement}
+          >
+            <path
+              d="M22.8033 13.4672C22.8033 7.41018 17.8931 2.5 11.8361 2.5C5.77908 2.5 0.868896 7.41018 0.868896 13.4672V13.4673C0.868896 19.5243 5.77908 24.4345 11.8361 24.4345C17.8931 24.4345 22.8033 19.5243 22.8033 13.4673V13.4672Z"
+              fill="#F6C73B"
+            />
+            <path
+              d="M16.5313 14.706H13.1395H10.7705H7.37866V12.5166H10.7705H13.1395H16.5313V14.706Z"
+              fill="#2F2D2D"
+            />
+          </svg>
+
+          <p
+            className={`font-louis text-white ${
+              count === 0 ? "hidden" : "block"
+            }`}
+          >
+            {count}
+          </p>
+          <svg
+            width="23"
+            height="27"
+            viewBox="0 0 23 27"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="cursor-pointer"
+            onClick={handleIncrement}
+          >
+            <rect
+              x="0.868896"
+              y="2.5"
+              width="21.9344"
+              height="21.9345"
+              rx="10.9672"
+              fill="#F6C73B"
+            />
+            <path
+              d="M16.5312 14.7058H13.1394V18.1874H10.7704V14.7058H7.37858V12.5164H10.7704V9.03476H13.1394V12.5164H16.5312V14.7058Z"
+              fill="#2F2D2D"
+            />
+          </svg>
+        </div>
+      </div>
+      {!last && <hr className="border-1 h-1 border-primary-300 pb-8" />}
+    </>
+  );
+};

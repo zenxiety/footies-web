@@ -1,12 +1,13 @@
 import { useRouter } from "next/router";
-import { useForm, UseFormSetValue } from "react-hook-form";
+import type { UseFormSetValue } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { api } from "../../../utils/api";
 import { useState } from "react";
 import { useFormData } from "../../../context/FormContext";
 import "@fortawesome/fontawesome-free/css/all.css";
 import type { SignUpFormValues } from "../../../pages/auth/signup";
 import MapboxMap from "../../Map";
-import { FieldValues } from "react-hook-form/dist/types";
+import type { FieldValues } from "react-hook-form/dist/types";
 export default function Biodata({
   prevFormStep,
   formStep,
@@ -15,7 +16,6 @@ export default function Biodata({
   formStep: number;
 }) {
   const { data, setFormValues } = useFormData<SignUpFormValues>();
-  const [error, setError] = useState("");
 
   const {
     handleSubmit,
@@ -34,7 +34,7 @@ export default function Biodata({
         email: data.email,
         password: data.password,
         telepon: values.telepon,
-        alamat: values.alamat,
+        alamat: coord,
       })
       .then(async () => {
         setFormValues({});
@@ -133,7 +133,7 @@ export default function Biodata({
         </div>
         <div className="relative z-0 flex font-louis">
           <input
-            {...register("alamat", { required: true, minLength: 10 })}
+            {...register("alamat", { required: true, minLength: 5 })}
             type="text"
             value={getValues("alamat")}
             className="peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 pr-5 text-others-white focus:border-primary-300 focus:outline-none focus:ring-0"
@@ -195,7 +195,7 @@ export default function Biodata({
           <label>
             <input
               type="checkbox"
-              {...register("remember")}
+              {...register("checkbox")}
               // checked={isChecked}
               // onChange={handleCheckboxChange}
               className="peer hidden"
@@ -254,7 +254,7 @@ export default function Biodata({
           <button
             type="submit"
             className="h-[6vh] w-1/2 rounded-md bg-[#F4B829] font-louis"
-            onClick={() => router.push("/auth/signin")}
+            // onClick={() => router.push("/auth/signin")}
           >
             Daftar
           </button>

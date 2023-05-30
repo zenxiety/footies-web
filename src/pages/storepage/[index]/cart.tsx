@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Cartlist from "../components/cartlist/cartlist";
-import Payment from "../components/cartlist/payment";
-import Promo from "../components/cartlist/promo";
-import Ketentuan from "../components/cartlist/ketentuan";
+import Cartlist from "../../../components/cartlist/cartlist";
+import Payment from "../../../components/cartlist/payment";
+import Promo from "../../../components/cartlist/promo";
+import Ketentuan from "../../../components/cartlist/ketentuan";
 
 const Cart = () => {
   const [page, setPage] = useState(0);
