@@ -43,7 +43,12 @@ export const transactionRouter = createTRPCRouter({
         },
       },
       include: {
-        User: true,
+        Merchant: true,
+        User: {
+          include: {
+            Alamat: true,
+          },
+        },
         Cart: {
           include: {
             CartMenu: {
@@ -58,6 +63,69 @@ export const transactionRouter = createTRPCRouter({
 
     return data;
   }),
+
+  getOrder: protectedProcedure
+    .input(
+      z.object({
+        orderId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.prisma.order.findUnique({
+        where: {
+          id: input.orderId,
+        },
+        include: {
+          Mitra: {
+            include: {
+              user: {
+                select: {
+                  image: true,
+                  name: true,
+                },
+              },
+              Kendaraan: {
+                select: {
+                  platNomor: true,
+                },
+              },
+            },
+          },
+          User: {
+            include: {
+              Alamat: true,
+            },
+          },
+          Merchant: true,
+          Cart: {
+            include: {
+              CartMenu: {
+                include: {
+                  Menu: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return data;
+    }),
+
+  finishOrderMitra: protectedProcedureMitra
+    .input(z.object({ orderId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const data = await ctx.prisma.order.update({
+        where: {
+          id: input.orderId,
+        },
+        data: {
+          status: "done",
+        },
+      });
+
+      return data;
+    }),
 
   acceptOrderMerchant: protectedProcedureMerchant
     .input(z.object({ orderId: z.string() }))
@@ -190,6 +258,17 @@ export const transactionRouter = createTRPCRouter({
           CartMenu: {
             include: {
               Menu: true,
+            },
+          },
+          user: {
+            include: {
+              Alamat: true,
+            },
+          },
+          merchant: {
+            select: {
+              alamat: true,
+              nama: true,
             },
           },
         },

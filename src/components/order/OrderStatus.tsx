@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Map from "../Map";
 import type { FieldValues, UseFormSetValue } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import type { SignUpFormValues } from "../../pages/auth/signup";
+import { useRouter } from "next/router";
+import { api } from "../../utils/api";
+import { distance, numberFormat } from "../../utils/transactions";
 
 const OrderStatus = ({
   rating,
@@ -12,6 +15,8 @@ const OrderStatus = ({
   rating: () => void;
   formStep: number;
 }) => {
+  const router = useRouter();
+  const { index } = router.query;
   const [hidden, setHidden] = useState(false);
   const hiddenClick = () => {
     setHidden(!hidden);
@@ -19,8 +24,85 @@ const OrderStatus = ({
   const [lng, setLng] = useState(110.37767682106005);
   const [lat, setLat] = useState(-7.770797393657097);
   const [location, setLocation] = useState("");
+  const [locationMerchant, setLocationMerchant] = useState("");
   const [coord, setCoord] = useState("");
   const { setValue } = useForm<SignUpFormValues>();
+
+  const getOrder = api.transaction.getOrder.useQuery({
+    orderId: index as string,
+  });
+
+  const lng_lat = getOrder.data?.User.Alamat[0]?.alamat.split(",");
+  const lng_latMerchant = getOrder.data?.Merchant?.alamat.split(",");
+  const [estimated, setEstimated] = useState({
+    time: 0,
+    distance: 0,
+    biaya: 0,
+  });
+
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    setStep(
+      getOrder.data?.status == "done"
+        ? 3
+        : getOrder.data?.mitraId
+        ? 2
+        : getOrder.data?.status == "accepted"
+        ? 1
+        : 0
+    );
+
+    if (getOrder.data?.status == "done") {
+      return rating();
+    }
+  }, [getOrder.data]);
+
+  useEffect(() => {
+    fetch(
+      `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&featureTypes=&location=${lng_lat![1]!}%2C${lng_lat![0]!}`
+    )
+      .then((res) => res.json())
+      .then((data: { address: { Match_addr: string } }) =>
+        setLocation(data.address.Match_addr)
+      )
+      .catch((e) => console.log(e));
+
+    fetch(
+      `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&featureTypes=&location=${lng_latMerchant![1]!}%2C${lng_latMerchant![0]!}`
+    )
+      .then((res) => res.json())
+      .then((data: { address: { Match_addr: string } }) =>
+        setLocationMerchant(data.address.Match_addr)
+      )
+      .catch((e) => console.log(e));
+
+    const distance = estimatedTime();
+    setEstimated({
+      time: parseFloat(distance.time),
+      distance: parseFloat(distance.distance),
+      biaya: parseFloat(distance.distance) * 5000,
+    });
+  }, []);
+
+  const estimatedTime = () => {
+    const x = distance({
+      lat1: parseFloat(lng_lat![1]!),
+      lon1: parseFloat(lng_lat![0]!),
+      lat2: parseFloat(lng_latMerchant![1]!),
+      lon2: parseFloat(lng_latMerchant![0]!),
+      unit: "K",
+    });
+    const speed = 30;
+    const time = (x / speed) * 60;
+    return { time: time.toFixed(2), distance: x.toFixed(2) };
+  };
+
+  const total =
+    getOrder.data?.Cart?.CartMenu.reduce((acc, curr) => {
+      return acc + (curr.qty * curr.Menu.harga || 0);
+    }, 0) || 0;
+  const biayaLayanan = 4000;
 
   return (
     <div hidden={formStep != 0}>
@@ -130,49 +212,59 @@ const OrderStatus = ({
                 Processing your order...
               </h1>
               <h1 className="font-louis text-lg text-white">
-                Restoran akan menerima pesananmu
+                {step == 0
+                  ? "Restoran akan menerima pesananmu"
+                  : step == 1
+                  ? "Sedang mencari driver"
+                  : step == 2
+                  ? "Pesananmu sedang dalam perjalanan"
+                  : "Pesananmu telah sampai"}
               </h1>
             </div>
           </div>
         </div>
         <div className={`${hidden ? "block" : "hidden"}`}>
-          <div className="mx-5 my-8 rounded-xl border-2 border-primary-300 bg-[#1a1a1a] p-5">
-            <div className="flex flex-row items-center justify-between">
-              <h1 className="font-literata text-xl font-semibold text-white">
-                Richardus Ferdian
-              </h1>
-              <svg
-                width="27"
-                height="27"
-                viewBox="0 0 27 27"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="scale-150"
-              >
-                <rect y="2" width="25" height="25" rx="10" fill="#F6C73B" />
-                <g clip-path="url(#clip0_2636_7046)">
-                  <path
-                    d="M17.8 9H8.2C7.54 9 7.006 9.54 7.006 10.2L7 21L9.4 18.6H17.8C18.46 18.6 19 18.06 19 17.4V10.2C19 9.54 18.46 9 17.8 9ZM9.4 13.2H16.6V14.4H9.4V13.2ZM14.2 16.2H9.4V15H14.2V16.2ZM16.6 12.6H9.4V11.4H16.6V12.6Z"
-                    fill="#1A1A1A"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_2636_7046">
-                    <rect x="7" y="9" width="12" height="12" fill="white" />
-                  </clipPath>
-                </defs>
-              </svg>
-            </div>
-            <div className="flex flex-row gap-x-3 pt-8">
-              <Image src="/assets/ferdi.png" width={75} height={50} alt="" />
-              <div className="flex flex-col justify-center">
-                <h1 className="font-louis text-lg font-bold text-white">
-                  AD 1111 KI
+          {getOrder.data?.mitraId && (
+            <div className="mx-5 my-8 rounded-xl border-2 border-primary-300 bg-[#1a1a1a] p-5">
+              <div className="flex flex-row items-center justify-between">
+                <h1 className="font-literata text-xl font-semibold text-white">
+                  {getOrder.data.Mitra?.user.name}
                 </h1>
-                <h1 className="font-louis text-lg text-white">ID : D-696969</h1>
+                <svg
+                  width="27"
+                  height="27"
+                  viewBox="0 0 27 27"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="scale-150"
+                >
+                  <rect y="2" width="25" height="25" rx="10" fill="#F6C73B" />
+                  <g clip-path="url(#clip0_2636_7046)">
+                    <path
+                      d="M17.8 9H8.2C7.54 9 7.006 9.54 7.006 10.2L7 21L9.4 18.6H17.8C18.46 18.6 19 18.06 19 17.4V10.2C19 9.54 18.46 9 17.8 9ZM9.4 13.2H16.6V14.4H9.4V13.2ZM14.2 16.2H9.4V15H14.2V16.2ZM16.6 12.6H9.4V11.4H16.6V12.6Z"
+                      fill="#1A1A1A"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_2636_7046">
+                      <rect x="7" y="9" width="12" height="12" fill="white" />
+                    </clipPath>
+                  </defs>
+                </svg>
+              </div>
+              <div className="flex flex-row gap-x-3 pt-8">
+                <Image src="/assets/ferdi.png" width={75} height={50} alt="" />
+                <div className="flex flex-col justify-center">
+                  <h1 className="font-louis text-lg font-bold text-white">
+                    {getOrder.data.Mitra?.Kendaraan?.platNomor}
+                  </h1>
+                  <h1 className="font-louis text-lg text-white">
+                    ID : {getOrder.data.Mitra?.id}
+                  </h1>
+                </div>
               </div>
             </div>
-          </div>
+          )}
           <div className="mx-5 my-8 rounded-xl border-2 border-primary-300 bg-[#1a1a1a] p-5">
             <h1 className="font-literata text-xl font-semibold text-white">
               Rincian Pengiriman
@@ -223,7 +315,7 @@ const OrderStatus = ({
                   Alamat Restoran
                 </h1>
                 <h1 className="font-louis text-lg text-white">
-                  Nasi Goreng Seafood 23, Pandega Marta
+                  {locationMerchant}
                 </h1>
               </div>
             </div>
@@ -256,32 +348,34 @@ const OrderStatus = ({
                 <h1 className="font-louis text-lg text-primary-300">
                   Alamat Pengiriman
                 </h1>
-                <h1 className="font-louis text-lg text-white">
-                  Jl. Jalan sama kamu tapi apa mungkin
-                </h1>
+                <h1 className="font-louis text-lg text-white">{location}</h1>
               </div>
             </div>
             <div className="flex flex-row justify-between pt-5">
               <h1 className="font-louis text-lg text-primary-300">
                 Estimasi Jarak
               </h1>
-              <h1 className="font-louis text-lg text-white">2.2 Km</h1>
+              <h1 className="font-louis text-lg text-white">
+                {estimated.distance} Km
+              </h1>
             </div>
           </div>
           <div className="mx-5 my-8 rounded-xl border-2 border-primary-300 bg-[#1a1a1a] p-5">
             <h1 className="pb-8 font-literata text-xl font-semibold text-white">
-              5 Produk
+              {getOrder.data?.Cart?.CartMenu.length} Produk
             </h1>
             <div className="flex flex-row justify-between">
               <h1 className="font-literata text-xl text-white">
-                Nasi Goreng Kerang Ijo
+                {getOrder.data?.Cart?.CartMenu[0]?.Menu.nama}
               </h1>
-              <h1 className="font-louis text-xl text-white">1</h1>
+              <h1 className="font-louis text-xl text-white">
+                {getOrder.data?.Cart?.CartMenu[0]?.qty}
+              </h1>
             </div>
-            <h1 className="py-1 font-louis text-white">
+            {/* <h1 className="py-1 font-louis text-white">
               • Level pedas : Tidak pedas
             </h1>
-            <h1 className="font-louis text-white">• Es batu : Less ice</h1>
+            <h1 className="font-louis text-white">• Es batu : Less ice</h1> */}
             <h1 className="pt-2 font-louis text-primary-300">
               Lihat Detail Pesanan &gt;
             </h1>
@@ -292,24 +386,30 @@ const OrderStatus = ({
             </h1>
             <div className="mb-4 flex flex-row justify-between gap-x-5 text-lg">
               <h1 className=" font-literata font-light text-white">
-                Harga (2 menu)
+                Harga ({getOrder.data?.Cart?.CartMenu.length} menu)
               </h1>
 
-              <h1 className=" font-literata font-light text-white">51.000</h1>
+              <h1 className=" font-literata font-light text-white">
+                {numberFormat(total)}
+              </h1>
             </div>
             <div className="mb-4 flex flex-row justify-between gap-x-5 text-lg">
               <h1 className=" font-literata font-light text-white">
                 Biaya Pengiriman
               </h1>
 
-              <h1 className=" font-literata font-light text-white">11.000</h1>
+              <h1 className=" font-literata font-light text-white">
+                {numberFormat(estimated.biaya)}
+              </h1>
             </div>
             <div className="mb-4 flex flex-row justify-between gap-x-5 text-lg">
               <h1 className=" font-literata font-light text-white">
                 Biaya Layanan
               </h1>
 
-              <h1 className=" font-literata font-light text-white">4.000</h1>
+              <h1 className=" font-literata font-light text-white">
+                {numberFormat(biayaLayanan)}
+              </h1>
             </div>
             <hr className="border-1 h-1 border-primary-300 py-4" />
             <div className="mb-4 flex flex-row justify-between gap-x-5 text-lg">
@@ -318,17 +418,18 @@ const OrderStatus = ({
               </h1>
 
               <h1 className=" font-literata text-xl font-light text-white">
-                66.000
+                {numberFormat(total + estimated.biaya + biayaLayanan)}
               </h1>
             </div>
           </div>
         </div>
-        <div
-          className="mx-5 my-6 cursor-pointer rounded-xl bg-[#B2371E] p-5 text-center font-louis text-xl text-white"
-          onClick={() => rating()}
+        <button
+          className="mt-6 w-full rounded-xl bg-[#B2371E] p-5 text-center font-louis text-xl text-white disabled:bg-[#B2371E]/50"
+          // onClick={() => rating()}
+          disabled={step != 0}
         >
           Batalkan Pesanan
-        </div>
+        </button>
       </div>
     </div>
   );

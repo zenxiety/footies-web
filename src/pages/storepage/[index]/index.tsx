@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
-import MapboxMap from "../../components/Map";
-import data from "../../components/homepage/data.json";
+import MapboxMap from "../../../components/Map";
+import data from "../../../components/homepage/data.json";
 import "@fortawesome/fontawesome-free/css/all.css";
 import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { Navigation, Pagination, EffectCoverflow, Autoplay } from "swiper";
@@ -12,9 +12,9 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "swiper/css/effect-coverflow";
-import { api } from "../../utils/api";
+import { api } from "../../../utils/api";
 import { useForm } from "react-hook-form";
-import Navbar from "../../components/Navbarbuyer";
+import Navbar from "../../../components/Navbarbuyer";
 
 export default function Produk() {
   const router = useRouter();
@@ -315,18 +315,21 @@ export default function Produk() {
                 {numberFormat(total || 0)}
               </h1>
               <button
-                onClick={async () => {
-                  await createOrder.mutateAsync({
-                    cartId: cartItem.id,
-                    MetodePembayaran: "WALLET",
-                    mitraId: index as string,
-                    total: total || 0,
-                  });
+                // onClick={async () => {
+                //   await createOrder.mutateAsync({
+                //     cartId: cartItem.id,
+                //     MetodePembayaran: "WALLET",
+                //     mitraId: index as string,
+                //     total: total || 0,
+                //   });
 
-                  if (createOrder.isError) {
-                    alert(createOrder.error);
-                  }
-                }}
+                //   if (createOrder.isError) {
+                //     alert(createOrder.error);
+                //   }
+                // }}
+                onClick={() =>
+                  router.push(`/storepage/${index as string}/cart`)
+                }
                 className="font-regular rounded-full bg-primary-300 px-3 py-1 font-louis"
               >
                 <h1 className="">Checkout &#62;</h1>

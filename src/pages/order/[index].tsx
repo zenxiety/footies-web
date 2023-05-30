@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import Map from "../components/Map";
-import OrderStatus from "../components/order/OrderStatus";
-import Rating from "../components/order/Rating";
+import Map from "../../components/Map";
+import OrderStatus from "../../components/order/OrderStatus";
+import Rating from "../../components/order/Rating";
 import type { FieldValues, UseFormSetValue } from "react-hook-form";
 import { useForm } from "react-hook-form";
-import type { SignUpFormValues } from "./auth/signup";
+import type { SignUpFormValues } from "../auth/signup";
 
 const Order = () => {
   const [lng, setLng] = useState(110.37767682106005);
@@ -12,9 +12,7 @@ const Order = () => {
   const [location, setLocation] = useState("");
   const [coord, setCoord] = useState("");
   const [page, setPage] = useState(0);
-  const { 
-    setValue,
-  } = useForm<SignUpFormValues>();
+  const { setValue } = useForm<SignUpFormValues>();
   if (page === 0) {
     return (
       <>
