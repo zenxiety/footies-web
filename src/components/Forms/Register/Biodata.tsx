@@ -1,12 +1,13 @@
 import { useRouter } from "next/router";
-import { useForm, UseFormSetValue } from "react-hook-form";
+import type { UseFormSetValue } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { api } from "../../../utils/api";
 import { useState } from "react";
 import { useFormData } from "../../../context/FormContext";
 import "@fortawesome/fontawesome-free/css/all.css";
 import type { SignUpFormValues } from "../../../pages/auth/signup";
 import MapboxMap from "../../Map";
-import { FieldValues } from "react-hook-form/dist/types";
+import type { FieldValues } from "react-hook-form/dist/types";
 export default function Biodata({
   prevFormStep,
   formStep,
@@ -15,7 +16,6 @@ export default function Biodata({
   formStep: number;
 }) {
   const { data, setFormValues } = useFormData<SignUpFormValues>();
-  const [error, setError] = useState("");
 
   const {
     handleSubmit,
