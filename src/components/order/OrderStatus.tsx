@@ -59,31 +59,33 @@ const OrderStatus = ({
   }, [getOrder.data]);
 
   useEffect(() => {
-    fetch(
-      `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&featureTypes=&location=${lng_lat![1]!}%2C${lng_lat![0]!}`
-    )
-      .then((res) => res.json())
-      .then((data: { address: { Match_addr: string } }) =>
-        setLocation(data.address.Match_addr)
+    if (lng_lat && lng_latMerchant) {
+      fetch(
+        `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&featureTypes=&location=${lng_lat![1]!}%2C${lng_lat![0]!}`
       )
-      .catch((e) => console.log(e));
+        .then((res) => res.json())
+        .then((data: { address: { Match_addr: string } }) =>
+          setLocation(data.address.Match_addr)
+        )
+        .catch((e) => console.log(e));
 
-    fetch(
-      `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&featureTypes=&location=${lng_latMerchant![1]!}%2C${lng_latMerchant![0]!}`
-    )
-      .then((res) => res.json())
-      .then((data: { address: { Match_addr: string } }) =>
-        setLocationMerchant(data.address.Match_addr)
+      fetch(
+        `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&featureTypes=&location=${lng_latMerchant![1]!}%2C${lng_latMerchant![0]!}`
       )
-      .catch((e) => console.log(e));
+        .then((res) => res.json())
+        .then((data: { address: { Match_addr: string } }) =>
+          setLocationMerchant(data.address.Match_addr)
+        )
+        .catch((e) => console.log(e));
 
-    const distance = estimatedTime();
-    setEstimated({
-      time: parseFloat(distance.time),
-      distance: parseFloat(distance.distance),
-      biaya: parseFloat(distance.distance) * 5000,
-    });
-  }, []);
+      const distance = estimatedTime();
+      setEstimated({
+        time: parseFloat(distance.time),
+        distance: parseFloat(distance.distance),
+        biaya: parseFloat(distance.distance) * 5000,
+      });
+    }
+  }, [getOrder.data]);
 
   const estimatedTime = () => {
     const x = distance({

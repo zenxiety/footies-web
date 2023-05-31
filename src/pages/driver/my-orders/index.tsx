@@ -10,6 +10,7 @@ import Navbar from "../../../components/Navbardriver";
 import DetailRute from "../../../components/driver/DetailRute";
 import { distance, numberFormat } from "../../../utils/transactions";
 import { api } from "../../../utils/api";
+import { get } from "http";
 
 const MyOrders = () => {
   const [roles, setRoles] = useState<Role>("MITRA");
@@ -73,6 +74,7 @@ const MyOrders = () => {
     selectedOrder[0]?.Merchant?.alamat.split(",") ||
     totalOrderPending[0]?.Merchant?.alamat.split(",");
   useEffect(() => {
+    if (!lng_lat || !lng_latMerchant) return;
     fetch(
       `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&featureTypes=&location=${lng_lat![1]!}%2C${lng_lat![0]!}`
     )
@@ -97,7 +99,7 @@ const MyOrders = () => {
       distance: parseFloat(distance.distance),
       biaya: parseFloat(distance.distance) * 5000,
     });
-  }, []);
+  }, [getOrder.data]);
 
   const estimatedTime = () => {
     const x = distance({
