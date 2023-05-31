@@ -61,14 +61,17 @@ const MyOrders = () => {
         item.status == "accepted" && item.mitraId == getMitraId.data?.Mitra?.id
     ) || [];
 
-  const lng_lat = selectedOrder[0]?.User.Alamat[0]?.alamat.split(",");
-  const lng_latMerchant = selectedOrder[0]?.Merchant?.alamat.split(",");
   const [estimated, setEstimated] = useState({
     time: 0,
     distance: 0,
     biaya: 0,
   });
-
+  const lng_lat =
+    selectedOrder[0]?.User.Alamat[0]?.alamat.split(",") ||
+    totalOrderPending[0]?.User.Alamat[0]?.alamat.split(",");
+  const lng_latMerchant =
+    selectedOrder[0]?.Merchant?.alamat.split(",") ||
+    totalOrderPending[0]?.Merchant?.alamat.split(",");
   useEffect(() => {
     fetch(
       `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&featureTypes=&location=${lng_lat![1]!}%2C${lng_lat![0]!}`
@@ -168,8 +171,8 @@ const MyOrders = () => {
                   </div>
                   <p className="font-bold">
                     <span className="text-primary-300">Restoran</span>
-                    <span className="mx-[.3em]">:</span>Burger Klenger,
-                    Tegalrejo
+                    <span className="mx-[.3em]">:</span>
+                    {item.Merchant?.nama}
                   </p>
                   <div className="mt-3">
                     <div className="flex">
@@ -184,7 +187,7 @@ const MyOrders = () => {
                         <p className="text-xs leading-none text-secondary-100">
                           Alamat Restoran
                         </p>
-                        <p>Burger Klenger, Tegalrejo</p>
+                        <p>{locationMerchant}</p>
                       </div>
                     </div>
                     <div className="my-2 flex w-5 flex-col items-center justify-center gap-y-[2px]">
@@ -204,13 +207,9 @@ const MyOrders = () => {
                       />
                       <div className="ml-4">
                         <p className="max-h-[1em] overflow-hidden text-xs leading-none text-secondary-100">
-                          Alamat Tujuan • 2.0 KM
+                          Alamat Tujuan • {estimated.distance} KM
                         </p>
-                        <p className="">
-                          Jl. Jalan Sama Kamu Tapi Apa Mung... Jl. Jalan Sama
-                          Kamu Tapi Apa Mung...Jl. Jalan Sama Kamu Tapi Apa
-                          Mung...
-                        </p>
+                        <p className="">{location}</p>
                       </div>
                     </div>
                     <button
@@ -399,6 +398,11 @@ const MyOrders = () => {
           setCancel={setCancel}
           setComplete={setComplete}
           setDetailPesanan={setDetailPesanan}
+          estimated={estimated}
+          location={{
+            customer: location,
+            merchant: locationMerchant,
+          }}
           onClick={async () => {
             await acceptOrder.mutateAsync({
               orderId: getOrder.data?.filter(

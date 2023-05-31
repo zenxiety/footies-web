@@ -20,6 +20,8 @@ const PesananMasuk = ({
   setDetailPesanan,
   data,
   onClick,
+  estimated,
+  location,
 }: {
   roles: string;
   pop: boolean;
@@ -34,6 +36,15 @@ const PesananMasuk = ({
     | RouterOutput["transaction"]["getOrderMitra"][0]
     | RouterOutput["transaction"]["getOrderMerchant"][0];
   onClick?: () => void;
+  estimated: {
+    distance: number;
+    time: number;
+    biaya: number;
+  };
+  location: {
+    merchant: string;
+    customer: string;
+  };
 }) => {
   useEffect(() => {
     if (pop) {
@@ -102,14 +113,11 @@ const PesananMasuk = ({
         ) : (
           <>
             <p className="mt-2 text-xs font-bold text-white">Alamat Restoran</p>
-            <p className="font-bold">Burger Klenger, Tegalrejo</p>
+            <p className="font-bold">{location.merchant}</p>
             <p className="mt-1 text-xs font-bold text-white">
-              Alamat Tujuan • 2,0 KM
+              Alamat Tujuan • {estimated.distance} KM
             </p>
-            <p className="font-bold">
-              Jl. Jalan Sama Kamu Tapi Apa MungkinJl. Jalan Sama Kamu Tapi Apa
-              Mungkin
-            </p>
+            <p className="font-bold">{location.customer}</p>
             <p className="mt-2">{numberFormat(data?.total || 0)}</p>
           </>
         )}
