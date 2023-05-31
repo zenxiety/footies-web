@@ -124,6 +124,17 @@ export const transactionRouter = createTRPCRouter({
         },
       });
 
+      if (data.MetodePembayaran === "CASH") {
+        await ctx.prisma.user.update({
+          where: {
+            id: data.userId,
+          },
+          data: {
+            isOrder: false,
+          },
+        });
+      }
+
       return data;
     }),
 
