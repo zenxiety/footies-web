@@ -23,6 +23,8 @@ const OrderStatus = ({
   };
   const [lng, setLng] = useState(110.37767682106005);
   const [lat, setLat] = useState(-7.770797393657097);
+  const [lngMerchant, setLngMerchant] = useState(110.37067682106005);
+  const [latMerchant, setLatMerchant] = useState(-7.779797393657097);
   const [location, setLocation] = useState("");
   const [locationMerchant, setLocationMerchant] = useState("");
   const [coord, setCoord] = useState("");
@@ -39,6 +41,17 @@ const OrderStatus = ({
     distance: 0,
     biaya: 0,
   });
+
+  useEffect(() => {
+    if (lng_lat && lng_latMerchant) {
+      setLng(lng_lat![0])!;
+      setLat(lng_lat![1])!;
+      setLngMerchant(lng_latMerchant![0])!;
+      setLatMerchant(lng_latMerchant![1])!;
+    }
+  }, []);
+
+  const markers: object[] = [];
 
   const [step, setStep] = useState(0);
 
@@ -114,6 +127,8 @@ const OrderStatus = ({
           coord={coord}
           lat={lat}
           lng={lng}
+          latMerchant={latMerchant}
+          lngMerchant={lngMerchant}
           location={location}
           setLat={setLat}
           setLng={setLng}
@@ -121,6 +136,7 @@ const OrderStatus = ({
           initialOptions={{}}
           checked={false}
           setValue={setValue as unknown as UseFormSetValue<FieldValues>}
+          markers={markers}
         />
       </div>
       <div

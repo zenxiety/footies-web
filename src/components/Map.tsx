@@ -17,6 +17,8 @@ type props = {
   onMapLoaded?: (map: mapboxgl.Map) => void;
   lat: number;
   lng: number;
+  latMerchant: number;
+  lngMerchant: number;
   coord: string;
   location: string;
   setLat: Dispatch<SetStateAction<number>>;
@@ -35,6 +37,8 @@ const MapboxMap = ({
   onMapLoaded,
   lat,
   lng,
+  latMerchant,
+  lngMerchant,
   coord,
   location,
   setLat,
@@ -69,16 +73,14 @@ const MapboxMap = ({
       zoom: 16,
       ...initialOptions,
     });
+
     setMap(mapboxMap);
     if (onMapLoaded) mapboxMap.once("load", onMapLoaded);
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((pos) => {
-        console.log(pos.coords);
         const lat1 = pos.coords.latitude;
         const lng1 = pos.coords.longitude;
-        console.log(lat, lng);
-        console.log(lat1, lng1);
         mapboxMap.flyTo({ center: [lng1, lat1] });
         setLat(() => pos.coords.latitude);
         setLng(() => pos.coords.longitude);
@@ -93,13 +95,60 @@ const MapboxMap = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const [route, setRoute] = useState<GeoJSON.Position[]>([]);
+
+  useEffect(() => {
+    fetch(
+      `https://api.mapbox.com/directions/v5/mapbox/driving/${lng},${lat};${lngMerchant},${latMerchant}?geometries=geojson&access_token=${ACCESS_TOKEN}`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        const data2 = data.routes[0];
+        setRoute(data2.geometry.coordinates);
+      })
+      .catch((e) => console.log(e));
+  }, [map]);
+
+  useEffect(() => {
+    if (lngMerchant && latMerchant) {
+      map?.on("load", () => {
+        new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
+        new mapboxgl.Marker().setLngLat([lngMerchant, latMerchant]).addTo(map);
+      });
+      map?.on("load", () => {
+        map?.addLayer({
+          id: "route",
+          type: "line",
+          source: {
+            type: "geojson",
+            data: {
+              type: "Feature",
+              properties: {},
+              geometry: {
+                type: "LineString",
+                coordinates: route,
+              },
+            },
+          },
+          layout: {
+            "line-join": "round",
+            "line-cap": "round",
+          },
+          paint: {
+            "line-color": "#ff0000",
+            "line-width": 5,
+            "line-opacity": 0.75,
+          },
+        });
+      });
+    }
+  }, [map, route, lat, lng, latMerchant, lngMerchant]);
+
   useEffect(() => {
     if (!map) return; // wait for map to initialize
     map.on("dragend", () => {
       setLat(map.getCenter().lat);
       setLng(map.getCenter().lng);
-      console.log(map.getCenter().lat);
-      console.log(map.getCenter().lng);
     });
   }, [map]);
 

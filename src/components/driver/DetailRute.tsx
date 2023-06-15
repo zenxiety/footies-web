@@ -1,9 +1,11 @@
 import Image from "next/image";
 import { FieldValues, UseFormSetValue, useForm } from "react-hook-form";
 import MapboxMap from "../Map";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SellerFormValues } from "../../pages/auth/signup/seller";
 import { Dispatch, SetStateAction } from "react";
+import { useRouter } from "next/router";
+import { api } from "../../utils/api";
 
 const DetailRute = ({
   rute,
@@ -19,9 +21,29 @@ const DetailRute = ({
     setValue,
     getValues,
   } = useForm<SellerFormValues>();
+  const router = useRouter();
+  const { index } = router.query;
 
-  const [lat, setLat] = useState(-7.770797393657097);
+  const getOrder = api.transaction.getOrder.useQuery({
+    orderId: index as string,
+  });
+
   const [lng, setLng] = useState(110.37767682106005);
+  const [lat, setLat] = useState(-7.770797393657097);
+  const [lngMerchant, setLngMerchant] = useState(110.37067682106005);
+  const [latMerchant, setLatMerchant] = useState(-7.779797393657097);
+  const lng_lat = getOrder.data?.User.Alamat[0]?.alamat.split(",");
+  const lng_latMerchant = getOrder.data?.Merchant?.alamat.split(",");
+
+  useEffect(() => {
+    if (lng_lat) {
+      setLng(lng_lat![0])!;
+      setLat(lng_lat![1])!;
+      setLngMerchant(lng_latMerchant![0])!;
+      setLatMerchant(lng_latMerchant![1])!;
+    }
+  }, []);
+
   const [location, setLocation] = useState("");
   const [coord, setCoord] = useState("");
 
@@ -61,6 +83,8 @@ const DetailRute = ({
             <MapboxMap
               lat={lat}
               lng={lng}
+              latMerchant={latMerchant}
+              lngMerchant={lngMerchant}
               coord={coord}
               location={location}
               setLat={setLat}

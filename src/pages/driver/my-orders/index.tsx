@@ -158,7 +158,7 @@ const MyOrders = () => {
         </div>
 
         <div className="mt-4 flex h-full flex-col justify-between bg-secondary-400 px-5 py-4 pb-20">
-          <span className="text-xl font-bold">Pesanan Masuk</span>;
+          <span className="text-xl font-bold">Pesanan Masuk</span>
           {getOrder.data?.map((item) => {
             if (item.status == "accepted" && item.mitraId == null) {
               return (

@@ -240,6 +240,9 @@ const MyOrders = () => {
             setCancel={setCancel}
             setComplete={setComplete}
             setDetailPesanan={setDetailPesanan}
+            estimated={null}
+            location={null}
+            onClick={() => {}}
           />
           <PesananBatal cancel={cancel} setCancel={setCancel} />
           <PesananSelesai complete={complete} setComplete={setComplete} />
