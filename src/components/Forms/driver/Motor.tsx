@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ChangeEvent, useCallback } from "react";
+import { ChangeEvent, MouseEvent, useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Controller, useForm } from "react-hook-form";
 import { useFormData } from "../../../context/FormContext";
@@ -21,6 +21,8 @@ export default function Motor({
   const signUp = api.auth.registerMitra.useMutation();
 
   const onSubmit = (values: DriverFormValues) => {
+    const finalPlate = plate.join(" ").toLowerCase();
+    setValue("platNomor", finalPlate);
     signUp
       .mutateAsync({
         ...data,
@@ -42,10 +44,31 @@ export default function Motor({
     getValues,
   } = useForm<DriverFormValues>({ mode: "all" });
 
+  const plate: string[] = [];
+
+  const handlePlateFirst = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+
+    plate[0] = e.target.value;
+    console.log(plate);
+  };
   const handlePlateNum = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
     if (e.currentTarget.value.length > 4) {
       e.currentTarget.value = e.currentTarget.value.slice(0, 4);
     }
+    plate[1] = e.target.value;
+    console.log(plate);
+  };
+  const handlePlateLast = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+
+    plate[2] = e.target.value;
+    console.log(plate);
+  };
+
+  const test = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+    e.preventDefault();
   };
 
   return (
@@ -73,14 +96,16 @@ export default function Motor({
         </h4>
         <div className="mx-auto mt-[.25em] flex justify-center gap-x-4 px-14">
           <input
-            {...register("platNomor", { required: true })}
+            // {...register("platNomor", { required: true })}
             type="text"
+            onChange={(e) => handlePlateFirst(e)}
             className="w-[10%] border-b border-others-white bg-transparent text-center font-louis text-base font-normal uppercase text-others-white focus:outline-none"
             maxLength={2}
             autoComplete="off"
             placeholder="XX"
           />
           <input
+            // {...register("platNomor", { required: true })}
             type="number"
             onChange={(e) => handlePlateNum(e)}
             className="w-[22%] border-b border-others-white bg-transparent text-center font-louis text-base font-normal text-others-white focus:outline-none"
@@ -88,13 +113,18 @@ export default function Motor({
             placeholder="0000"
           />
           <input
+            // {...register("platNomor", { required: true })}
             type="text"
+            onChange={(e) => handlePlateLast(e)}
             className="w-[15%] border-b border-others-white bg-transparent text-center font-louis text-base font-normal uppercase text-others-white focus:outline-none"
             maxLength={3}
             autoComplete="off"
             placeholder="XXX"
           />
         </div>
+        <button type="button" onClick={(e) => test(e)}>
+          Test
+        </button>
         <h4
           className={`mt-[1em] text-base duration-500 ${
             getValues("merk") ? "text-primary-300" : "text-secondary-100"

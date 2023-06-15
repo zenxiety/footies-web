@@ -94,7 +94,7 @@ export default function Dashboard() {
                 {roles == "MITRA" ? (
                   <>
                     <div className="mt-1 flex flex-col items-center justify-center rounded-sm border bg-secondary-400 px-3 py-1">
-                      <span className="text-[18px]">
+                      <span className="text-[18px] uppercase">
                         {mitraData.data?.Mitra?.Kendaraan?.platNomor}
                       </span>
                       <p className="text-[0.5rem]">
