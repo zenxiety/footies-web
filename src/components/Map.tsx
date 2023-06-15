@@ -17,8 +17,8 @@ type props = {
   onMapLoaded?: (map: mapboxgl.Map) => void;
   lat: number;
   lng: number;
-  latMerchant: number;
-  lngMerchant: number;
+  latMerchant?: number;
+  lngMerchant?: number;
   coord: string;
   location: string;
   setLat: Dispatch<SetStateAction<number>>;
@@ -98,12 +98,18 @@ const MapboxMap = ({
   const [route, setRoute] = useState<GeoJSON.Position[]>([]);
 
   useEffect(() => {
-    fetch(
-      `https://api.mapbox.com/directions/v5/mapbox/driving/${lng},${lat};${lngMerchant},${latMerchant}?geometries=geojson&access_token=${ACCESS_TOKEN}`
-    )
+    console.log(lng, lat, lngMerchant, latMerchant);
+
+    const link =
+      lngMerchant && latMerchant
+        ? `https://api.mapbox.com/directions/v5/mapbox/driving/${lng},${lat};${lngMerchant},${latMerchant}?geometries=geojson&access_token=${ACCESS_TOKEN}`
+        : `https://api.mapbox.com/directions/v5/mapbox/driving/${lng},${lat}?geometries=geojson&access_token=${ACCESS_TOKEN}`;
+    fetch(link)
       .then((res) => res.json())
       .then((data) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         const data2 = data.routes[0];
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
         setRoute(data2.geometry.coordinates);
       })
       .catch((e) => console.log(e));
@@ -111,11 +117,14 @@ const MapboxMap = ({
 
   useEffect(() => {
     if (lngMerchant && latMerchant) {
+      console.log("te");
       map?.on("load", () => {
         new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
         new mapboxgl.Marker().setLngLat([lngMerchant, latMerchant]).addTo(map);
       });
       map?.on("load", () => {
+        if (map?.getLayer("route")) map?.removeLayer("route");
+        if (map?.getSource("route")) map?.removeSource("route");
         map?.addLayer({
           id: "route",
           type: "line",

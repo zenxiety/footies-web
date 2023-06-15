@@ -21,10 +21,10 @@ const OrderStatus = ({
   const hiddenClick = () => {
     setHidden(!hidden);
   };
-  const [lng, setLng] = useState(110.37767682106005);
-  const [lat, setLat] = useState(-7.770797393657097);
-  const [lngMerchant, setLngMerchant] = useState(110.37067682106005);
-  const [latMerchant, setLatMerchant] = useState(-7.779797393657097);
+  const [lng, setLng] = useState(110.377676);
+  const [lat, setLat] = useState(-7.770797);
+  const [lngMerchant, setLngMerchant] = useState(110.370676);
+  const [latMerchant, setLatMerchant] = useState(-7.779797);
   const [location, setLocation] = useState("");
   const [locationMerchant, setLocationMerchant] = useState("");
   const [coord, setCoord] = useState("");
@@ -43,11 +43,25 @@ const OrderStatus = ({
   });
 
   useEffect(() => {
-    if (lng_lat && lng_latMerchant) {
-      setLng(lng_lat![0])!;
-      setLat(lng_lat![1])!;
-      setLngMerchant(lng_latMerchant![0])!;
-      setLatMerchant(lng_latMerchant![1])!;
+    // if (lng_lat && lng_latMerchant) {
+    //   setLng(lng_lat![0])!;
+    //   setLat(lng_lat![1])!;
+    //   setLngMerchant(lng_latMerchant![0])!;
+    //   setLatMerchant(lng_latMerchant![1])!;
+    // }
+
+    if (
+      lng_lat &&
+      lng_latMerchant &&
+      lng_lat[0] &&
+      lng_lat[1] &&
+      lng_latMerchant[0] &&
+      lng_latMerchant[1]
+    ) {
+      setLng(parseFloat(lng_lat[1]));
+      setLat(parseFloat(lng_lat[0]));
+      setLngMerchant(parseFloat(lng_latMerchant[1]));
+      setLatMerchant(parseFloat(lng_latMerchant[0]));
     }
   }, []);
 
@@ -74,7 +88,7 @@ const OrderStatus = ({
   useEffect(() => {
     if (lng_lat && lng_latMerchant) {
       fetch(
-        `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&featureTypes=&location=${lng_lat![1]!}%2C${lng_lat![0]!}`
+        `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&featureTypes=&location=${lng_lat[1]!}%2C${lng_lat[0]!}`
       )
         .then((res) => res.json())
         .then((data: { address: { Match_addr: string } }) =>
@@ -83,7 +97,7 @@ const OrderStatus = ({
         .catch((e) => console.log(e));
 
       fetch(
-        `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&featureTypes=&location=${lng_latMerchant![1]!}%2C${lng_latMerchant![0]!}`
+        `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=pjson&featureTypes=&location=${lng_latMerchant[1]!}%2C${lng_latMerchant[0]!}`
       )
         .then((res) => res.json())
         .then((data: { address: { Match_addr: string } }) =>
@@ -136,7 +150,6 @@ const OrderStatus = ({
           initialOptions={{}}
           checked={false}
           setValue={setValue as unknown as UseFormSetValue<FieldValues>}
-          markers={markers}
         />
       </div>
       <div

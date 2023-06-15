@@ -28,19 +28,40 @@ const DetailRute = ({
     orderId: index as string,
   });
 
-  const [lng, setLng] = useState(110.37767682106005);
-  const [lat, setLat] = useState(-7.770797393657097);
-  const [lngMerchant, setLngMerchant] = useState(110.37067682106005);
-  const [latMerchant, setLatMerchant] = useState(-7.779797393657097);
+  const [lng, setLng] = useState(110.377);
+  const [lat, setLat] = useState(-7.77);
+  const [lngMerchant, setLngMerchant] = useState(110.37);
+  const [latMerchant, setLatMerchant] = useState(-7.779);
   const lng_lat = getOrder.data?.User.Alamat[0]?.alamat.split(",");
   const lng_latMerchant = getOrder.data?.Merchant?.alamat.split(",");
 
   useEffect(() => {
-    if (lng_lat) {
-      setLng(lng_lat![0])!;
-      setLat(lng_lat![1])!;
-      setLngMerchant(lng_latMerchant![0])!;
-      setLatMerchant(lng_latMerchant![1])!;
+    // if (lng_lat) {
+    //   console.log(lng_lat);
+    //   setLng(lng_lat![1])!;
+    //   setLat(lng_lat![0])!;
+    //   setLngMerchant(lng_latMerchant![1])!;
+    //   setLatMerchant(lng_latMerchant![0])!;
+    // }
+
+    if (
+      lng_lat &&
+      lng_latMerchant &&
+      lng_lat[0] &&
+      lng_lat[1] &&
+      lng_latMerchant[0] &&
+      lng_latMerchant[1]
+    ) {
+      console.log(
+        parseFloat(parseFloat(lng_lat[0]).toFixed(3)),
+        parseFloat(parseFloat(lng_lat[1]).toFixed(3)),
+        parseFloat(parseFloat(lng_latMerchant[0]).toFixed(3)),
+        parseFloat(parseFloat(lng_latMerchant[1]).toFixed(3))
+      );
+      setLng(parseFloat(parseFloat(lng_lat[1]).toFixed(3)));
+      setLat(parseFloat(parseFloat(lng_lat[0]).toFixed(3)));
+      setLngMerchant(parseFloat(parseFloat(lng_latMerchant[1]).toFixed(3)));
+      setLatMerchant(parseFloat(parseFloat(lng_latMerchant[0]).toFixed(3)));
     }
   }, []);
 

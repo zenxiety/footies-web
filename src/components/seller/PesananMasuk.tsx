@@ -36,12 +36,12 @@ const PesananMasuk = ({
     | RouterOutput["transaction"]["getOrderMitra"][0]
     | RouterOutput["transaction"]["getOrderMerchant"][0];
   onClick?: () => void;
-  estimated: {
+  estimated?: {
     distance: number;
     time: number;
     biaya: number;
   };
-  location: {
+  location?: {
     merchant: string;
     customer: string;
   };
@@ -113,11 +113,11 @@ const PesananMasuk = ({
         ) : (
           <>
             <p className="mt-2 text-xs font-bold text-white">Alamat Restoran</p>
-            <p className="font-bold">{location.merchant}</p>
+            <p className="font-bold">{location?.merchant}</p>
             <p className="mt-1 text-xs font-bold text-white">
-              Alamat Tujuan • {estimated.distance} KM
+              Alamat Tujuan • {estimated?.distance} KM
             </p>
-            <p className="font-bold">{location.customer}</p>
+            <p className="font-bold">{location?.customer}</p>
             <p className="mt-2">{numberFormat(data?.total || 0)}</p>
           </>
         )}
