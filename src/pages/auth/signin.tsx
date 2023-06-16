@@ -37,7 +37,7 @@ const SignIn: NextPage = () => {
       redirect: false,
     });
 
-    if (res && !res?.error) return await router.push("/");
+    if (res && !res?.error) return await router.push("/dashboard");
     setError(res?.error as string);
     return setTimeout(() => {
       setError("");
@@ -74,7 +74,7 @@ const SignIn: NextPage = () => {
                   pattern: passDigital,
                 })}
                 type="text"
-                className={`peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:outline-none focus:ring-0 ${
+                className={`peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent px-0 py-2.5 text-others-white focus:outline-none focus:ring-0 ${
                   errors.email
                     ? "focus:border-red-500"
                     : "focus:border-primary-300"
@@ -98,7 +98,7 @@ const SignIn: NextPage = () => {
               <input
                 type={passwordVisible ? "text" : "password"}
                 {...register("password", { required: true })}
-                className={`peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent py-2.5 px-0 text-others-white focus:outline-none focus:ring-0 ${
+                className={`peer block w-full appearance-none border-0 border-b-2 border-secondary-200 bg-transparent px-0 py-2.5 text-others-white focus:outline-none focus:ring-0 ${
                   errors.password
                     ? "focus:border-red-500"
                     : "focus:border-primary-300"
