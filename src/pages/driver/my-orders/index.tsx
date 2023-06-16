@@ -20,7 +20,7 @@ const MyOrders = () => {
   const [complete, setComplete] = useState(false);
   const [detailPesanan, setDetailPesanan] = useState(false);
 
-  const [menerimaPesanan, setMenerimaPesanan] = useState(false);
+  const [menerimaPesanan, setMenerimaPesanan] = useState(true);
   const [rute, setRute] = useState(false);
 
   const [sectionIdx, setSectionIdx] = useState(0);
@@ -378,10 +378,6 @@ const MyOrders = () => {
                     >
                       Selesaikan
                     </button>
-                    <div className="absolute bottom-4 h-1 w-full bg-secondary-300"></div>
-                    <div
-                      className={`countdown absolute bottom-4 h-1 bg-white`}
-                    ></div>
                   </div>
                 </>
               );
