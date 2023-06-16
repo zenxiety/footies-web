@@ -98,8 +98,6 @@ const MapboxMap = ({
   const [route, setRoute] = useState<GeoJSON.Position[]>([]);
 
   useEffect(() => {
-    console.log(lng, lat, lngMerchant, latMerchant);
-
     const link =
       lngMerchant && latMerchant
         ? `https://api.mapbox.com/directions/v5/mapbox/driving/${lng},${lat};${lngMerchant},${latMerchant}?geometries=geojson&access_token=${ACCESS_TOKEN}`
@@ -117,7 +115,6 @@ const MapboxMap = ({
 
   useEffect(() => {
     if (lngMerchant && latMerchant) {
-      console.log("te");
       map?.on("load", () => {
         new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map);
         new mapboxgl.Marker().setLngLat([lngMerchant, latMerchant]).addTo(map);

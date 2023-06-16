@@ -38,7 +38,6 @@ export async function getServerSideProps(ctx: CreateNextContextOptions) {
     transformer: superjson,
   });
   const data = await ssg.auth.checkRegister.fetch();
-  console.log(data);
   return {
     props: {
       data,

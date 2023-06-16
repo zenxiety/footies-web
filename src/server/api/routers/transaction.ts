@@ -195,8 +195,6 @@ export const transactionRouter = createTRPCRouter({
         throw new Error("User sudah memiliki order");
       }
 
-      console.log("MASUK SINI");
-
       // TODO: USE TRANSACTION
       if (input.MetodePembayaran === "WALLET") {
         const user = await ctx.prisma.user.findUnique({
@@ -238,9 +236,6 @@ export const transactionRouter = createTRPCRouter({
           status: "pending",
         },
       });
-      console.log("--- Create Order ---");
-
-      console.log(data);
 
       if (input.MetodePembayaran === "CASH") {
         await ctx.prisma.user.update({
@@ -285,8 +280,6 @@ export const transactionRouter = createTRPCRouter({
         },
       });
 
-      console.log(data);
-
       return data;
     }),
 
@@ -315,8 +308,6 @@ export const transactionRouter = createTRPCRouter({
       });
 
       let data;
-
-      console.log(isAlreadyInCart);
 
       if (isAlreadyInCart && isAlreadyInCart.CartMenu.length > 0) {
         data = await ctx.prisma.cartMenu.update({

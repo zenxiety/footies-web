@@ -43,9 +43,8 @@ const Promo = () => {
       <div className="h-full w-full overflow-hidden rounded-xl bg-secondary-500">
         <Swiper
           // scrollbar={{ draggable: false }}
-          onSwiper={(swiper) => console.log(swiper)}
+          // onSwiper={(swiper) => console.log(swiper)}
           className="my-6 h-[150%]"
-         
           modules={[Navigation, Pagination, EffectCoverflow, Autoplay]}
           slidesPerView={1.5}
           spaceBetween={30}
@@ -64,7 +63,6 @@ const Promo = () => {
           direction="horizontal"
           centeredSlides={true}
           pagination={true}
-          
         >
           {data.map(({ image }, i) => {
             return (
@@ -109,7 +107,15 @@ const Promo = () => {
             />
           </svg>
         </div>
-        <Image src="/assets/promo.png" alt="" width={500} height={700} className={`${active ? 'block rounded-xl' : 'hidden'} py-5 duration-300 rounded-xl`}/>
+        <Image
+          src="/assets/promo.png"
+          alt=""
+          width={500}
+          height={700}
+          className={`${
+            active ? "block rounded-xl" : "hidden"
+          } rounded-xl py-5 duration-300`}
+        />
       </div>
     </>
   );

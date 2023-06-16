@@ -136,8 +136,6 @@ export const authOptions: NextAuthOptions = {
           user.password ?? ""
         );
 
-        console.log(credentials.password, user.password);
-
         if (!isPasswordCorrect) throw new Error(ErrorCode.IncorrectPassword);
 
         return user || null;

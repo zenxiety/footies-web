@@ -52,12 +52,6 @@ const DetailRute = ({
       lng_latMerchant[0] &&
       lng_latMerchant[1]
     ) {
-      console.log(
-        parseFloat(parseFloat(lng_lat[0]).toFixed(3)),
-        parseFloat(parseFloat(lng_lat[1]).toFixed(3)),
-        parseFloat(parseFloat(lng_latMerchant[0]).toFixed(3)),
-        parseFloat(parseFloat(lng_latMerchant[1]).toFixed(3))
-      );
       setLng(parseFloat(parseFloat(lng_lat[1]).toFixed(3)));
       setLat(parseFloat(parseFloat(lng_lat[0]).toFixed(3)));
       setLngMerchant(parseFloat(parseFloat(lng_latMerchant[1]).toFixed(3)));
@@ -132,7 +126,7 @@ const DetailRute = ({
               <p>Burger Klenger, Tegalrejo</p>
             </div>
           </div>
-          <div className="my-2 mx-4 flex w-5 flex-col items-center justify-center gap-y-[2px]">
+          <div className="mx-4 my-2 flex w-5 flex-col items-center justify-center gap-y-[2px]">
             <div className="h-1 w-1 rounded-full bg-white"></div>
             <div className="h-1 w-1 rounded-full bg-white"></div>
             <div className="h-1 w-1 rounded-full bg-white"></div>
@@ -162,7 +156,7 @@ const DetailRute = ({
             <span className="">2.0 Km</span>
           </div>
           <div className="mt-6 px-4">
-            <div className="relative -mx-4 flex justify-between bg-secondary-400 px-4 pt-6 pb-10">
+            <div className="relative -mx-4 flex justify-between bg-secondary-400 px-4 pb-10 pt-6">
               <button>
                 <Image
                   src="/assets/cancel.svg"
@@ -172,7 +166,7 @@ const DetailRute = ({
                   quality={100}
                 />
               </button>
-              <button className="rounded-full bg-primary-300 py-2 px-4 font-bold text-secondary-400">
+              <button className="rounded-full bg-primary-300 px-4 py-2 font-bold text-secondary-400">
                 Terima
               </button>
               <div className="absolute bottom-4 h-1 w-[calc(100%-2rem)] bg-secondary-300"></div>

@@ -41,7 +41,6 @@ export default function Item({
       .then(async (res) => {
         setItemPopup(0);
         await getMenu.refetch();
-        console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -58,7 +57,6 @@ export default function Item({
       .then(async (res) => {
         setItemPopup(0);
         await getMenu.refetch();
-        console.log(res);
       })
       .catch((err) => {
         console.log(err);
@@ -88,7 +86,7 @@ export default function Item({
                 ((menu?.harga ?? 0) * parseInt(menu?.promo ?? "0")) / 100}
               <span className="relative ml-2 text-secondary-200">
                 {menu?.harga}
-                <span className="absolute top-[55%] left-0 right-0 h-[2px] w-full bg-secondary-200" />
+                <span className="absolute left-0 right-0 top-[55%] h-[2px] w-full bg-secondary-200" />
               </span>
             </p>
             <div className="mt-1 flex w-[50px] flex-col items-center">

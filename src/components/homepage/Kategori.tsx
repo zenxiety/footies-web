@@ -49,7 +49,6 @@ const Terdekat = () => {
         <h1 className="px-5 font-literata text-2xl text-white">Kategori</h1>
         <Swiper
           // scrollbar={{ draggable: true }}
-          onSwiper={(swiper) => console.log(swiper)}
           className="bullets my-12 flex h-full w-full flex-col justify-center bg-secondary-300 px-5"
           modules={[Navigation, Pagination, EffectCoverflow, Autoplay]}
           slidesPerView={4}

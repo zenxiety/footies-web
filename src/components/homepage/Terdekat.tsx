@@ -55,12 +55,12 @@ const Terdekat = () => {
   return (
     <>
       <div className="mt-12 h-full w-full overflow-hidden rounded-xl bg-secondary-300 pt-5">
-        <h1 className="font-literata text-2xl text-white px-5">
+        <h1 className="px-5 font-literata text-2xl text-white">
           Restoran Terdekat
         </h1>
         <Swiper
           // scrollbar={{ draggable: true }}
-          onSwiper={(swiper) => console.log(swiper)}
+          // onSwiper={(swiper) => console.log(swiper)}
           className="bullets my-12 flex h-full w-full flex-col justify-start bg-secondary-300 px-5"
           onSlideChange={(swiper) => setSwiperIndex(swiper.realIndex)}
           modules={[Navigation, Pagination, EffectCoverflow, Autoplay]}

@@ -51,7 +51,7 @@ const PageOne = ({
         </h1>
         <Swiper
           // scrollbar={{ draggable: true }}
-          onSwiper={(swiper) => console.log(swiper)}
+          // onSwiper={(swiper) => console.log(swiper)}
           className="bullets my-5 flex h-full w-full flex-col justify-start bg-secondary-500 px-5"
           // onSlideChange={(swiper) => setSwiperIndex(swiper.realIndex)}
           modules={[Navigation, Pagination, EffectCoverflow, Autoplay]}

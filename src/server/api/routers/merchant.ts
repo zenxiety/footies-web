@@ -43,7 +43,6 @@ export const merchantRouter = createTRPCRouter({
           },
         },
       });
-      console.log(data);
       return data;
     }),
 
@@ -55,7 +54,6 @@ export const merchantRouter = createTRPCRouter({
         },
       },
     });
-    console.log(data);
     return data;
   }),
 
@@ -89,7 +87,6 @@ export const merchantRouter = createTRPCRouter({
           id: input,
         },
       });
-      console.log(data);
       return data;
     }),
 
@@ -121,7 +118,6 @@ export const merchantRouter = createTRPCRouter({
           kategori: input.label?.toLowerCase().trimEnd(),
         },
       });
-      console.log(data);
       return data;
     }),
 
@@ -133,7 +129,6 @@ export const merchantRouter = createTRPCRouter({
           id: input,
         },
       });
-      console.log(data);
       return data;
     }),
 
@@ -169,7 +164,6 @@ export const merchantRouter = createTRPCRouter({
           },
         },
       });
-      console.log(newData);
       return newData;
     }),
 });

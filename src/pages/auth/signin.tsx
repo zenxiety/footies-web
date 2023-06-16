@@ -24,7 +24,6 @@ const SignIn: NextPage = () => {
   const passDigital = new RegExp(
     "[a-z,0-9,A-Z]+[@,.]+[a-z,0-9,A-Z]+[.]+[a-z,0-9,A-Z]"
   );
-  const onSubmit = (data: any) => console.log(data);
   const router = useRouter();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const togglePasswordVisibility = () => {

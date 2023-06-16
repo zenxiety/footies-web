@@ -33,7 +33,6 @@ const MyOrders = () => {
     const data =
       getOrder.data?.filter((item) => item.status == "pending") || [];
     if (data && data.length > 0) {
-      console.log(data);
       setPop(true);
     }
   }, [getOrder.data]);
@@ -77,7 +76,7 @@ const MyOrders = () => {
       >
         <span className="ml-5 font-literata text-2xl">Pesanan</span>
         <hr className="my-4 border-secondary-300" />
-        <div className="ml-5 mb-7 flex gap-x-1">
+        <div className="mb-7 ml-5 flex gap-x-1">
           {sectionLabel.map((section, i) => (
             <button
               key={i}
@@ -138,7 +137,7 @@ const MyOrders = () => {
                               />
                             </button>
                             <button
-                              className="rounded-full bg-primary-300 py-2 px-4 font-bold text-secondary-400"
+                              className="rounded-full bg-primary-300 px-4 py-2 font-bold text-secondary-400"
                               onClick={async () => {
                                 await acceptOrder.mutateAsync({
                                   orderId: item.id,

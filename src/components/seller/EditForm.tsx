@@ -49,14 +49,14 @@ export default function EditForm({
   const router = useRouter();
 
   const onSubmit = (values: AddItemValues) => {
-    console.log("Foto menu:", values.foto);
-    console.log("Nama menu:", values.nama);
-    console.log("Harga awal menu sebelum diskon:", values.hargaAwal);
-    console.log("Deskripsi menu:", values.deskripsi);
-    console.log("Diskon:", values.diskon);
-    console.log("Harga akhir menu setelah diskon:", values.hargaAkhir);
+    // console.log("Foto menu:", values.foto);
+    // console.log("Nama menu:", values.nama);
+    // console.log("Harga awal menu sebelum diskon:", values.hargaAwal);
+    // console.log("Deskripsi menu:", values.deskripsi);
+    // console.log("Diskon:", values.diskon);
+    // console.log("Harga akhir menu setelah diskon:", values.hargaAkhir);
 
-    console.log("Kategori menu:", values.kategori);
+    // console.log("Kategori menu:", values.kategori);
 
     if (page === "add") {
       addProduct
@@ -256,7 +256,7 @@ export default function EditForm({
                           alt=""
                           width={300}
                           height={200}
-                          className="absolute top-1/2 left-0 h-auto w-full -translate-y-1/2"
+                          className="absolute left-0 top-1/2 h-auto w-full -translate-y-1/2"
                         />
                       </div>
                       <div className="absolute bottom-0 h-[50px] w-full bg-gradient-to-b from-transparent to-black"></div>
@@ -279,7 +279,7 @@ export default function EditForm({
                     <button
                       type="button"
                       onClick={open}
-                      className={`absolute top-2 right-2 scale-90 rounded-full bg-primary-300`}
+                      className={`absolute right-2 top-2 scale-90 rounded-full bg-primary-300`}
                     >
                       <svg
                         width={37}
@@ -318,7 +318,7 @@ export default function EditForm({
         {/* Nama Menu */}
         <div>
           <p
-            className={`mt-3 mr-auto text-start font-literata font-medium duration-500 ${
+            className={`mr-auto mt-3 text-start font-literata font-medium duration-500 ${
               getValues("nama") ? "text-primary-300" : "text-secondary-100"
             }`}
           >
@@ -349,7 +349,7 @@ export default function EditForm({
         {/* Harga */}
         <div>
           <p
-            className={`mt-5 mr-auto text-start font-literata font-medium duration-500 ${
+            className={`mr-auto mt-5 text-start font-literata font-medium duration-500 ${
               getValues("hargaAwal") ? "text-primary-300" : "text-secondary-100"
             }`}
           >
@@ -368,7 +368,7 @@ export default function EditForm({
                 errors.hargaAwal ? "border-failed" : "border-secondary-100"
               }`}
             />
-            <span className="absolute top-1/2 left-0 -translate-y-[50%] text-secondary-100">
+            <span className="absolute left-0 top-1/2 -translate-y-[50%] text-secondary-100">
               Rp
             </span>
           </div>
@@ -381,7 +381,7 @@ export default function EditForm({
         {/* Deskripsi */}
         <div>
           <p
-            className={`mt-5 mr-auto text-start font-literata font-medium duration-500 ${
+            className={`mr-auto mt-5 text-start font-literata font-medium duration-500 ${
               getValues("deskripsi") ? "text-primary-300" : "text-secondary-100"
             }`}
           >
@@ -407,7 +407,7 @@ export default function EditForm({
         {/* Kategori */}
         <div>
           <p
-            className={`mt-3 mr-auto text-start font-literata font-medium duration-500 ${
+            className={`mr-auto mt-3 text-start font-literata font-medium duration-500 ${
               getValues("kategori") ? "text-primary-300" : "text-secondary-100"
             }`}
           >
@@ -435,7 +435,7 @@ export default function EditForm({
         <div className="flex gap-x-8">
           <div className="">
             <p
-              className={`mt-5 mr-auto text-start font-literata font-medium duration-500 ${
+              className={`mr-auto mt-5 text-start font-literata font-medium duration-500 ${
                 getValues("diskon") ? "text-primary-300" : "text-secondary-100"
               }`}
             >
@@ -452,7 +452,7 @@ export default function EditForm({
                 maxLength={discType == "%" ? 3 : 5}
                 className={`relative w-full text-ellipsis border-b bg-transparent py-1 font-louis text-[18px] font-light text-others-white duration-500 focus:border-b focus:border-others-white focus:outline-none ${"border-others-white"}`}
               />
-              <div className="absolute top-1/2 right-0 flex -translate-y-1/2 gap-x-1">
+              <div className="absolute right-0 top-1/2 flex -translate-y-1/2 gap-x-1">
                 <button
                   type="button"
                   onClick={() => setDiscType("%")}
@@ -495,7 +495,7 @@ export default function EditForm({
         </div>
         {/* Opsi Menu */}
         <div>
-          <p className="mt-5 mr-auto text-start font-literata font-medium text-others-white">
+          <p className="mr-auto mt-5 text-start font-literata font-medium text-others-white">
             Opsi Menu
           </p>
           {/* Tambahkan Opsi */}

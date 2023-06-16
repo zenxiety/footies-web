@@ -26,8 +26,6 @@ export default function Alamat({
 
   const onSubmit = (values: SellerFormValues) => {
     values.alamat = coord;
-    console.log(coord);
-    console.log(values);
     setFormValues(values);
     nextFormStep();
   };
@@ -67,7 +65,7 @@ export default function Alamat({
                 initialOptions={{}}
                 setValue={setValue as unknown as UseFormSetValue<FieldValues>}
               />
-              <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full">
+              <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-full">
                 <svg
                   width={31}
                   height={39}
@@ -120,7 +118,7 @@ export default function Alamat({
               </label> */}
             </div>
             <p
-              className={`mt-6 mb-1 mr-auto text-start text-sm duration-500
+              className={`mb-1 mr-auto mt-6 text-start text-sm duration-500
           ${getValues("alamat") ? "text-primary-300" : "text-secondary-100"}`}
             >
               Alamat Toko <span className="text-failed">*</span>

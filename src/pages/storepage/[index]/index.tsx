@@ -172,7 +172,7 @@ export default function Produk() {
         </div>
         <Swiper
           // scrollbar={{ draggable: false }}
-          onSwiper={(swiper) => console.log(swiper)}
+          // onSwiper={(swiper) => console.log(swiper)}
           className="my-6 h-[150%]"
           modules={[Navigation, Pagination, EffectCoverflow, Autoplay]}
           slidesPerView={1.5}

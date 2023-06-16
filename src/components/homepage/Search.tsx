@@ -19,7 +19,7 @@ const Search = () => {
   const filteredData = data.filter((item) =>
     item.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  
+
   return (
     <>
       <div className="h-full w-full rounded-b-xl bg-secondary-400">
@@ -42,72 +42,71 @@ const Search = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <Swiper
-          // scrollbar={{ draggable: true }}
-          onSwiper={(swiper) => console.log(swiper)}
-          className="bullets my-12 flex h-full w-full flex-col justify-start bg-secondary-300 px-5"
-          // onSlideChange={(swiper) => setSwiperIndex(swiper.realIndex)}
-          modules={[Navigation, Pagination, EffectCoverflow, Autoplay]}
-          slidesPerView={2}
-          spaceBetween={10}
-          effect="coverflow"
-          coverflowEffect={{
-            scale: 1,
-            rotate: 0,
-            stretch: 0,
-            depth: 0,
-            slideShadows: false,
-          }}
-          autoplay={{
-            delay: 2500,
-          }}
-          direction="horizontal"
-          centeredSlides={true}
-          pagination={{
-            el: ".swiper-pagination",
-            clickable: true,
-            type: "bullets",
-            bulletActiveClass: "swiper-pagination-bullet",
-          }}
-          navigation={{
-            disabledClass: "opacity-100",
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-          }}
-        >
-          {filteredData.map(({ image, title, jarak, rating }, i) => {
-            return (
-              <SwiperSlide
-                key={i}
-                className="flex flex-col justify-start rounded-3xl bg-white h-full"
-              >
-                <>
-                  <Image
-                    src={image}
-                    alt=""
-                    className="mx-auto block rounded-3xl border-2"
-                    width={250}
-                    height={250}
-                  />
-                  <div className="flex flex-col items-start py-5 pl-5">
-                    <p className="text-start font-louis text-xl font-light">
-                      {jarak}
-                    </p>
-                    <p className="text-start font-louis text-xl font-light">
-                      {title}
-                    </p>
-                    <div className="flex flex-row items-center justify-start gap-x-2">
-                      <i className="fas fa-star text-primary-300" />
-                      <p className=" mx-auto block font-louis text-xl font-light">
-                        {rating}
+            // scrollbar={{ draggable: true }}
+            // onSwiper={(swiper) => console.log(swiper)}
+            className="bullets my-12 flex h-full w-full flex-col justify-start bg-secondary-300 px-5"
+            // onSlideChange={(swiper) => setSwiperIndex(swiper.realIndex)}
+            modules={[Navigation, Pagination, EffectCoverflow, Autoplay]}
+            slidesPerView={2}
+            spaceBetween={10}
+            effect="coverflow"
+            coverflowEffect={{
+              scale: 1,
+              rotate: 0,
+              stretch: 0,
+              depth: 0,
+              slideShadows: false,
+            }}
+            autoplay={{
+              delay: 2500,
+            }}
+            direction="horizontal"
+            centeredSlides={true}
+            pagination={{
+              el: ".swiper-pagination",
+              clickable: true,
+              type: "bullets",
+              bulletActiveClass: "swiper-pagination-bullet",
+            }}
+            navigation={{
+              disabledClass: "opacity-100",
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+            }}
+          >
+            {filteredData.map(({ image, title, jarak, rating }, i) => {
+              return (
+                <SwiperSlide
+                  key={i}
+                  className="flex h-full flex-col justify-start rounded-3xl bg-white"
+                >
+                  <>
+                    <Image
+                      src={image}
+                      alt=""
+                      className="mx-auto block rounded-3xl border-2"
+                      width={250}
+                      height={250}
+                    />
+                    <div className="flex flex-col items-start py-5 pl-5">
+                      <p className="text-start font-louis text-xl font-light">
+                        {jarak}
                       </p>
+                      <p className="text-start font-louis text-xl font-light">
+                        {title}
+                      </p>
+                      <div className="flex flex-row items-center justify-start gap-x-2">
+                        <i className="fas fa-star text-primary-300" />
+                        <p className=" mx-auto block font-louis text-xl font-light">
+                          {rating}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </>
-              </SwiperSlide>
-            );
-          })}
-        </Swiper>
-          
+                  </>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
         </div>
       </div>
     </>

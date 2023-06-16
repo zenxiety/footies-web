@@ -32,7 +32,6 @@ const Search = () => {
   );
 
   useEffect(() => {
-    console.log(searchQuery.length);
     if (searchQuery.length !== 0) {
       setPage(1);
     } else {

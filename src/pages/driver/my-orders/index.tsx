@@ -34,7 +34,6 @@ const MyOrders = () => {
         (item) => item.status == "accepted" && item.mitraId == null
       ) || [];
     if (data && data.length > 0) {
-      console.log(data);
       setPop(true);
     }
   }, [getOrder.data]);
@@ -149,7 +148,7 @@ const MyOrders = () => {
               onClick={() => setMenerimaPesanan(!menerimaPesanan)}
             >
               <div
-                className={`absolute top-1/2 left-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-secondary-400 duration-500 ${
+                className={`absolute left-1/2 top-1/2 h-3 w-3 -translate-y-1/2 rounded-full bg-secondary-400 duration-500 ${
                   menerimaPesanan ? "translate-x-[25%]" : "-translate-x-[125%]"
                 }`}
               ></div>
@@ -230,7 +229,7 @@ const MyOrders = () => {
                     </span>
                   </div>
                   <p>{item.Cart?.CartMenu.map((item) => item.Menu.nama)}</p>
-                  <button className="mt-2 mr-auto text-xs text-primary-300">
+                  <button className="mr-auto mt-2 text-xs text-primary-300">
                     Lihat Detail Pesanan &gt;
                   </button>
                   <div className="mt-6 flex items-center justify-between">
@@ -244,7 +243,7 @@ const MyOrders = () => {
                       {numberFormat(item.total)}
                     </span>
                   </div>
-                  <div className="relative flex justify-between bg-secondary-400 pt-6 pb-10">
+                  <div className="relative flex justify-between bg-secondary-400 pb-10 pt-6">
                     <button onClick={() => handleCancel()}>
                       <Image
                         src="/assets/cancel.svg"
@@ -262,7 +261,7 @@ const MyOrders = () => {
 
                         await getOrder.refetch();
                       }}
-                      className="rounded-full bg-primary-300 py-2 px-4 font-bold text-secondary-400"
+                      className="rounded-full bg-primary-300 px-4 py-2 font-bold text-secondary-400"
                     >
                       Terima
                     </button>
@@ -350,7 +349,7 @@ const MyOrders = () => {
                     </span>
                   </div>
                   <p>{item.Cart?.CartMenu.map((item) => item.Menu.nama)}</p>
-                  <button className="mt-2 mr-auto text-xs text-primary-300">
+                  <button className="mr-auto mt-2 text-xs text-primary-300">
                     Lihat Detail Pesanan &gt;
                   </button>
                   <div className="mt-6 flex items-center justify-between">
@@ -366,7 +365,7 @@ const MyOrders = () => {
                       {numberFormat(estimated.biaya)}
                     </span>
                   </div>
-                  <div className="relative flex justify-between bg-secondary-400 pt-6 pb-10">
+                  <div className="relative flex justify-between bg-secondary-400 pb-10 pt-6">
                     <button
                       onClick={async () => {
                         await finishOrder.mutateAsync({
@@ -375,7 +374,7 @@ const MyOrders = () => {
 
                         await getOrder.refetch();
                       }}
-                      className="ml-auto rounded-full bg-primary-300 py-2 px-4 font-bold text-secondary-400"
+                      className="ml-auto rounded-full bg-primary-300 px-4 py-2 font-bold text-secondary-400"
                     >
                       Selesaikan
                     </button>

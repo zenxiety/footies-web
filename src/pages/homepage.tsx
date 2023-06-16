@@ -40,7 +40,6 @@ const Homepage = () => {
   const [page, setPage] = useState(0);
 
   useEffect(() => {
-    console.log(searchQuery.length);
     if (searchQuery.length !== 0) {
       setPage(1);
     } else {
@@ -48,9 +47,6 @@ const Homepage = () => {
     }
   }, [searchQuery]);
 
-  useEffect(() => {
-    console.log(searchMenu.data);
-  }, [searchMenu.data]);
   if (page === 1) {
     return (
       <PageTwo
@@ -96,7 +92,7 @@ const Homepage = () => {
             </h1>
             <Swiper
               // scrollbar={{ draggable: true }}
-              onSwiper={(swiper) => console.log(swiper)}
+              // onSwiper={(swiper) => console.log(swiper)}
               className="bullets my-12 flex h-full w-full flex-col justify-start bg-secondary-300 px-5"
               // onSlideChange={(swiper) => setSwiperIndex(swiper.realIndex)}
               modules={[Navigation, Pagination, EffectCoverflow, Autoplay]}

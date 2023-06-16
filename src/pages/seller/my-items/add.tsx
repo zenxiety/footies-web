@@ -32,12 +32,12 @@ export default function Add() {
   const router = useRouter();
 
   const onSubmit = (values: AddItemValues) => {
-    console.log("Foto menu:", values.foto);
-    console.log("Nama menu:", values.nama);
-    console.log("Harga awal menu sebelum diskon:", values.hargaAwal);
-    console.log("Deskripsi menu:", values.deskripsi);
-    console.log("Diskon:", values.diskon);
-    console.log("Harga akhir menu setelah diskon:", values.hargaAkhir);
+    // console.log("Foto menu:", values.foto);
+    // console.log("Nama menu:", values.nama);
+    // console.log("Harga awal menu sebelum diskon:", values.hargaAwal);
+    // console.log("Deskripsi menu:", values.deskripsi);
+    // console.log("Diskon:", values.diskon);
+    // console.log("Harga akhir menu setelah diskon:", values.hargaAkhir);
 
     merchant
       .mutateAsync({

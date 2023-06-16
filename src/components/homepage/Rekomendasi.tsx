@@ -53,21 +53,16 @@ const data = [
 const Rekomendasi = () => {
   const data = api.user.getRecommendedRestaurant.useQuery();
   const router = useRouter();
-  useEffect(() => {
-    console.log(data.data)
-  }, [])
-  
-  console.log(data)
 
   return (
     <>
-      <div className="mt-12 h-full w-full overflow-hidden rounded-xl bg-secondary-300 pt-5 mb-40">
+      <div className="mb-40 mt-12 h-full w-full overflow-hidden rounded-xl bg-secondary-300 pt-5">
         <h1 className="px-5 font-literata text-2xl text-white">
           Restoran Rekomendasi
         </h1>
         <Swiper
           // scrollbar={{ draggable: true }}
-          onSwiper={(swiper) => console.log(swiper)}
+          // onSwiper={(swiper) => console.log(swiper)}
           className="bullets my-12 flex h-full w-full flex-col justify-start bg-secondary-300 px-5"
           //   onSlideChange={(swiper) => setSwiperIndex(swiper.realIndex)}
           modules={[Navigation, Pagination, EffectCoverflow, Autoplay]}
@@ -111,7 +106,7 @@ const Rekomendasi = () => {
                   <Image
                     src={Menu[0]?.gambar || "/assets/burger.png"}
                     alt=""
-                    className="mx-auto block rounded-3xl border-2 border-[#A06235] aspect-square"
+                    className="mx-auto block aspect-square rounded-3xl border-2 border-[#A06235]"
                     width={250}
                     height={250}
                   />

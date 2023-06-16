@@ -196,9 +196,6 @@ export const authRouter = createTRPCRouter({
       },
     });
 
-    console.log("dari check register");
-    console.log(data);
-
     return data;
   }),
 });
