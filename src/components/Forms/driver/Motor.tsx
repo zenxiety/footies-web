@@ -19,14 +19,17 @@ export default function Motor({
 }) {
   const { setFormValues, data } = useFormData<DriverFormValues>();
   const signUp = api.auth.registerMitra.useMutation();
+  const [plateFirst, setPlateFirst] = useState<string>("");
+  const [plateNum, setPlateNum] = useState<string>("");
+  const [plateLast, setPlateLast] = useState<string>("");
 
   const onSubmit = (values: DriverFormValues) => {
-    const finalPlate = plate.join(" ").toLowerCase();
-    setValue("platNomor", finalPlate);
+    const finalPlate = plateFirst + " " + plateNum + " " + plateLast;
     signUp
       .mutateAsync({
         ...data,
         ...values,
+        platNomor: finalPlate,
       })
       .then((res) => {
         nextFormStep();
@@ -43,29 +46,6 @@ export default function Motor({
     setValue,
     getValues,
   } = useForm<DriverFormValues>({ mode: "all" });
-
-  const plate: string[] = [];
-
-  const handlePlateFirst = (e: ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-
-    plate[0] = e.target.value;
-    console.log(plate);
-  };
-  const handlePlateNum = (e: ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    if (e.currentTarget.value.length > 4) {
-      e.currentTarget.value = e.currentTarget.value.slice(0, 4);
-    }
-    plate[1] = e.target.value;
-    console.log(plate);
-  };
-  const handlePlateLast = (e: ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-
-    plate[2] = e.target.value;
-    console.log(plate);
-  };
 
   const test = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     e.preventDefault();
@@ -98,7 +78,7 @@ export default function Motor({
           <input
             // {...register("platNomor", { required: true })}
             type="text"
-            onChange={(e) => handlePlateFirst(e)}
+            onChange={(e) => setPlateFirst(e.target.value)}
             className="w-[10%] border-b border-others-white bg-transparent text-center font-louis text-base font-normal uppercase text-others-white focus:outline-none"
             maxLength={2}
             autoComplete="off"
@@ -107,7 +87,7 @@ export default function Motor({
           <input
             // {...register("platNomor", { required: true })}
             type="number"
-            onChange={(e) => handlePlateNum(e)}
+            onChange={(e) => setPlateNum(e.target.value)}
             className="w-[22%] border-b border-others-white bg-transparent text-center font-louis text-base font-normal text-others-white focus:outline-none"
             autoComplete="off"
             placeholder="0000"
@@ -115,7 +95,7 @@ export default function Motor({
           <input
             // {...register("platNomor", { required: true })}
             type="text"
-            onChange={(e) => handlePlateLast(e)}
+            onChange={(e) => setPlateLast(e.target.value)}
             className="w-[15%] border-b border-others-white bg-transparent text-center font-louis text-base font-normal uppercase text-others-white focus:outline-none"
             maxLength={3}
             autoComplete="off"

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import Link from "next/link";
 import MapboxMap from "../../../components/Map";
 import data from "../../../components/homepage/data.json";
 import "@fortawesome/fontawesome-free/css/all.css";
-import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, EffectCoverflow, Autoplay } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -14,7 +13,6 @@ import "swiper/css/scrollbar";
 import "swiper/css/effect-coverflow";
 import { api } from "../../../utils/api";
 import { useForm } from "react-hook-form";
-import Navbar from "../../../components/Navbarbuyer";
 
 export default function Produk() {
   const router = useRouter();
@@ -104,7 +102,7 @@ export default function Produk() {
             checked={false} // keknya bakal checkbox use my location
             setValue={setValue}
           />
-          <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full">
+          <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-full">
             <svg
               width={31}
               height={39}
@@ -241,7 +239,7 @@ export default function Produk() {
                         <h1
                           className={
                             item.promo
-                              ? "rounded-full bg-failed py-1 px-3 font-literata text-white"
+                              ? "rounded-full bg-failed px-3 py-1 font-literata text-white"
                               : "hidden"
                           }
                         >

@@ -1,4 +1,4 @@
-import { createProxySSGHelpers } from "@trpc/react-query/ssg";
+import { createServerSideHelpers } from "@trpc/react-query/server";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -37,7 +37,7 @@ export type SellerFormValues = {
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function getServerSideProps(ctx: CreateNextContextOptions) {
   // const ssg = await ssgHelpers(ctx);
-  const ssg = createProxySSGHelpers({
+  const ssg = createServerSideHelpers({
     router: appRouter,
     ctx: await createTRPCContext(ctx),
     transformer: superjson,
@@ -130,7 +130,7 @@ export default function Seller(props: {
       {domLoaded && (
         <div className="relative flex min-h-screen flex-col items-center justify-between overflow-hidden bg-secondary-500 font-louis">
           {/* close button */}
-          <div className="absolute top-6 left-6 z-[100]">
+          <div className="absolute left-6 top-6 z-[100]">
             <Link href="/dashboard">
               <svg
                 width={17}
@@ -178,7 +178,7 @@ export default function Seller(props: {
                   ? "translate-x-[0%] "
                   : page == 4
                   ? "-translate-x-[25%] "
-                  : "translate-x-[50%] -translate-y-full "
+                  : "-translate-y-full translate-x-[50%] "
               }`}
             >
               <svg
@@ -186,7 +186,7 @@ export default function Seller(props: {
                 height={321}
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                className="absolute top-0 -left-[10%]"
+                className="absolute -left-[10%] top-0"
               >
                 <g filter="url(#prefix__filter0_f_583_1124)">
                   <path
@@ -233,7 +233,7 @@ export default function Seller(props: {
                 height={427}
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                className="absolute -top-[10%] -right-[6%]"
+                className="absolute -right-[6%] -top-[10%]"
               >
                 <g filter="url(#prefix__filter0_f_583_1125)">
                   <path
