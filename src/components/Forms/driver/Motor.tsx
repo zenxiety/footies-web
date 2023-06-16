@@ -47,10 +47,6 @@ export default function Motor({
     getValues,
   } = useForm<DriverFormValues>({ mode: "all" });
 
-  const test = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
-    e.preventDefault();
-  };
-
   return (
     <>
       <form
@@ -102,9 +98,6 @@ export default function Motor({
             placeholder="XXX"
           />
         </div>
-        <button type="button" onClick={(e) => test(e)}>
-          Test
-        </button>
         <h4
           className={`mt-[1em] text-base duration-500 ${
             getValues("merk") ? "text-primary-300" : "text-secondary-100"
